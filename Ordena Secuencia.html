@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actividad: Ordena la Secuencia</title>
+    <style>
+        :root {
+            /* Paleta de colores suave y accesible */
+            --bg-body: #f1f5f9;
+            --bg-card: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --success-green: #22c55e;
+            --border-soft: #cbd5e1;
+            --shadow-soft: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --focus-ring: 0 0 0 4px #f59e0b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Encabezado */
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            max-width: 800px;
+        }
+
+        .institution {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--accent-purple);
+            margin-bottom: 8px;
+        }
+
+        .course-info {
+            display: inline-flex;
+            gap: 15px;
+            background: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-soft);
+            font-size: 1rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* Instrucciones */
+        .instruction-box {
+            background: white;
+            padding: 20px;
+            border-radius: 16px;
+            text-align: center;
+            margin-bottom: 30px;
+            border: 2px solid var(--border-soft);
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .instruction-title {
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .instruction-text {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+        }
+
+        /* Áreas de Juego */
+        .game-area {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .zone {
+            background: #e2e8f0;
+            border-radius: 16px;
+            padding: 20px;
+            min-height: 150px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+            border: 3px dashed var(--border-soft);
+            transition: border-color 0.3s;
+        }
+
+        .zone-label {
+            width: 100%;
+            text-align: center;
+            font-weight: 700;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Zona de Respuesta (Destino) */
+        #targetZone {
+            background: #f8fafc;
+            border-color: var(--accent-blue);
+        }
+
+        #targetZone.correct {
+            border-color: var(--success-green);
+            background: #f0fdf4;
+        }
+
+        /* Tarjetas de Números */
+        .number-card {
+            background: white;
+            border: 2px solid var(--accent-blue);
+            border-radius: 12px;
+            width: 100px;
+            height: 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: grab;
+            box-shadow: var(--shadow-soft);
+            transition: transform 0.2s, box-shadow 0.2s;
+            user-select: none;
+            position: relative;
+        }
+
+        .number-card:active {
+            cursor: grabbing;
+        }
+
+        .number-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .number-card:focus {
+            outline: none;
+            box-shadow: var(--focus-ring);
+            z-index: 10;
+        }
+
+        .num-root {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+
+        .num-val {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        /* Botones de Control */
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .action-btn {
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-check {
+            background: var(--success-green);
+            color: white;
+        }
+
+        .btn-reset {
+            background: var(--text-secondary);
+            color: white;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            opacity: 0.9;
+        }
+
+        .action-btn:focus {
+            outline: none;
+            box-shadow: var(--focus-ring);
+        }
+
+        /* Mensaje de Éxito */
+        .success-message {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background: #dcfce7;
+            border: 2px solid var(--success-green);
+            border-radius: 12px;
+            color: #166534;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-align: center;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Accesibilidad: Movimiento reducido */
+        @media (prefers-reduced-motion: reduce) {
+            * { transition: none !important; animation: none !important; }
+        }
+
+        @media (max-width: 600px) {
+            .number-card {
+                width: 80px;
+                height: 80px;
+            }
+            .num-root { font-size: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="institution">Instituto para Sordos Santa Rosa</div>
+        <div class="course-info">
+            <span>🎓 1ro Secundaria</span>
+            <span>📐 Matemáticas</span>
+            <span>👨‍🏫 Prof. Miguel</span>
+        </div>
+    </header>
+
+    <main>
+        <section class="instruction-box">
+            <h1 class="instruction-title">Ordena de Menor a Mayor</h1>
+            <p class="instruction-text">
+                Toca los números en la caja gris para moverlos a la caja blanca.<br>
+                Ordénalos desde el más pequeño hasta el más grande.
+            </p>
+        </section>
+
+        <div class="game-area">
+            
+            <!-- Zona de Origen (Desordenada) -->
+            <div class="zone" id="sourceZone" aria-label="Números desordenados">
+                <div class="zone-label">📦 Toca para mover aquí</div>
+                <!-- Se llenan con JS -->
+            </div>
+
+            <!-- Zona de Destino (Ordenada) -->
+            <div class="zone" id="targetZone" aria-label="Secuencia ordenada">
+                <div class="zone-label">✅ Orden Correcto</div>
+            </div>
+
+        </div>
+
+        <div class="success-message" id="successMessage">
+            🎉 ¡Excelente! Secuencia Correcta
+        </div>
+
+        <div class="controls">
+            <button class="action-btn btn-reset" id="resetBtn" aria-label="Reiniciar actividad">
+                🔄 Reiniciar
+            </button>
+            <button class="action-btn btn-check" id="checkBtn" aria-label="Verificar respuesta">
+                ✓ Verificar
+            </button>
+        </div>
+    </main>
+
+    <script>
+        // DATOS DE LOS NÚMEROS (Orden Correcto: 1, 2, 3, 4, 5)
+        // Valores: √1=1, √2≈1.41, √4=2, √9=3, √16=4
+        const numbersData = [
+            { id: 1, root: "√1", val: "1", order: 1 },
+            { id: 2, root: "√4", val: "2", order: 2 },
+            { id: 3, root: "√9", val: "3", order: 3 },
+            { id: 4, root: "√16", val: "4", order: 4 },
+            { id: 5, root: "√2", val: "1.41...", order: 5 } 
+            // Nota: Para hacerlo más desafiante, el orden real de menor a mayor es:
+            // √1 (1), √2 (1.41), √4 (2), √9 (3), √16 (4).
+            // Ajustemos el array 'order' para reflejar el valor numérico real.
+        ];
+
+        // Corregimos el orden numérico real para la lógica de validación
+        const correctSequence = [
+            { id: 1, root: "√1", val: "1" },       // 1
+            { id: 5, root: "√2", val: "1.41..." }, // 1.41
+            { id: 2, root: "√4", val: "2" },       // 2
+            { id: 3, root: "√9", val: "3" },       // 3
+            { id: 4, root: "√16", val: "4" }       // 4
+        ];
+
+        const sourceZone = document.getElementById('sourceZone');
+        const targetZone = document.getElementById('targetZone');
+        const checkBtn = document.getElementById('checkBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const successMessage = document.getElementById('successMessage');
+
+        // Función para crear tarjeta HTML
+        function createCard(item) {
+            const card = document.createElement('div');
+            card.className = 'number-card';
+            card.setAttribute('draggable', 'true');
+            card.setAttribute('tabindex', '0');
+            card.setAttribute('role', 'button');
+            card.setAttribute('aria-label', `Número ${item.root}, valor ${item.val}`);
+            card.dataset.id = item.id;
+            
+            card.innerHTML = `
+                <div class="num-root">${item.root}</div>
+                <div class="num-val">${item.val}</div>
+            `;
+
+            // Evento Click (Para accesibilidad y móviles)
+            card.addEventListener('click', () => moveCard(card));
+            
+            // Evento Teclado (Enter/Espacio)
+            card.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    moveCard(card);
+                }
+            });
+
+            // Eventos Drag & Drop (Escritorio)
+            card.addEventListener('dragstart', dragStart);
+            
+            return card;
+        }
+
+        // Mover tarjeta entre zonas con Clic
+        function moveCard(card) {
+            if (card.parentElement === sourceZone) {
+                targetZone.appendChild(card);
+                card.focus(); // Mantener foco
+            } else {
+                sourceZone.appendChild(card);
+                card.focus();
+            }
+            // Limpiar estado visual al mover
+            targetZone.classList.remove('correct');
+            successMessage.style.display = 'none';
+        }
+
+        // Lógica Drag & Drop
+        let draggedItem = null;
+
+        function dragStart(e) {
+            draggedItem = this;
+            setTimeout(() => this.style.opacity = '0.5', 0);
+        }
+
+        sourceZone.addEventListener('dragover', e => e.preventDefault());
+        targetZone.addEventListener('dragover', e => e.preventDefault());
+
+        sourceZone.addEventListener('drop', function() {
+            if (draggedItem) this.appendChild(draggedItem);
+            draggedItem.style.opacity = '1';
+            resetVisuals();
+        });
+
+        targetZone.addEventListener('drop', function() {
+            if (draggedItem) this.appendChild(draggedItem);
+            draggedItem.style.opacity = '1';
+            resetVisuals();
+        });
+
+        function resetVisuals() {
+            targetZone.classList.remove('correct');
+            successMessage.style.display = 'none';
+        }
+
+        // Verificar Respuesta
+        function checkAnswer() {
+            const currentCards = targetZone.querySelectorAll('.number-card');
+            
+            // Si no hay 5 cartas, no verificar
+            if (currentCards.length !== 5) {
+                alert("Por favor mueve todos los números a la caja de orden.");
+                return;
+            }
+
+            let isCorrect = true;
+
+            currentCards.forEach((card, index) => {
+                const cardId = parseInt(card.dataset.id);
+                const correctId = correctSequence[index].id;
+
+                if (cardId !== correctId) {
+                    isCorrect = false;
+                }
+            });
+
+            if (isCorrect) {
+                targetZone.classList.add('correct');
+                successMessage.style.display = 'block';
+                checkBtn.disabled = true;
+                checkBtn.textContent = "¡Completado!";
+            } else {
+                // Animación de error simple (sacudida)
+                targetZone.style.transform = "translateX(10px)";
+                setTimeout(() => targetZone.style.transform = "translateX(-10px)", 100);
+                setTimeout(() => targetZone.style.transform = "translateX(0)", 200);
+                
+                const errorMsg = document.createElement('div');
+                errorMsg.textContent = "❌ Revisa el orden e intenta de nuevo";
+                errorMsg.style.color = "#ef4444";
+                errorMsg.style.fontWeight = "bold";
+                errorMsg.style.textAlign = "center";
+                errorMsg.style.width = "100%";
+                targetZone.appendChild(errorMsg);
+                setTimeout(() => errorMsg.remove(), 2000);
+            }
+        }
+
+        // Reiniciar Juego
+        function initGame() {
+            // Limpiar zonas (mantener labels)
+            const sourceLabel = sourceZone.querySelector('.zone-label');
+            const targetLabel = targetZone.querySelector('.zone-label');
+            sourceZone.innerHTML = '';
+            targetZone.innerHTML = '';
+            sourceZone.appendChild(sourceLabel);
+            targetZone.appendChild(targetLabel);
+
+            // Resetear UI
+            targetZone.classList.remove('correct');
+            successMessage.style.display = 'none';
+            checkBtn.disabled = false;
+            checkBtn.textContent = "✓ Verificar";
+
+            // Crear y mezclar cartas
+            const shuffled = [...correctSequence].sort(() => Math.random() - 0.5);
+            shuffled.forEach(item => {
+                sourceZone.appendChild(createCard(item));
+            });
+        }
+
+        // Listeners
+        checkBtn.addEventListener('click', checkAnswer);
+        resetBtn.addEventListener('click', initGame);
+
+        // Iniciar
+        initGame();
+
+    </script>
+</body>
+</html>

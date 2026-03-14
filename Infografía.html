@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Números Irracionales - Instituto Santa Rosa</title>
+    <style>
+        :root {
+            /* Paleta de colores accesible y tranquila */
+            --bg-primary: #f8fafc;
+            --bg-secondary: #eef2f7;
+            --bg-accent: #dbeafe;
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --accent-teal: #14b8a6;
+            --accent-amber: #f59e0b;
+            --border-color: #cbd5e1;
+            --shadow-soft: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-medium: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Encabezado institucional */
+        header {
+            text-align: center;
+            padding: 25px 20px;
+            background: linear-gradient(135deg, var(--bg-secondary), var(--bg-accent));
+            border-radius: 16px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow-soft);
+            border: 2px solid var(--border-color);
+        }
+
+        .institution {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .course-info {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+            font-size: 1.05rem;
+        }
+
+        .course-info span {
+            background: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-weight: 500;
+            box-shadow: var(--shadow-soft);
+            border: 1px solid var(--border-color);
+        }
+
+        /* Título principal */
+        .main-title {
+            text-align: center;
+            padding: 30px 20px 25px;
+            margin-bottom: 35px;
+            position: relative;
+        }
+
+        .main-title h1 {
+            font-size: 2.4rem;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .main-title::after {
+            content: "";
+            display: block;
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-purple), var(--accent-teal));
+            margin: 15px auto 0;
+            border-radius: 2px;
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 15px auto 0;
+            font-weight: 400;
+        }
+
+        /* Contenedor de secciones */
+        .infographic-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        /* Tarjetas de sección */
+        .section-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: var(--shadow-medium);
+            border: 2px solid var(--border-color);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 18px;
+            color: var(--accent-blue);
+            padding-bottom: 12px;
+            border-bottom: 2px dashed var(--border-color);
+        }
+
+        .section-icon {
+            font-size: 1.8rem;
+            background: var(--bg-accent);
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        /* Contenido de viñetas */
+        .content-list {
+            list-style: none;
+            padding-left: 8px;
+        }
+
+        .content-list li {
+            padding: 10px 0 10px 32px;
+            position: relative;
+            border-bottom: 1px dashed var(--border-color);
+            font-size: 1.05rem;
+        }
+
+        .content-list li:last-child {
+            border-bottom: none;
+        }
+
+        .content-list li::before {
+            content: "•";
+            position: absolute;
+            left: 12px;
+            color: var(--accent-teal);
+            font-size: 1.8rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-weight: bold;
+        }
+
+        .content-list li strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        /* Ejemplos matemáticos */
+        .math-example {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 16px;
+            margin: 12px 0;
+            border-left: 4px solid var(--accent-purple);
+            font-family: 'Cambria Math', 'Times New Roman', serif;
+            font-size: 1.2rem;
+            text-align: center;
+            line-height: 1.8;
+        }
+
+        .fraction {
+            display: inline-block;
+            text-align: center;
+            vertical-align: middle;
+            margin: 0 4px;
+        }
+
+        .fraction .numerator {
+            border-bottom: 2px solid var(--text-primary);
+            display: block;
+            padding: 0 4px 2px;
+        }
+
+        .fraction .denominator {
+            display: block;
+            padding: 2px 4px 0;
+        }
+
+        .radical {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .radical-symbol {
+            font-size: 1.4rem;
+            position: relative;
+            top: -2px;
+        }
+
+        .radical-content {
+            border-top: 2px solid var(--text-primary);
+            padding: 0 6px 2px;
+            position: relative;
+            top: -3px;
+        }
+
+        /* Sección de comparación */
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .comparison-card {
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .rational {
+            background: #dbeafe;
+            border: 2px solid #93c5fd;
+        }
+
+        .irrational {
+            background: #ede9fe;
+            border: 2px solid #c4b5fd;
+        }
+
+        .comparison-title {
+            font-weight: 700;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+
+        /* Conectores visuales */
+        .visual-connector {
+            text-align: center;
+            padding: 20px;
+            margin: 25px 0;
+            position: relative;
+        }
+
+        .connector-line {
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--accent-teal), transparent);
+            margin: 15px auto;
+            max-width: 300px;
+            border-radius: 2px;
+        }
+
+        .connector-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background: var(--accent-blue);
+            color: white;
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin: 0 auto 12px;
+            box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
+        }
+
+        /* Sección de características */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .feature-item {
+            text-align: center;
+            padding: 15px 10px;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            transition: background 0.2s ease;
+        }
+
+        .feature-item:hover {
+            background: var(--bg-accent);
+        }
+
+        .feature-icon {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .feature-text {
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        /* Pie de página */
+        footer {
+            text-align: center;
+            padding: 25px 20px;
+            margin-top: 20px;
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            border: 2px solid var(--border-color);
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+        }
+
+        .teacher-name {
+            font-weight: 700;
+            color: var(--accent-blue);
+            display: block;
+            margin-top: 5px;
+            font-size: 1.2rem;
+        }
+
+        /* Animaciones suaves al cargar */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-card {
+            animation: fadeInUp 0.5s ease forwards;
+            opacity: 0;
+        }
+
+        .section-card:nth-child(1) { animation-delay: 0.1s; opacity: 1; }
+        .section-card:nth-child(2) { animation-delay: 0.2s; opacity: 1; }
+        .section-card:nth-child(3) { animation-delay: 0.3s; opacity: 1; }
+        .section-card:nth-child(4) { animation-delay: 0.4s; opacity: 1; }
+        .section-card:nth-child(5) { animation-delay: 0.5s; opacity: 1; }
+        .section-card:nth-child(6) { animation-delay: 0.6s; opacity: 1; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .infographic-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .main-title h1 {
+                font-size: 2rem;
+            }
+            
+            .course-info {
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+        }
+
+        /* Accesibilidad: foco visible */
+        a:focus, button:focus {
+            outline: 3px solid var(--accent-amber);
+            outline-offset: 2px;
+        }
+
+        /* Evitar animaciones para usuarios que prefieren reducir movimiento */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Encabezado institucional -->
+    <header>
+        <div class="institution">Instituto para Sordos Santa Rosa</div>
+        <div class="course-info">
+            <span>🎓 Primero de Secundaria</span>
+            <span>📐 Matemáticas</span>
+            <span>👨‍🏫 Profesor Miguel</span>
+        </div>
+    </header>
+
+    <!-- Título principal -->
+    <section class="main-title">
+        <h1>Números Irracionales</h1>
+        <p class="subtitle">Descubre los números que no pueden escribirse como fracción y su importancia en las matemáticas</p>
+    </section>
+
+    <!-- Contenedor principal de la infografía -->
+    <div class="infographic-container">
+        
+        <!-- Sección 1: Definición -->
+        <article class="section-card">
+            <h2 class="section-title">
+                <span class="section-icon">❓</span>
+                ¿Qué son?
+            </h2>
+            <ul class="content-list">
+                <li>Son números que <strong>no pueden expresarse</strong> como fracción de dos enteros</li>
+                <li>Su representación decimal es <strong>infinita y no periódica</strong></li>
+                <li>No se pueden escribir como <span class="fraction"><span class="numerator">p</span><span class="denominator">q</span></span> donde p y q son enteros</li>
+                <li>Forman parte del conjunto de los <strong>números reales</strong></li>
+            </ul>
+        </article>
+
+        <!-- Sección 2: Ejemplos clave -->
+        <article class="section-card">
+            <h2 class="section-title">
+                <span class="section-icon">✨</span>
+                Ejemplos Importantes
+            </h2>
+            <ul class="content-list">
+                <li><strong>√2</strong> ≈ 1.4142135... (diagonal del cuadrado)</li>
+                <li><strong>√3</strong> ≈ 1.7320508... (triángulo equilátero)</li>
+                <li><strong>√5</strong> ≈ 2.2360679... (proporción áurea)</li>
+                <li><strong>π</strong> ≈ 3.1415926... (circunferencia)</li>
+                <li><strong>e</strong> ≈ 2.7182818... (crecimiento exponencial)</li>
+            </ul>
+            <div class="math-example">
+                √(2·3) = √6 ≈ 2.449<br>
+                √(5·2) = √10 ≈ 3.162
+            </div>
+        </article>
+
+        <!-- Sección 3: Propiedades -->
+        <article class="section-card">
+            <h2 class="section-title">
+                <span class="section-icon">⚙️</span>
+                Propiedades
+            </h2>
+            <ul class="content-list">
+                <li>La suma de un racional y un irracional es <strong>siempre irracional</strong></li>
+                <li>El producto de un racional (≠0) y un irracional es <strong>irracional</strong></li>
+                <li>√(a·b) = √a · √b cuando a y b son positivos</li>
+                <li>
+                    <span class="fraction">
+                        <span class="numerator">√a</span>
+                        <span class="denominator">√b</span>
+                    </span>
+                    = √
+                    <span class="fraction">
+                        <span class="numerator">a</span>
+                        <span class="denominator">b</span>
+                    </span>
+                    (b ≠ 0)
+                </li>
+                <li>√(a²) = |a| para cualquier número real a</li>
+            </ul>
+        </article>
+
+        <!-- Conector visual -->
+        <div class="visual-connector">
+            <div class="connector-number">1</div>
+            <p><strong>Primero</strong>: Identifica si el número puede escribirse como fracción</p>
+            <div class="connector-line"></div>
+            <div class="connector-number">2</div>
+            <p><strong>Luego</strong>: Observa su representación decimal</p>
+            <div class="connector-line"></div>
+            <div class="connector-number">3</div>
+            <p><strong>Finalmente</strong>: Clasifícalo como racional o irracional</p>
+        </div>
+
+        <!-- Sección 4: Comparación -->
+        <article class="section-card">
+            <h2 class="section-title">
+                <span class="section-icon">⚖️</span>
+                Racional vs Irracional
+            </h2>
+            <div class="comparison-grid">
+                <div class="comparison-card rational">
+                    <div class="comparison-title">Racionales</div>
+                    <div>Se escriben como fracción</div>
+                    <div>Decimal finito o periódico</div>
+                    <div>Ej: <span class="fraction"><span class="numerator">1</span><span class="denominator">2</span></span> = 0.5</div>
+                </div>
+                <div class="comparison-card irrational">
+                    <div class="comparison-title">Irracionales</div>
+                    <div>No son fracción de enteros</div>
+                    <div>Decimal infinito no periódico</div>
+                    <div>Ej: √2 = 1.4142135...</div>
+                </div>
+            </div>
+        </article>
+
+        <!-- Sección 5: Características visuales -->
+        <article class="section-card">
+            <h2 class="section-title">
+                <span class="section-icon">🔍</span>
+                Características
+            </h2>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <span class="feature-icon">∞</span>
+                    <span class="feature-text">Decimales infinitos</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">🔄</span>
+                    <span class="feature-text">No se repiten</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">📏</span>
+                    <span class="feature-text">Medidas geométricas</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">🧮</span>
+                    <span class="feature-text">Operaciones con radicales</span>
+                </div>
+            </div>
+            <div class="math-example" style="margin-top: 15px;">
+                √(8·2) = √16 = 4 (racional)<br>
+                √(3·5) = √15 ≈ 3.872... (irracional)
+            </div>
+        </article>
+
+        <!-- Sección 6: Aplicaciones -->
+        <article class="section-card">
+            <h2 class="section-title">
+                <span class="section-icon">🌍</span>
+                ¿Dónde los usamos?
+            </h2>
+            <ul class="content-list">
+                <li><strong>Geometría</strong>: Diagonales, circunferencias, áreas</li>
+                <li><strong>Física</strong>: Movimiento, ondas, electricidad</li>
+                <li><strong>Arquitectura</strong>: Proporción áurea en diseños</li>
+                <li><strong>Tecnología</strong>: Algoritmos, criptografía</li>
+                <li><strong>Naturaleza</strong>: Espirales, crecimiento de plantas</li>
+            </ul>
+            <div class="math-example" style="margin-top: 10px; background: #ede9fe; border-left-color: var(--accent-purple);">
+                Circunferencia: C = 2·π·r<br>
+                Diagonal cuadrado: d = √(2·l²) = l·√2
+            </div>
+        </article>
+    </div>
+
+    <!-- Pie de página -->
+    <footer>
+        <div>Infografía educativa - Números Irracionales</div>
+        <span class="teacher-name">Profesor Miguel</span>
+        <div style="margin-top: 10px; font-size: 0.95rem; opacity: 0.9;">
+            Instituto para Sordos Santa Rosa • Primero de Secundaria • Área: Matemáticas
+        </div>
+    </footer>
+
+    <script>
+        // Script mínimo para accesibilidad: permitir navegación con teclado
+        document.addEventListener('DOMContentLoaded', function() {
+            // Añadir tabIndex a las tarjetas para navegación con teclado
+            const cards = document.querySelectorAll('.section-card');
+            cards.forEach(card => {
+                card.setAttribute('tabindex', '0');
+                card.setAttribute('role', 'region');
+                card.setAttribute('aria-label', 'Sección de información sobre números irracionales');
+            });
+            
+            // Efecto suave al hacer foco en tarjetas (para navegación con teclado)
+            cards.forEach(card => {
+                card.addEventListener('focus', function() {
+                    this.style.boxShadow = '0 0 0 3px #f59e0b, 0 10px 15px -3px rgba(0, 0, 0, 0.1)';
+                    this.style.outline = 'none';
+                });
+                
+                card.addEventListener('blur', function() {
+                    this.style.boxShadow = '';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

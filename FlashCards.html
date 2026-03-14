@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flashcards Matemáticas - Instituto Santa Rosa</title>
+    <style>
+        :root {
+            /* Paleta de colores atractiva para adolescentes */
+            --primary-color: #4f46e5; /* Índigo vibrante */
+            --secondary-color: #06b6d4; /* Cian */
+            --accent-color: #f59e0b; /* Ámbar */
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --text-color: #1f2937;
+            --text-light: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+            max-width: 600px;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        h2 {
+            font-size: 1.1rem;
+            color: #4b5563;
+            font-weight: normal;
+        }
+
+        .info-tag {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            display: inline-block;
+            margin-top: 5px;
+        }
+
+        /* Contenedor principal de la tarjeta */
+        .card-container {
+            width: 100%;
+            max-width: 400px;
+            height: 300px;
+            perspective: 1000px; /* Necesario para el efecto 3D */
+            margin-bottom: 30px;
+            cursor: pointer;
+        }
+
+        /* La tarjeta en sí */
+        .card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        /* Clase para activar el giro */
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
+
+        /* Caras de la tarjeta */
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden; /* Oculta la cara trasera al girar */
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            text-align: center;
+            border: 4px solid var(--primary-color);
+        }
+
+        /* Frente */
+        .card-front {
+            background-color: var(--card-bg);
+            color: var(--text-color);
+        }
+
+        .card-front h3 {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .card-front .content {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .hint {
+            font-size: 0.8rem;
+            color: #9ca3af;
+            margin-top: 20px;
+            font-style: italic;
+        }
+
+        /* Reverso */
+        .card-back {
+            background-color: var(--primary-color);
+            color: var(--text-light);
+            transform: rotateY(180deg);
+            border-color: var(--secondary-color);
+        }
+
+        .card-back .content {
+            font-size: 1.2rem;
+            line-height: 1.5;
+        }
+
+        /* Controles de navegación */
+        .controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.1s, opacity 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        .btn-nav {
+            background-color: var(--text-color);
+            color: white;
+        }
+
+        .btn-action {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .btn-shuffle {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        /* Contador */
+        .counter {
+            margin-top: 15px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--text-color);
+        }
+
+        /* Accesibilidad: Focus visible */
+        button:focus, .card-container:focus {
+            outline: 3px solid var(--accent-color);
+            outline-offset: 2px;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .card-container {
+                height: 250px;
+            }
+            .card-front .content {
+                font-size: 1.2rem;
+            }
+            button {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Instituto para Sordos Santa Rosa</h1>
+        <h2>Matemáticas - 2do de Secundaria</h2>
+        <span class="info-tag">Tema: Geometría Plana</span>
+    </header>
+
+    <!-- Contenedor de la Tarjeta -->
+    <div class="card-container" id="cardContainer" role="button" tabindex="0" aria-label="Tarjeta interactiva. Haz clic para ver la respuesta.">
+        <div class="card" id="card">
+            <!-- Frente -->
+            <div class="card-face card-front">
+                <h3 id="cardCategory">Término</h3>
+                <div class="content" id="cardFrontContent">Cargando...</div>
+                <div class="hint">👆 Toca para voltear</div>
+            </div>
+            <!-- Reverso -->
+            <div class="card-face card-back">
+                <div class="content" id="cardBackContent">Cargando...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contador -->
+    <div class="counter" id="counter">Tarjeta 1 de 6</div>
+
+    <!-- Botones -->
+    <div class="controls">
+        <button class="btn-nav" onclick="prevCard()">⬅ Anterior</button>
+        <button class="btn-action" onclick="nextCard()">Siguiente ➡</button>
+        <button class="btn-shuffle" onclick="shuffleCards()">🔀 Barajar</button>
+        <button class="btn-action" onclick="randomCard()">🎲 Aleatorio</button>
+    </div>
+
+    <script>
+        // DATOS DE LAS FLASHCARDS
+        // Puedes editar el texto entre comillas para cambiar el contenido.
+        const flashcardsData = [
+            {
+                category: "Concepto",
+                front: "Triángulo Rectángulo",
+                back: "Es un triángulo que tiene un ángulo de 90 grados (ángulo recto). Sus lados se llaman Catetos e Hipotenusa."
+            },
+            {
+                category: "Fórmula",
+                front: "Área del Círculo",
+                back: "A = π · r² <br> (Pi por el radio al cuadrado)"
+            },
+            {
+                category: "Teorema",
+                front: "Teorema de Pitágoras",
+                back: "En un triángulo rectángulo: <br> a² + b² = c² <br> (La suma de los cuadrados de los catetos es igual al cuadrado de la hipotenusa)."
+            },
+            {
+                category: "Definición",
+                front: "Perímetro",
+                back: "Es la suma de las longitudes de todos los lados de una figura geométrica."
+            },
+            {
+                category: "Ángulos",
+                front: "Suma de ángulos internos de un triángulo",
+                back: "Siempre suman 180 grados."
+            },
+            {
+                category: "Figura",
+                front: "Hexágono",
+                back: "Polígono de 6 lados y 6 vértices. Si es regular, todos sus lados y ángulos son iguales."
+            }
+        ];
+
+        // Variables de estado
+        let currentIndex = 0;
+        let isFlipped = false;
+
+        // Elementos del DOM
+        const cardElement = document.getElementById('card');
+        const cardContainer = document.getElementById('cardContainer');
+        const cardFrontContent = document.getElementById('cardFrontContent');
+        const cardBackContent = document.getElementById('cardBackContent');
+        const cardCategory = document.getElementById('cardCategory');
+        const counterElement = document.getElementById('counter');
+
+        // Función para renderizar la tarjeta actual
+        function renderCard() {
+            // Asegurarnos de que la tarjeta esté en el frente antes de cambiar contenido
+            if (isFlipped) {
+                cardElement.classList.remove('flipped');
+                isFlipped = false;
+                
+                // Esperar a que termine la animación de vuelta para cambiar el texto (opcional, pero mejora UX)
+                setTimeout(() => {
+                    updateContent();
+                }, 300);
+            } else {
+                updateContent();
+            }
+        }
+
+        function updateContent() {
+            const data = flashcardsData[currentIndex];
+            cardCategory.textContent = data.category;
+            cardFrontContent.innerHTML = data.front;
+            cardBackContent.innerHTML = data.back;
+            counterElement.textContent = `Tarjeta ${currentIndex + 1} de ${flashcardsData.length}`;
+            
+            // Accesibilidad: Actualizar etiqueta ARIA
+            cardContainer.setAttribute('aria-label', `${data.category}: ${data.front}. Toca para ver la respuesta.`);
+        }
+
+        // Función para voltear la tarjeta
+        function flipCard() {
+            isFlipped = !isFlipped;
+            cardElement.classList.toggle('flipped');
+        }
+
+        // Navegación
+        function nextCard() {
+            if (currentIndex < flashcardsData.length - 1) {
+                currentIndex++;
+                renderCard();
+            } else {
+                currentIndex = 0; // Volver al inicio
+                renderCard();
+            }
+        }
+
+        function prevCard() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                renderCard();
+            } else {
+                currentIndex = flashcardsData.length - 1; // Ir al final
+                renderCard();
+            }
+        }
+
+        // Barajar (Algoritmo Fisher-Yates simplificado)
+        function shuffleCards() {
+            for (let i = flashcardsData.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [flashcardsData[i], flashcardsData[j]] = [flashcardsData[j], flashcardsData[i]];
+            }
+            currentIndex = 0;
+            renderCard();
+            alert("¡Tarjetas barajadas!");
+        }
+
+        // Ir a una tarjeta aleatoria
+        function randomCard() {
+            const randomIndex = Math.floor(Math.random() * flashcardsData.length);
+            currentIndex = randomIndex;
+            renderCard();
+        }
+
+        // Event Listeners
+        cardContainer.addEventListener('click', flipCard);
+        
+        // Accesibilidad: Permitir voltear con teclado (Enter o Espacio)
+        cardContainer.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                flipCard();
+            }
+        });
+
+        // Inicializar
+        renderCard();
+
+    </script>
+</body>
+</html>

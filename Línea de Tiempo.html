@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Línea del Tiempo - Números Irracionales</title>
+    <style>
+        :root {
+            /* Paleta de colores accesible y suave */
+            --bg-primary: #f8fafc;
+            --bg-card: #ffffff;
+            --bg-timeline: #eef2f7;
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+            --text-light: #ffffff;
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --accent-teal: #14b8a6;
+            --accent-amber: #f59e0b;
+            --accent-rose: #f43f5e;
+            --border-soft: #cbd5e1;
+            --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.06);
+            --shadow-medium: 0 4px 14px rgba(0, 0, 0, 0.09);
+            --focus-ring: 0 0 0 3px rgba(59, 130, 246, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        /* Encabezado institucional */
+        header {
+            text-align: center;
+            padding: 20px;
+            margin-bottom: 30px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .institution {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--accent-purple);
+            margin-bottom: 8px;
+        }
+
+        .course-info {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-top: 10px;
+        }
+
+        .course-info span {
+            background: var(--bg-card);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-weight: 500;
+            box-shadow: var(--shadow-soft);
+            border: 1px solid var(--border-soft);
+        }
+
+        /* Título principal */
+        .main-title {
+            text-align: center;
+            margin-bottom: 35px;
+            padding: 0 20px;
+        }
+
+        .main-title h1 {
+            font-size: 2rem;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .main-title p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Contenedor principal */
+        .timeline-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Línea del tiempo vertical */
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+
+        /* Línea central */
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--accent-blue), var(--accent-purple), var(--accent-teal));
+            border-radius: 2px;
+            top: 0;
+        }
+
+        /* Eventos de la línea del tiempo */
+        .timeline-event {
+            position: relative;
+            margin-bottom: 40px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Marcador */
+        .timeline-marker {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--bg-card);
+            border: 4px solid var(--accent-blue);
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-medium);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--accent-blue);
+            font-size: 0.9rem;
+        }
+
+        .timeline-marker:hover {
+            transform: translateX(-50%) scale(1.15);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+        }
+
+        .timeline-marker.active {
+            background: var(--accent-blue);
+            color: var(--text-light);
+            transform: translateX(-50%) scale(1.2);
+            box-shadow: 0 0 0 6px rgba(59, 130, 246, 0.3);
+        }
+
+        .timeline-marker:focus {
+            outline: none;
+            box-shadow: var(--focus-ring), var(--shadow-medium);
+        }
+
+        /* Tarjeta de contenido */
+        .timeline-content {
+            width: 45%;
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: var(--shadow-medium);
+            border: 2px solid var(--border-soft);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .timeline-content:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+            border-color: var(--accent-blue);
+        }
+
+        .timeline-content.active {
+            border-color: var(--accent-purple);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2), var(--shadow-medium);
+        }
+
+        /* Alternar lados */
+        .timeline-event:nth-child(odd) .timeline-content {
+            margin-right: auto;
+            margin-left: 0;
+            text-align: right;
+        }
+
+        .timeline-event:nth-child(even) .timeline-content {
+            margin-left: auto;
+            margin-right: 0;
+            text-align: left;
+        }
+
+        /* Fecha */
+        .event-date {
+            display: inline-block;
+            background: var(--accent-blue);
+            color: var(--text-light);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 12px;
+        }
+
+        .timeline-event:nth-child(even) .event-date {
+            background: var(--accent-purple);
+        }
+
+        /* Título del evento */
+        .event-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+
+        /* Descripción */
+        .event-description {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+
+        /* Imagen sugerida */
+        .event-image-placeholder {
+            background: var(--bg-timeline);
+            border: 2px dashed var(--border-soft);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            margin-top: 12px;
+        }
+
+        .event-image-placeholder strong {
+            color: var(--accent-purple);
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        /* Panel de detalles emergente */
+        .details-panel {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.95);
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            border: 3px solid var(--accent-purple);
+        }
+
+        .details-panel.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .details-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--border-soft);
+        }
+
+        .details-date {
+            background: var(--accent-purple);
+            color: var(--text-light);
+            padding: 8px 20px;
+            border-radius: 24px;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .close-btn {
+            background: var(--bg-timeline);
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-btn:hover {
+            background: var(--accent-rose);
+            color: var(--text-light);
+            transform: rotate(90deg);
+        }
+
+        .close-btn:focus {
+            outline: none;
+            box-shadow: var(--focus-ring);
+        }
+
+        .details-title {
+            font-size: 1.6rem;
+            color: var(--text-primary);
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .details-description {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .details-image-info {
+            background: var(--bg-timeline);
+            border-radius: 12px;
+            padding: 20px;
+            border-left: 4px solid var(--accent-teal);
+        }
+
+        .details-image-info strong {
+            color: var(--accent-teal);
+            display: block;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+
+        /* Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Navegación */
+        .navigation {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 12px 24px;
+            background: var(--bg-card);
+            border: 2px solid var(--border-soft);
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            border-color: var(--accent-blue);
+            background: #eff6ff;
+            transform: translateY(-2px);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .nav-btn:focus {
+            outline: none;
+            box-shadow: var(--focus-ring);
+        }
+
+        /* Indicador de progreso */
+        .progress-indicator {
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .timeline::before {
+                left: 30px;
+            }
+
+            .timeline-marker {
+                left: 30px;
+                transform: translateX(-50%);
+            }
+
+            .timeline-marker:hover,
+            .timeline-marker.active {
+                transform: translateX(-50%) scale(1.15);
+            }
+
+            .timeline-content {
+                width: calc(100% - 80px);
+                margin-left: 80px !important;
+                text-align: left !important;
+            }
+
+            .timeline-event:nth-child(odd) .timeline-content,
+            .timeline-event:nth-child(even) .timeline-content {
+                margin-left: 80px !important;
+                margin-right: 0 !important;
+                text-align: left !important;
+            }
+
+            .main-title h1 {
+                font-size: 1.6rem;
+            }
+
+            .details-panel {
+                padding: 24px;
+            }
+        }
+
+        /* Preferencias de movimiento reducido */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Accesibilidad: foco visible */
+        .timeline-content:focus {
+            outline: none;
+            box-shadow: var(--focus-ring), var(--shadow-medium);
+        }
+    </style>
+</head>
+<body>
+    <!-- Encabezado institucional -->
+    <header>
+        <div class="institution">Instituto para Sordos Santa Rosa</div>
+        <div class="course-info">
+            <span>🎓 Primero de Secundaria</span>
+            <span>📐 Matemáticas</span>
+            <span>👨‍🏫 Profesor Miguel</span>
+        </div>
+    </header>
+
+    <!-- Título principal -->
+    <section class="main-title">
+        <h1>Historia de los Números Irracionales</h1>
+        <p>Descubre cómo la humanidad descubrió y comprendió los números que no pueden escribirse como fracción</p>
+    </section>
+
+    <!-- Contenedor de la línea del tiempo -->
+    <main class="timeline-container">
+        
+        <!-- Indicador de progreso -->
+        <div class="progress-indicator" id="progressIndicator">
+            Evento 1 de 6
+        </div>
+
+        <!-- Línea del tiempo -->
+        <div class="timeline" id="timeline" role="list" aria-label="Línea del tiempo histórica">
+            
+            <!-- Evento 1 -->
+            <div class="timeline-event" role="listitem" data-index="0">
+                <button class="timeline-marker" tabindex="0" aria-label="500 a.C. - Descubrimiento en Grecia" role="button">1</button>
+                <div class="timeline-content" tabindex="0" role="button" aria-label="Ver detalles del evento 1">
+                    <span class="event-date">500 a.C.</span>
+                    <h3 class="event-title">Descubrimiento en la Grecia Antigua</h3>
+                    <p class="event-description">Hipaso de Metaponto descubre que √2 no puede expresarse como fracción, causando una crisis en la escuela pitagórica.</p>
+                    <div class="event-image-placeholder">
+                        <strong>📷 Imagen sugerida:</strong>
+                        Representación de Hipaso o triángulo rectángulo con lados 1, 1, √2
+                    </div>
+                </div>
+            </div>
+
+            <!-- Evento 2 -->
+            <div class="timeline-event" role="listitem" data-index="1">
+                <button class="timeline-marker" tabindex="0" aria-label="800 d.C. - Matemáticos Indios" role="button">2</button>
+                <div class="timeline-content" tabindex="0" role="button" aria-label="Ver detalles del evento 2">
+                    <span class="event-date">800 d.C.</span>
+                    <h3 class="event-title">Aportes de la India Antigua</h3>
+                    <p class="event-description">Matemáticos indios como Aryabhata trabajan con raíces cuadradas y cúbicas irracionales en astronomía y geometría.</p>
+                    <div class="event-image-placeholder">
+                        <strong>📷 Imagen sugerida:</strong>
+                        Manuscrito antiguo indio o representación de Aryabhata
+                    </div>
+                </div>
+            </div>
+
+            <!-- Evento 3 -->
+            <div class="timeline-event" role="listitem" data-index="2">
+                <button class="timeline-marker" tabindex="0" aria-label="1000 d.C. - Matemáticos Islámicos" role="button">3</button>
+                <div class="timeline-content" tabindex="0" role="button" aria-label="Ver detalles del evento 3">
+                    <span class="event-date">1000 d.C.</span>
+                    <h3 class="event-title">Edad de Oro Islámica</h3>
+                    <p class="event-description">Al-Khwarizmi y otros matemáticos árabes desarrollan el álgebra y trabajan con números irracionales en ecuaciones.</p>
+                    <div class="event-image-placeholder">
+                        <strong>📷 Imagen sugerida:</strong>
+                        Ilustración de Al-Khwarizmi o manuscrito árabe medieval
+                    </div>
+                </div>
+            </div>
+
+            <!-- Evento 4 -->
+            <div class="timeline-event" role="listitem" data-index="3">
+                <button class="timeline-marker" tabindex="0" aria-label="1500s - Renacimiento Europeo" role="button">4</button>
+                <div class="timeline-content" tabindex="0" role="button" aria-label="Ver detalles del evento 4">
+                    <span class="event-date">1500s</span>
+                    <h3 class="event-title">Renacimiento y Aceptación</h3>
+                    <p class="event-description">Matemáticos europeos como Fibonacci y Cardano comienzan a aceptar y usar números irracionales en sus trabajos.</p>
+                    <div class="event-image-placeholder">
+                        <strong>📷 Imagen sugerida:</strong>
+                        Retrato de Fibonacci o página del Liber Abaci
+                    </div>
+                </div>
+            </div>
+
+            <!-- Evento 5 -->
+            <div class="timeline-event" role="listitem" data-index="4">
+                <button class="timeline-marker" tabindex="0" aria-label="1761 - Prueba de Irracionalidad de π" role="button">5</button>
+                <div class="timeline-content" tabindex="0" role="button" aria-label="Ver detalles del evento 5">
+                    <span class="event-date">1761</span>
+                    <h3 class="event-title">π es Irracional</h3>
+                    <p class="event-description">Johann Heinrich Lambert demuestra rigurosamente que π (pi) es un número irracional, resolviendo un misterio milenario.</p>
+                    <div class="event-image-placeholder">
+                        <strong>📷 Imagen sugerida:</strong>
+                        Representación de π o retrato de Lambert
+                    </div>
+                </div>
+            </div>
+
+            <!-- Evento 6 -->
+            <div class="timeline-event" role="listitem" data-index="5">
+                <button class="timeline-marker" tabindex="0" aria-label="1800s - Definición Formal" role="button">6</button>
+                <div class="timeline-content" tabindex="0" role="button" aria-label="Ver detalles del evento 6">
+                    <span class="event-date">1800s</span>
+                    <h3 class="event-title">Definición Formal Moderna</h3>
+                    <p class="event-description">Dedekind y Cantor formalizan la teoría de números irracionales con cortaduras de Dedekind y teoría de conjuntos.</p>
+                    <div class="event-image-placeholder">
+                        <strong>📷 Imagen sugerida:</strong>
+                        Retrato de Dedekind o diagrama de cortadura de Dedekind
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Navegación -->
+        <div class="navigation">
+            <button class="nav-btn" id="prevBtn" aria-label="Evento anterior">
+                ← Anterior
+            </button>
+            <button class="nav-btn" id="nextBtn" aria-label="Siguiente evento">
+                Siguiente →
+            </button>
+            <button class="nav-btn" id="firstBtn" aria-label="Ir al primer evento">
+                Inicio
+            </button>
+            <button class="nav-btn" id="lastBtn" aria-label="Ir al último evento">
+                Final
+            </button>
+        </div>
+
+    </main>
+
+    <!-- Overlay -->
+    <div class="overlay" id="overlay" aria-hidden="true"></div>
+
+    <!-- Panel de detalles -->
+    <div class="details-panel" id="detailsPanel" role="dialog" aria-modal="true" aria-labelledby="detailsTitle" aria-describedby="detailsDesc">
+        <div class="details-header">
+            <span class="details-date" id="detailsDate">Fecha</span>
+            <button class="close-btn" id="closeBtn" aria-label="Cerrar panel de detalles">×</button>
+        </div>
+        <h2 class="details-title" id="detailsTitle">Título del Evento</h2>
+        <p class="details-description" id="detailsDesc">Descripción detallada del evento histórico.</p>
+        <div class="details-image-info">
+            <strong>📷 Sugerencia de imagen:</strong>
+            <span id="detailsImage">Descripción de la imagen sugerida</span>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // DATOS DE LA LÍNEA DEL TIEMPO
+        // ============================================
+        const timelineData = [
+            {
+                date: "500 a.C.",
+                title: "Descubrimiento en la Grecia Antigua",
+                description: "Hipaso de Metaponto, discípulo de Pitágoras, descubre que la diagonal de un cuadrado de lado 1 (√2) no puede expresarse como fracción de números enteros. Este descubrimiento causó una crisis en la escuela pitagórica, que creía que todos los números eran racionales. Según la leyenda, Hipaso fue expulsado o incluso ahogado por revelar este secreto.",
+                image: "Representación de Hipaso de Metaponto, triángulo rectángulo isósceles con catetos de longitud 1 y hipotenusa √2, o símbolo de la escuela pitagórica (pentagrama)"
+            },
+            {
+                date: "800 d.C.",
+                title: "Aportes de la India Antigua",
+                description: "Los matemáticos indios, especialmente Aryabhata y Brahmagupta, trabajaron extensamente con raíces cuadradas y cúbicas en sus cálculos astronómicos. Desarrollaron métodos aproximados para calcular valores de números irracionales y los usaron en fórmulas geométricas y trigonométricas avanzadas.",
+                image: "Manuscrito antiguo indio mostrando cálculos astronómicos, retrato de Aryabhata, o representación de un observatorio astronómico indio antiguo"
+            },
+            {
+                date: "1000 d.C.",
+                title: "Edad de Oro Islámica",
+                description: "Durante la Edad de Oro del Islam, matemáticos como Al-Khwarizmi (padre del álgebra), Omar Khayyam y Al-Kashi desarrollaron métodos algebraicos para resolver ecuaciones que involucraban números irracionales. Tradujeron y preservaron el conocimiento griego e indio, agregando sus propias contribuciones.",
+                image: "Ilustración de Al-Khwarizmi trabajando en su estudio, página del libro 'Al-Kitab al-Mukhtasar fi Hisab al-Jabr wal-Muqabala', o caligrafía árabe mostrando ecuaciones algebraicas"
+            },
+            {
+                date: "1500s",
+                title: "Renacimiento y Aceptación",
+                description: "En el Renacimiento europeo, matemáticos como Leonardo Fibonacci introdujeron los números irracionales en Europa Occidental a través de su libro 'Liber Abaci'. Gerolamo Cardano y Rafael Bombelli trabajaron con raíces cuadradas de números negativos, dando origen a los números complejos. Poco a poco, los irracionales fueron aceptados como números válidos.",
+                image: "Retrato de Fibonacci o página del Liber Abaci mostrando la sucesión de Fibonacci, o ilustración de Cardano resolviendo ecuaciones cúbicas"
+            },
+            {
+                date: "1761",
+                title: "π es Irracional",
+                description: "El matemático suizo-alemán Johann Heinrich Lambert proporcionó la primera demostración rigurosa de que π (pi) es irracional. Usó fracciones continuas para probar que ni π ni π² pueden expresarse como fracción de enteros. Esto resolvió una pregunta que había permanecido sin respuesta desde la antigüedad.",
+                image: "Retato de Johann Heinrich Lambert, representación visual de π con sus decimales infinitos, o diagrama mostrando la relación entre circunferencia y diámetro"
+            },
+            {
+                date: "1800s",
+                title: "Definición Formal Moderna",
+                description: "Richard Dedekind y Georg Cantor revolucionaron la comprensión de los números irracionales. Dedekind introdujo las 'cortaduras de Dedekind' (1872) para definir rigurosamente los números reales. Cantor desarrolló la teoría de conjuntos y demostró que los números irracionales son 'más numerosos' que los racionales (son no numerables), estableciendo diferentes tamaños de infinito.",
+                image: "Retrato de Richard Dedekind o Georg Cantor, diagrama de una cortadura de Dedekind dividiendo los números racionales, o representación del conjunto de números reales"
+            }
+        ];
+
+        // ============================================
+        // ESTADO Y ELEMENTOS DEL DOM
+        // ============================================
+        let currentIndex = 0;
+        const totalEvents = timelineData.length;
+
+        const timeline = document.getElementById('timeline');
+        const markers = document.querySelectorAll('.timeline-marker');
+        const contents = document.querySelectorAll('.timeline-content');
+        const overlay = document.getElementById('overlay');
+        const detailsPanel = document.getElementById('detailsPanel');
+        const closeBtn = document.getElementById('closeBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const firstBtn = document.getElementById('firstBtn');
+        const lastBtn = document.getElementById('lastBtn');
+        const progressIndicator = document.getElementById('progressIndicator');
+
+        // Elementos del panel de detalles
+        const detailsDate = document.getElementById('detailsDate');
+        const detailsTitle = document.getElementById('detailsTitle');
+        const detailsDesc = document.getElementById('detailsDesc');
+        const detailsImage = document.getElementById('detailsImage');
+
+        // ============================================
+        // FUNCIONES PRINCIPALES
+        // ============================================
+
+        // Actualizar estado visual de la línea del tiempo
+        function updateTimelineState() {
+            markers.forEach((marker, index) => {
+                marker.classList.toggle('active', index === currentIndex);
+            });
+
+            contents.forEach((content, index) => {
+                content.classList.toggle('active', index === currentIndex);
+            });
+
+            // Actualizar indicador de progreso
+            progressIndicator.textContent = `Evento ${currentIndex + 1} de ${totalEvents}`;
+
+            // Actualizar estado de botones
+            prevBtn.disabled = (currentIndex === 0);
+            nextBtn.disabled = (currentIndex === totalEvents - 1);
+
+            // Scroll suave al evento activo en móvil
+            if (window.innerWidth <= 768) {
+                contents[currentIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        // Mostrar panel de detalles
+        function showDetails(index) {
+            const event = timelineData[index];
+            
+            detailsDate.textContent = event.date;
+            detailsTitle.textContent = event.title;
+            detailsDesc.textContent = event.description;
+            detailsImage.textContent = event.image;
+
+            overlay.classList.add('show');
+            detailsPanel.classList.add('show');
+            
+            // Enfocar botón de cerrar para accesibilidad
+            setTimeout(() => closeBtn.focus(), 100);
+            
+            // Actualizar índice actual
+            currentIndex = index;
+            updateTimelineState();
+        }
+
+        // Cerrar panel de detalles
+        function closeDetails() {
+            overlay.classList.remove('show');
+            detailsPanel.classList.remove('show');
+            
+            // Regresar el foco al marcador activo
+            markers[currentIndex].focus();
+        }
+
+        // Navegar al evento anterior
+        function goToPrevious() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateTimelineState();
+                // Enfocar el contenido del nuevo evento
+                contents[currentIndex].focus();
+            }
+        }
+
+        // Navegar al siguiente evento
+        function goToNext() {
+            if (currentIndex < totalEvents - 1) {
+                currentIndex++;
+                updateTimelineState();
+                contents[currentIndex].focus();
+            }
+        }
+
+        // Ir al primer evento
+        function goToFirst() {
+            currentIndex = 0;
+            updateTimelineState();
+            contents[currentIndex].focus();
+        }
+
+        // Ir al último evento
+        function goToLast() {
+            currentIndex = totalEvents - 1;
+            updateTimelineState();
+            contents[currentIndex].focus();
+        }
+
+        // ============================================
+        // EVENT LISTENERS
+        // ============================================
+
+        // Click en marcadores
+        markers.forEach((marker, index) => {
+            marker.addEventListener('click', () => {
+                currentIndex = index;
+                showDetails(index);
+            });
+
+            marker.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    currentIndex = index;
+                    showDetails(index);
+                }
+            });
+        });
+
+        // Click en tarjetas de contenido
+        contents.forEach((content, index) => {
+            content.addEventListener('click', () => {
+                showDetails(index);
+            });
+
+            content.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    showDetails(index);
+                }
+            });
+        });
+
+        // Cerrar panel
+        closeBtn.addEventListener('click', closeDetails);
+        overlay.addEventListener('click', closeDetails);
+
+        // Cerrar con tecla Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && detailsPanel.classList.contains('show')) {
+                closeDetails();
+            }
+        });
+
+        // Botones de navegación
+        prevBtn.addEventListener('click', goToPrevious);
+        nextBtn.addEventListener('click', goToNext);
+        firstBtn.addEventListener('click', goToFirst);
+        lastBtn.addEventListener('click', goToLast);
+
+        // Navegación con teclado en la línea del tiempo
+        document.addEventListener('keydown', (e) => {
+            // Solo si el panel no está abierto
+            if (!detailsPanel.classList.contains('show')) {
+                if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    goToPrevious();
+                }
+                if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    goToNext();
+                }
+                if (e.key === 'Home') {
+                    e.preventDefault();
+                    goToFirst();
+                }
+                if (e.key === 'End') {
+                    e.preventDefault();
+                    goToLast();
+                }
+            }
+        });
+
+        // ============================================
+        // INICIALIZACIÓN
+        // ============================================
+        document.addEventListener('DOMContentLoaded', () => {
+            updateTimelineState();
+            
+            // Enfocar el primer marcador
+            markers[0].focus();
+        });
+
+        // Prevenir scroll en el panel de detalles cuando se hace scroll dentro
+        detailsPanel.addEventListener('wheel', (e) => {
+            e.stopPropagation();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuestionario - Números Irracionales</title>
+    <style>
+        :root {
+            /* Paleta accesible y suave */
+            --bg-primary: #f8fafc;
+            --bg-card: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+            --accent-success: #22c55e;
+            --accent-error: #ef4444;
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --border-soft: #e2e8f0;
+            --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.06);
+            --shadow-hover: 0 4px 14px rgba(0, 0, 0, 0.09);
+            --focus-ring: 0 0 0 3px rgba(59, 130, 246, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Encabezado */
+        header {
+            text-align: center;
+            padding: 20px;
+            margin-bottom: 25px;
+            width: 100%;
+            max-width: 700px;
+        }
+
+        .institution {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin-bottom: 6px;
+        }
+
+        .course-info {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            font-size: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .course-info span {
+            background: var(--bg-card);
+            padding: 5px 14px;
+            border-radius: 16px;
+            font-weight: 500;
+            box-shadow: var(--shadow-soft);
+            border: 1px solid var(--border-soft);
+        }
+
+        /* Contenedor principal */
+        .quiz-container {
+            width: 100%;
+            max-width: 650px;
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 28px;
+            box-shadow: var(--shadow-hover);
+            border: 2px solid var(--border-soft);
+        }
+
+        /* Barra de progreso */
+        .progress-container {
+            margin-bottom: 25px;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background: var(--border-soft);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+            border-radius: 6px;
+            transition: width 0.4s ease;
+            width: 0%;
+        }
+
+        /* Pregunta */
+        .question-card {
+            margin-bottom: 25px;
+        }
+
+        .question-number {
+            display: inline-block;
+            background: var(--accent-blue);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 32px;
+            font-weight: bold;
+            font-size: 1rem;
+            margin-bottom: 12px;
+        }
+
+        .question-text {
+            font-size: 1.35rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .question-hint {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            font-weight: 400;
+        }
+
+        /* Opciones de respuesta */
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .option-btn {
+            width: 100%;
+            padding: 16px 20px;
+            background: var(--bg-primary);
+            border: 2px solid var(--border-soft);
+            border-radius: 14px;
+            font-size: 1.1rem;
+            color: var(--text-primary);
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 500;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            border-color: var(--accent-blue);
+            background: #eff6ff;
+            transform: translateY(-1px);
+        }
+
+        .option-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.85;
+        }
+
+        .option-btn .option-letter {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            background: var(--border-soft);
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 0.95rem;
+            flex-shrink: 0;
+        }
+
+        /* Estados de feedback */
+        .option-btn.correct {
+            background: #dcfce7;
+            border-color: var(--accent-success);
+            color: #166534;
+        }
+
+        .option-btn.correct .option-letter {
+            background: var(--accent-success);
+            color: white;
+        }
+
+        .option-btn.incorrect {
+            background: #fee2e2;
+            border-color: var(--accent-error);
+            color: #991b1b;
+        }
+
+        .option-btn.incorrect .option-letter {
+            background: var(--accent-error);
+            color: white;
+        }
+
+        /* Feedback visual */
+        .feedback-message {
+            padding: 14px 18px;
+            border-radius: 12px;
+            font-weight: 500;
+            margin-bottom: 20px;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .feedback-message.show {
+            display: block;
+        }
+
+        .feedback-message.correct {
+            background: #dcfce7;
+            border: 2px solid var(--accent-success);
+            color: #166534;
+        }
+
+        .feedback-message.incorrect {
+            background: #fee2e2;
+            border: 2px solid var(--accent-error);
+            color: #991b1b;
+        }
+
+        .feedback-icon {
+            margin-right: 8px;
+            font-size: 1.2rem;
+        }
+
+        /* Botón siguiente */
+        .next-btn {
+            width: 100%;
+            padding: 16px;
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 1.15rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: none;
+        }
+
+        .next-btn.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .next-btn:hover {
+            background: #2563eb;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .next-btn:disabled {
+            background: var(--border-soft);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Pantalla final */
+        .results-screen {
+            text-align: center;
+            padding: 20px 10px;
+            display: none;
+        }
+
+        .results-screen.show {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .results-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 15px;
+        }
+
+        .score-display {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--accent-purple);
+            margin: 20px 0;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .score-text {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 25px;
+        }
+
+        .score-message {
+            padding: 16px;
+            border-radius: 14px;
+            font-weight: 500;
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+        }
+
+        .score-message.excellent {
+            background: #dcfce7;
+            border: 2px solid var(--accent-success);
+            color: #166534;
+        }
+
+        .score-message.good {
+            background: #fef3c7;
+            border: 2px solid var(--accent-amber);
+            color: #92400e;
+        }
+
+        .score-message.practice {
+            background: #dbeafe;
+            border: 2px solid var(--accent-blue);
+            color: #1e40af;
+        }
+
+        .restart-btn {
+            padding: 14px 32px;
+            background: var(--accent-purple);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .restart-btn:hover {
+            background: #7c3aed;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        /* Animaciones suaves */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Accesibilidad: foco visible */
+        .option-btn:focus,
+        .next-btn:focus,
+        .restart-btn:focus {
+            outline: none;
+            box-shadow: var(--focus-ring);
+        }
+
+        /* Responsive */
+        @media (max-width: 500px) {
+            .quiz-container {
+                padding: 22px 18px;
+                border-radius: 16px;
+            }
+            
+            .question-text {
+                font-size: 1.2rem;
+            }
+            
+            .option-btn {
+                padding: 14px 16px;
+                font-size: 1rem;
+            }
+            
+            .score-display {
+                font-size: 2.8rem;
+            }
+        }
+
+        /* Preferencias de movimiento reducido */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Ocultar elementos no activos */
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Encabezado institucional -->
+    <header>
+        <div class="institution">Instituto para Sordos Santa Rosa</div>
+        <div class="course-info">
+            <span>🎓 Primero de Secundaria</span>
+            <span>📐 Matemáticas</span>
+            <span>👨‍🏫 Profesor Miguel</span>
+        </div>
+    </header>
+
+    <!-- Contenedor del cuestionario -->
+    <main class="quiz-container">
+        
+        <!-- Barra de progreso -->
+        <div class="progress-container">
+            <div class="progress-label">
+                <span>Progreso</span>
+                <span id="progress-text">Pregunta 1 de 5</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+        </div>
+
+        <!-- Sección de preguntas -->
+        <section id="quiz-section">
+            <div class="question-card">
+                <div class="question-number" id="question-number">1</div>
+                <h2 class="question-text" id="question-text">Cargando pregunta...</h2>
+                <p class="question-hint" id="question-hint">Selecciona la respuesta correcta</p>
+            </div>
+
+            <div class="options-container" id="options-container">
+                <!-- Las opciones se generan con JavaScript -->
+            </div>
+
+            <div class="feedback-message" id="feedback-message">
+                <span class="feedback-icon" id="feedback-icon"></span>
+                <span id="feedback-text"></span>
+            </div>
+
+            <button class="next-btn" id="next-btn">Siguiente pregunta →</button>
+        </section>
+
+        <!-- Pantalla de resultados -->
+        <section class="results-screen" id="results-screen">
+            <h2 class="results-title">¡Cuestionario completado!</h2>
+            <div class="score-display" id="final-score">0/5</div>
+            <p class="score-text" id="score-text">Respuestas correctas</p>
+            <div class="score-message" id="score-message"></div>
+            <button class="restart-btn" id="restart-btn">🔄 Intentar de nuevo</button>
+        </section>
+
+    </main>
+
+    <script>
+        // ============================================
+        // DATOS DEL CUESTIONARIO - NÚMEROS IRRACIONALES
+        // ============================================
+        const quizData = [
+            {
+                question: "¿Cuál de estos números es IRRACIONAL?",
+                hint: "Recuerda: los irracionales tienen decimales infinitos que NO se repiten",
+                options: [
+                    { text: "½ = 0.5", correct: false },
+                    { text: "√4 = 2", correct: false },
+                    { text: "√2 ≈ 1.4142135...", correct: true },
+                    { text: "0.333... = ⅓", correct: false }
+                ],
+                feedback: {
+                    correct: "✓ ¡Correcto! √2 tiene decimales infinitos que no se repiten.",
+                    incorrect: "✗ Ese número puede escribirse como fracción o tiene decimales periódicos."
+                }
+            },
+            {
+                question: "El número π (pi) es irracional porque:",
+                hint: "Piensa en cómo se escribe π en forma decimal",
+                options: [
+                    { text: "Es igual a 3.14 exactamente", correct: false },
+                    { text: "Sus decimales son infinitos y no periódicos", correct: true },
+                    { text: "Se puede escribir como fracción", correct: false },
+                    { text: "Es un número entero", correct: false }
+                ],
+                feedback: {
+                    correct: "✓ ¡Exacto! π = 3.1415926... con decimales infinitos sin patrón.",
+                    incorrect: "✗ π no tiene decimales que se repiten en patrón ni es fracción exacta."
+                }
+            },
+            {
+                question: "¿Cuál expresión representa un número IRRACIONAL?",
+                hint: "Aplica: √(a·b) = √a · √b. ¿El resultado es fracción?",
+                options: [
+                    { text: "√(9) = 3", correct: false },
+                    { text: "√(16) = 4", correct: false },
+                    { text: "√(5·3) = √15", correct: true },
+                    { text: "√(1) = 1", correct: false }
+                ],
+                feedback: {
+                    correct: "✓ ¡Bien! √15 ≈ 3.872... no se puede simplificar a fracción.",
+                    incorrect: "✗ Esos radicales dan números enteros, que son racionales."
+                }
+            },
+            {
+                question: "Si sumas un número racional + un irracional, el resultado es:",
+                hint: "Ejemplo: 2 + √3 = ¿racional o irracional?",
+                options: [
+                    { text: "Siempre racional", correct: false },
+                    { text: "Siempre irracional", correct: true },
+                    { text: "A veces racional, a veces irracional", correct: false },
+                    { text: "Siempre entero", correct: false }
+                ],
+                feedback: {
+                    correct: "✓ ¡Correcto! La suma de racional + irracional siempre da irracional.",
+                    incorrect: "✗ No puede ser racional: un decimal infinito no periódico + finito sigue siendo infinito no periódico."
+                }
+            },
+            {
+                question: "¿En qué situación aparece un número irracional?",
+                hint: "Piensa en geometría: diagonales, circunferencias...",
+                options: [
+                    { text: "Al contar objetos", correct: false },
+                    { text: "Al medir la diagonal de un cuadrado de lado 1", correct: true },
+                    { text: "Al dividir 10 entre 2", correct: false },
+                    { text: "Al sumar 3 + 4", correct: false }
+                ],
+                feedback: {
+                    correct: "✓ ¡Exacto! La diagonal es √(1²+1²) = √2, que es irracional.",
+                    incorrect: "✗ Esas operaciones dan números racionales. Busca situaciones con raíces no exactas."
+                }
+            }
+        ];
+
+        // ============================================
+        // ESTADO DEL CUESTIONARIO
+        // ============================================
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let answered = false;
+
+        // ============================================
+        // ELEMENTOS DEL DOM
+        // ============================================
+        const questionNumberEl = document.getElementById('question-number');
+        const questionTextEl = document.getElementById('question-text');
+        const questionHintEl = document.getElementById('question-hint');
+        const optionsContainerEl = document.getElementById('options-container');
+        const feedbackMessageEl = document.getElementById('feedback-message');
+        const feedbackIconEl = document.getElementById('feedback-icon');
+        const feedbackTextEl = document.getElementById('feedback-text');
+        const nextBtnEl = document.getElementById('next-btn');
+        const progressFillEl = document.getElementById('progress-fill');
+        const progressTextEl = document.getElementById('progress-text');
+        const quizSectionEl = document.getElementById('quiz-section');
+        const resultsScreenEl = document.getElementById('results-screen');
+        const finalScoreEl = document.getElementById('final-score');
+        const scoreTextEl = document.getElementById('score-text');
+        const scoreMessageEl = document.getElementById('score-message');
+        const restartBtnEl = document.getElementById('restart-btn');
+
+        // ============================================
+        // FUNCIONES PRINCIPALES
+        // ============================================
+
+        // Inicializar el cuestionario
+        function initQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            loadQuestion();
+            updateProgress();
+            resultsScreenEl.classList.remove('show');
+            quizSectionEl.classList.remove('hidden');
+        }
+
+        // Cargar pregunta actual
+        function loadQuestion() {
+            const current = quizData[currentQuestionIndex];
+            
+            // Actualizar textos
+            questionNumberEl.textContent = currentQuestionIndex + 1;
+            questionTextEl.textContent = current.question;
+            questionHintEl.textContent = current.hint;
+            
+            // Limpiar opciones anteriores
+            optionsContainerEl.innerHTML = '';
+            
+            // Generar botones de opciones
+            current.options.forEach((option, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerHTML = `
+                    <span class="option-letter">${String.fromCharCode(65 + index)}</span>
+                    ${option.text}
+                `;
+                btn.setAttribute('aria-label', `Opción ${String.fromCharCode(65 + index)}: ${option.text}`);
+                btn.addEventListener('click', () => selectOption(btn, option.correct));
+                optionsContainerEl.appendChild(btn);
+            });
+            
+            // Resetear estados
+            feedbackMessageEl.classList.remove('show', 'correct', 'incorrect');
+            nextBtnEl.classList.remove('show');
+            nextBtnEl.disabled = true;
+            answered = false;
+            
+            // Enfocar primera opción para accesibilidad con teclado
+            const firstOption = optionsContainerEl.querySelector('.option-btn');
+            if (firstOption) firstOption.focus();
+        }
+
+        // Manejar selección de opción
+        function selectOption(selectedBtn, isCorrect) {
+            if (answered) return; // Evitar múltiples selecciones
+            answered = true;
+            
+            // Deshabilitar todas las opciones
+            const allOptions = optionsContainerEl.querySelectorAll('.option-btn');
+            allOptions.forEach(btn => {
+                btn.disabled = true;
+                
+                // Marcar visualmente la correcta e incorrecta
+                const optionIndex = Array.from(allOptions).indexOf(btn);
+                const optionData = quizData[currentQuestionIndex].options[optionIndex];
+                
+                if (optionData.correct) {
+                    btn.classList.add('correct');
+                }
+                if (btn === selectedBtn && !isCorrect) {
+                    btn.classList.add('incorrect');
+                }
+            });
+            
+            // Actualizar puntaje
+            if (isCorrect) {
+                score++;
+            }
+            
+            // Mostrar feedback
+            showFeedback(isCorrect);
+            
+            // Mostrar botón siguiente
+            nextBtnEl.classList.add('show');
+            nextBtnEl.disabled = false;
+            nextBtnEl.focus();
+        }
+
+        // Mostrar mensaje de feedback
+        function showFeedback(isCorrect) {
+            const feedback = quizData[currentQuestionIndex].feedback;
+            
+            feedbackIconEl.textContent = isCorrect ? '✓' : '✗';
+            feedbackTextEl.textContent = isCorrect ? feedback.correct : feedback.incorrect;
+            
+            feedbackMessageEl.className = 'feedback-message show';
+            feedbackMessageEl.classList.add(isCorrect ? 'correct' : 'incorrect');
+        }
+
+        // Actualizar barra de progreso
+        function updateProgress() {
+            const total = quizData.length;
+            const current = currentQuestionIndex + 1;
+            const percent = ((current - 1) / total) * 100;
+            
+            progressFillEl.style.width = `${percent}%`;
+            progressTextEl.textContent = `Pregunta ${current} de ${total}`;
+        }
+
+        // Avanzar a siguiente pregunta o mostrar resultados
+        function nextQuestion() {
+            currentQuestionIndex++;
+            
+            if (currentQuestionIndex < quizData.length) {
+                updateProgress();
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        // Mostrar pantalla de resultados
+        function showResults() {
+            quizSectionEl.classList.add('hidden');
+            resultsScreenEl.classList.add('show');
+            
+            // Actualizar puntaje
+            finalScoreEl.textContent = `${score}/${quizData.length}`;
+            
+            // Mensaje personalizado según resultado
+            const percentage = (score / quizData.length) * 100;
+            if (percentage === 100) {
+                scoreMessageEl.textContent = "🌟 ¡Excelente! Dominas el tema de números irracionales.";
+                scoreMessageEl.className = "score-message excellent";
+            } else if (percentage >= 60) {
+                scoreMessageEl.textContent = "👍 ¡Muy bien! Tienes buena comprensión. Repasa los errores para mejorar.";
+                scoreMessageEl.className = "score-message good";
+            } else {
+                scoreMessageEl.textContent = "📚 Sigue practicando. Revisa las propiedades de los números irracionales.";
+                scoreMessageEl.className = "score-message practice";
+            }
+        }
+
+        // Reiniciar cuestionario
+        function restartQuiz() {
+            initQuiz();
+        }
+
+        // ============================================
+        // EVENT LISTENERS
+        // ============================================
+        nextBtnEl.addEventListener('click', nextQuestion);
+        restartBtnEl.addEventListener('click', restartQuiz);
+
+        // Navegación con teclado para opciones
+        optionsContainerEl.addEventListener('keydown', (e) => {
+            if (answered) return;
+            
+            const options = optionsContainerEl.querySelectorAll('.option-btn:not(:disabled)');
+            const currentIndex = Array.from(options).indexOf(document.activeElement);
+            
+            if (e.key === 'ArrowDown' && currentIndex < options.length - 1) {
+                e.preventDefault();
+                options[currentIndex + 1].focus();
+            }
+            if (e.key === 'ArrowUp' && currentIndex > 0) {
+                e.preventDefault();
+                options[currentIndex - 1].focus();
+            }
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                if (document.activeElement.classList.contains('option-btn')) {
+                    document.activeElement.click();
+                }
+            }
+        });
+
+        // ============================================
+        // INICIALIZAR AL CARGAR
+        // ============================================
+        document.addEventListener('DOMContentLoaded', initQuiz);
+    </script>
+</body>
+</html>

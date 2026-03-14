@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actividad: Encuentra el Elemento</title>
+    <style>
+        :root {
+            /* Paleta de colores suave y accesible */
+            --bg-body: #f0f4f8;
+            --bg-card: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+            --accent-blue: #3b82f6;
+            --success-green: #22c55e;
+            --error-red: #ef4444;
+            --border-soft: #cbd5e1;
+            --shadow-soft: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --focus-ring: 0 0 0 4px #f59e0b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Encabezado */
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            max-width: 800px;
+        }
+
+        .institution {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin-bottom: 8px;
+        }
+
+        .course-info {
+            display: inline-flex;
+            gap: 15px;
+            background: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-soft);
+            font-size: 1rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* Área de Instrucciones */
+        .instruction-panel {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 16px;
+            box-shadow: var(--shadow-soft);
+            margin-bottom: 30px;
+            text-align: center;
+            border: 2px solid var(--border-soft);
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .instruction-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+        }
+
+        .instruction-sub {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+        }
+
+        /* Área de Juego (Grid) */
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 800px;
+            margin-bottom: 30px;
+        }
+
+        /* Tarjetas de Elementos */
+        .game-card {
+            background: white;
+            border: 3px solid var(--border-soft);
+            border-radius: 16px;
+            height: 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-soft);
+            position: relative;
+        }
+
+        .game-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-blue);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .game-card:focus {
+            outline: none;
+            box-shadow: var(--focus-ring);
+            border-color: var(--accent-blue);
+        }
+
+        .card-content {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--text-primary);
+        }
+
+        .card-label {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+
+        /* Estados de Feedback */
+        .game-card.correct {
+            background-color: #dcfce7;
+            border-color: var(--success-green);
+            animation: pulse 0.5s;
+        }
+
+        .game-card.correct .card-content {
+            color: var(--success-green);
+        }
+
+        .game-card.incorrect {
+            background-color: #fee2e2;
+            border-color: var(--error-red);
+            opacity: 0.6;
+        }
+
+        .game-card.disabled {
+            pointer-events: none;
+            cursor: default;
+        }
+
+        /* Mensaje de Feedback */
+        .feedback-message {
+            font-size: 1.5rem;
+            font-weight: 700;
+            height: 40px;
+            margin-bottom: 20px;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .feedback-message.show {
+            opacity: 1;
+        }
+
+        .feedback-message.success { color: var(--success-green); }
+        .feedback-message.error { color: var(--error-red); }
+
+        /* Barra de Progreso */
+        .progress-container {
+            width: 100%;
+            max-width: 800px;
+            margin-top: 20px;
+        }
+
+        .progress-bar {
+            height: 12px;
+            background: #e2e8f0;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--accent-blue);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .progress-text {
+            text-align: right;
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-top: 5px;
+            font-weight: 600;
+        }
+
+        /* Botón Siguiente */
+        .next-btn {
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            border-radius: 12px;
+            cursor: pointer;
+            display: none; /* Oculto hasta acertar */
+            transition: transform 0.2s;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .next-btn:hover {
+            background: #2563eb;
+            transform: translateY(-2px);
+        }
+
+        .next-btn:focus {
+            outline: none;
+            box-shadow: var(--focus-ring);
+        }
+
+        /* Pantalla Final */
+        .final-screen {
+            text-align: center;
+            display: none;
+        }
+
+        .final-screen h2 {
+            font-size: 2.5rem;
+            color: var(--accent-blue);
+            margin-bottom: 20px;
+        }
+
+        .restart-btn {
+            background: var(--success-green);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            border-radius: 12px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        /* Animaciones */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * { transition: none !important; animation: none !important; }
+        }
+
+        @media (max-width: 600px) {
+            .game-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .instruction-text { font-size: 1.3rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="institution">Instituto para Sordos Santa Rosa</div>
+        <div class="course-info">
+            <span>🎓 1ro Secundaria</span>
+            <span>📐 Matemáticas</span>
+            <span>👨‍🏫 Prof. Miguel</span>
+        </div>
+    </header>
+
+    <main id="gameContainer">
+        <!-- Panel de Instrucciones -->
+        <section class="instruction-panel">
+            <div class="instruction-text" id="roundInstruction">Cargando...</div>
+            <div class="instruction-sub">Toca la tarjeta correcta</div>
+        </section>
+
+        <!-- Mensaje de Feedback -->
+        <div class="feedback-message" id="feedbackMessage" aria-live="polite"></div>
+
+        <!-- Grid de Juego -->
+        <div class="game-grid" id="gameGrid">
+            <!-- Las tarjetas se generan con JS -->
+        </div>
+
+        <!-- Botón Siguiente -->
+        <div style="text-align: center;">
+            <button class="next-btn" id="nextBtn">Siguiente Ronda ➡</button>
+        </div>
+
+        <!-- Barra de Progreso -->
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text" id="progressText">Ronda 1 de 5</div>
+        </div>
+    </main>
+
+    <!-- Pantalla Final -->
+    <main class="final-screen" id="finalScreen">
+        <h2>¡Actividad Completada! 🎉</h2>
+        <p style="font-size: 1.5rem; color: var(--text-secondary);">Has encontrado todos los elementos correctos.</p>
+        <button class="restart-btn" onclick="location.reload()">🔄 Jugar de Nuevo</button>
+    </main>
+
+    <script>
+        // DATOS DE LAS 5 RONDAS
+        const rounds = [
+            {
+                instruction: "Encuentra el Número IRRACIONAL",
+                target: "√2",
+                targetLabel: "Raíz de 2",
+                options: [
+                    { val: "√4", label: "Raíz de 4 (2)", correct: false },
+                    { val: "√2", label: "Raíz de 2", correct: true },
+                    { val: "√9", label: "Raíz de 9 (3)", correct: false },
+                    { val: "5", label: "5", correct: false }
+                ]
+            },
+            {
+                instruction: "Encuentra el símbolo de PI",
+                target: "π",
+                targetLabel: "Pi",
+                options: [
+                    { val: "∑", label: "Sigma", correct: false },
+                    { val: "π", label: "Pi", correct: true },
+                    { val: "Δ", label: "Delta", correct: false },
+                    { val: "Ω", label: "Omega", correct: false }
+                ]
+            },
+            {
+                instruction: "Encuentra el decimal INFINITO",
+                target: "1.414...",
+                targetLabel: "Infinito",
+                options: [
+                    { val: "0.5", label: "0.5", correct: false },
+                    { val: "1.414...", label: "1.414...", correct: true },
+                    { val: "3.75", label: "3.75", correct: false },
+                    { val: "0.2", label: "0.2", correct: false }
+                ]
+            },
+            {
+                instruction: "Encuentra la figura del CÍRCULO",
+                target: "⭕",
+                targetLabel: "Círculo",
+                options: [
+                    { val: "🔺", label: "Triángulo", correct: false },
+                    { val: "⬛", label: "Cuadrado", correct: false },
+                    { val: "⭕", label: "Círculo", correct: true },
+                    { val: "⭐", label: "Estrella", correct: false }
+                ]
+            },
+            {
+                instruction: "Encuentra el resultado de √16",
+                target: "4",
+                targetLabel: "4",
+                options: [
+                    { val: "8", label: "8", correct: false },
+                    { val: "4", label: "4", correct: true },
+                    { val: "16", label: "16", correct: false },
+                    { val: "2", label: "2", correct: false }
+                ]
+            }
+        ];
+
+        // ESTADO DEL JUEGO
+        let currentRound = 0;
+        let isRoundActive = true;
+
+        // ELEMENTOS DOM
+        const roundInstruction = document.getElementById('roundInstruction');
+        const gameGrid = document.getElementById('gameGrid');
+        const feedbackMessage = document.getElementById('feedbackMessage');
+        const nextBtn = document.getElementById('nextBtn');
+        const progressFill = document.getElementById('progressFill');
+        const progressText = document.getElementById('progressText');
+        const gameContainer = document.getElementById('gameContainer');
+        const finalScreen = document.getElementById('finalScreen');
+
+        // INICIALIZAR JUEGO
+        function initGame() {
+            loadRound(currentRound);
+        }
+
+        // CARGAR RONDA
+        function loadRound(index) {
+            const roundData = rounds[index];
+            
+            // Actualizar textos
+            roundInstruction.textContent = roundData.instruction;
+            progressText.textContent = `Ronda ${index + 1} de ${rounds.length}`;
+            progressFill.style.width = `${((index) / rounds.length) * 100}%`;
+
+            // Limpiar grid
+            gameGrid.innerHTML = '';
+            feedbackMessage.className = 'feedback-message';
+            feedbackMessage.textContent = '';
+            nextBtn.style.display = 'none';
+            isRoundActive = true;
+
+            // Mezclar opciones aleatoriamente
+            const shuffledOptions = [...roundData.options].sort(() => Math.random() - 0.5);
+
+            // Crear tarjetas
+            shuffledOptions.forEach(opt => {
+                const card = document.createElement('div');
+                card.className = 'game-card';
+                card.setAttribute('tabindex', '0');
+                card.setAttribute('role', 'button');
+                card.setAttribute('aria-label', `${opt.label}`);
+                
+                card.innerHTML = `
+                    <div class="card-content">${opt.val}</div>
+                    <div class="card-label">${opt.label}</div>
+                `;
+
+                // Evento Click
+                card.addEventListener('click', () => handleSelection(card, opt.correct));
+                
+                // Evento Teclado
+                card.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        handleSelection(card, opt.correct);
+                    }
+                });
+
+                gameGrid.appendChild(card);
+            });
+        }
+
+        // MANEJAR SELECCIÓN
+        function handleSelection(card, isCorrect) {
+            if (!isRoundActive) return;
+
+            if (isCorrect) {
+                // Respuesta Correcta
+                isRoundActive = false;
+                card.classList.add('correct');
+                
+                feedbackMessage.textContent = "✓ ¡Correcto!";
+                feedbackMessage.classList.add('show', 'success');
+                
+                nextBtn.style.display = 'inline-block';
+                nextBtn.focus();
+
+                // Deshabilitar otras tarjetas
+                const allCards = document.querySelectorAll('.game-card');
+                allCards.forEach(c => {
+                    if (c !== card) c.classList.add('disabled');
+                });
+
+            } else {
+                // Respuesta Incorrecta
+                card.classList.add('incorrect');
+                card.classList.add('disabled');
+                
+                feedbackMessage.textContent = "✗ Inténtalo de nuevo";
+                feedbackMessage.classList.add('show', 'error');
+                
+                // Quitar mensaje después de 1.5s
+                setTimeout(() => {
+                    feedbackMessage.classList.remove('show');
+                }, 1500);
+            }
+        }
+
+        // SIGUIENTE RONDA
+        nextBtn.addEventListener('click', () => {
+            currentRound++;
+            if (currentRound < rounds.length) {
+                loadRound(currentRound);
+            } else {
+                showFinalScreen();
+            }
+        });
+
+        // PANTALLA FINAL
+        function showFinalScreen() {
+            gameContainer.style.display = 'none';
+            finalScreen.style.display = 'block';
+            progressFill.style.width = '100%';
+        }
+
+        // Iniciar al cargar
+        initGame();
+
+    </script>
+</body>
+</html>

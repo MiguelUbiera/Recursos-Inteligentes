@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador: La Diagonal Irracional</title>
+    <style>
+        :root {
+            /* Paleta de colores suave y accesible */
+            --bg-body: #f8fafc;
+            --bg-panel: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --accent-green: #10b981;
+            --border-soft: #e2e8f0;
+            --shadow-soft: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            --focus-ring: 0 0 0 3px rgba(59, 130, 246, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Encabezado */
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            max-width: 800px;
+        }
+
+        .institution {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--accent-purple);
+            margin-bottom: 8px;
+        }
+
+        .course-info {
+            display: inline-flex;
+            gap: 15px;
+            background: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-soft);
+            font-size: 1rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        h1 {
+            margin-top: 20px;
+            font-size: 1.8rem;
+            color: var(--text-primary);
+        }
+
+        /* Contenedor Principal */
+        .simulator-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            width: 100%;
+            max-width: 1000px;
+            background: var(--bg-panel);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            border: 2px solid var(--border-soft);
+        }
+
+        /* Panel de Controles */
+        .controls-panel {
+            padding: 20px;
+            background: #f1f5f9;
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        label {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--text-primary);
+        }
+
+        /* Slider Personalizado */
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 12px;
+            border-radius: 6px;
+            background: #cbd5e1;
+            outline: none;
+            cursor: pointer;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--accent-blue);
+            cursor: pointer;
+            border: 3px solid white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: transform 0.1s;
+        }
+
+        input[type=range]::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+        }
+
+        input[type=range]:focus {
+            outline: none;
+            box-shadow: var(--focus-ring);
+        }
+
+        /* Botones de Escenario */
+        .scenario-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .scenario-btn {
+            flex: 1;
+            padding: 12px;
+            background: white;
+            border: 2px solid var(--border-soft);
+            border-radius: 10px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+            min-width: 100px;
+        }
+
+        .scenario-btn:hover {
+            border-color: var(--accent-blue);
+            color: var(--accent-blue);
+            background: #eff6ff;
+        }
+
+        .scenario-btn.active {
+            background: var(--accent-blue);
+            color: white;
+            border-color: var(--accent-blue);
+        }
+
+        .scenario-btn:focus {
+            outline: none;
+            box-shadow: var(--focus-ring);
+        }
+
+        /* Panel Visual (Canvas) */
+        .visual-panel {
+            position: relative;
+            background: white;
+            border-radius: 16px;
+            border: 2px solid var(--border-soft);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 400px;
+            overflow: hidden;
+        }
+
+        /* Cuadrícula de fondo */
+        .grid-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(var(--border-soft) 1px, transparent 1px),
+                linear-gradient(90deg, var(--border-soft) 1px, transparent 1px);
+            background-size: 40px 40px;
+            opacity: 0.5;
+            z-index: 0;
+        }
+
+        /* El Cuadrado Dinámico */
+        #dynamicSquare {
+            position: relative;
+            background: rgba(59, 130, 246, 0.2);
+            border: 3px solid var(--accent-blue);
+            z-index: 10;
+            transition: width 0.3s ease, height 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* La Diagonal */
+        #diagonalLine {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: var(--accent-purple);
+            transform-origin: 0 0;
+            z-index: 20;
+            box-shadow: 0 0 5px rgba(139, 92, 246, 0.5);
+        }
+
+        /* Panel de Datos */
+        .data-display {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            z-index: 30;
+            border: 2px solid var(--border-soft);
+            min-width: 200px;
+        }
+
+        .data-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+
+        .data-row:last-child {
+            margin-bottom: 0;
+            font-weight: 700;
+            color: var(--accent-purple);
+            border-top: 1px solid var(--border-soft);
+            padding-top: 8px;
+        }
+
+        .irrational-badge {
+            display: inline-block;
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-left: 8px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .simulator-container {
+                grid-template-columns: 1fr;
+            }
+            .visual-panel {
+                min-height: 300px;
+            }
+        }
+
+        /* Accesibilidad: Movimiento reducido */
+        @media (prefers-reduced-motion: reduce) {
+            #dynamicSquare, #diagonalLine {
+                transition: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="institution">Instituto para Sordos Santa Rosa</div>
+        <div class="course-info">
+            <span>🎓 1ro Secundaria</span>
+            <span>📐 Matemáticas</span>
+            <span>👨‍🏫 Prof. Miguel</span>
+        </div>
+        <h1>Simulador: La Diagonal Irracional</h1>
+    </header>
+
+    <main class="simulator-container">
+        
+        <!-- Panel Izquierdo: Controles -->
+        <section class="controls-panel">
+            
+            <div class="control-group">
+                <label for="sideSlider">Longitud del Lado (L): <span id="sideValueDisplay" style="color:var(--accent-blue)">5</span> cm</label>
+                <input type="range" id="sideSlider" min="1" max="10" step="0.5" value="5" aria-label="Deslizador para cambiar el tamaño del lado del cuadrado">
+            </div>
+
+            <div class="control-group">
+                <label>Escenarios Rápidos:</label>
+                <div class="scenario-buttons">
+                    <button class="scenario-btn" data-side="1">Pequeño (1)</button>
+                    <button class="scenario-btn active" data-side="5">Mediano (5)</button>
+                    <button class="scenario-btn" data-side="10">Grande (10)</button>
+                </div>
+            </div>
+
+            <div style="margin-top: auto; padding-top: 20px; border-top: 2px dashed var(--border-soft);">
+                <p style="font-size: 0.95rem; color: var(--text-secondary);">
+                    <strong>🔍 Observa:</strong> No importa el tamaño del cuadrado, la diagonal siempre es el lado multiplicado por un número irracional (√2).
+                </p>
+            </div>
+
+        </section>
+
+        <!-- Panel Derecho: Visualización -->
+        <section class="visual-panel" aria-label="Área visual del cuadrado y su diagonal">
+            <div class="grid-bg"></div>
+            
+            <div id="dynamicSquare" style="width: 200px; height: 200px;">
+                <!-- La diagonal se genera con JS -->
+                <div id="diagonalLine"></div>
+            </div>
+
+            <div class="data-display">
+                <div class="data-row">
+                    <span>Lado (L):</span>
+                    <span id="dataSide">5.0</span>
+                </div>
+                <div class="data-row">
+                    <span>Diagonal (D):</span>
+                    <span id="dataDiagonal">7.07...</span>
+                </div>
+                <div class="data-row">
+                    <span>Fórmula:</span>
+                    <span>D = L × √2 <span class="irrational-badge">Irracional</span></span>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // Elementos del DOM
+        const slider = document.getElementById('sideSlider');
+        const sideValueDisplay = document.getElementById('sideValueDisplay');
+        const dynamicSquare = document.getElementById('dynamicSquare');
+        const diagonalLine = document.getElementById('diagonalLine');
+        const dataSide = document.getElementById('dataSide');
+        const dataDiagonal = document.getElementById('dataDiagonal');
+        const scenarioBtns = document.querySelectorAll('.scenario-btn');
+
+        // Constante Raíz de 2
+        const SQRT2 = Math.sqrt(2); // 1.41421356...
+
+        // Función principal de actualización
+        function updateSimulator(sideLength) {
+            // 1. Actualizar valores numéricos
+            const diagonalLength = sideLength * SQRT2;
+            
+            sideValueDisplay.textContent = sideLength;
+            dataSide.textContent = sideLength.toFixed(1);
+            // Mostramos 4 decimales para enfatizar que no termina
+            dataDiagonal.textContent = diagonalLength.toFixed(4) + "..."; 
+
+            // 2. Actualizar tamaño visual del cuadrado
+            // Escalamos para que quepa en el panel (max 10cm = 300px aprox)
+            const scale = 30; 
+            const pixelSize = sideLength * scale;
+            
+            dynamicSquare.style.width = `${pixelSize}px`;
+            dynamicSquare.style.height = `${pixelSize}px`;
+
+            // 3. Actualizar diagonal visual
+            // Teorema de Pitágoras para la longitud en pixeles: sqrt(w^2 + h^2)
+            const pixelDiagonal = Math.sqrt(Math.pow(pixelSize, 2) + Math.pow(pixelSize, 2));
+            
+            diagonalLine.style.width = `${pixelDiagonal}px`;
+            // Rotar 45 grados para que coincida con la diagonal del cuadrado
+            diagonalLine.style.transform = `rotate(45deg)`;
+        }
+
+        // Event Listener: Slider
+        slider.addEventListener('input', (e) => {
+            const val = parseFloat(e.target.value);
+            updateSimulator(val);
+            updateActiveButton(val);
+        });
+
+        // Event Listener: Botones de Escenario
+        scenarioBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const val = parseFloat(btn.getAttribute('data-side'));
+                slider.value = val;
+                updateSimulator(val);
+                updateActiveButton(val);
+            });
+        });
+
+        // Helper: Actualizar clase activa en botones
+        function updateActiveButton(currentVal) {
+            scenarioBtns.forEach(btn => {
+                if (parseFloat(btn.getAttribute('data-side')) === currentVal) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+        }
+
+        // Inicializar
+        updateSimulator(5);
+
+    </script>
+</body>
+</html>

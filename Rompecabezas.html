@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rompecabezas: Números Irracionales</title>
+    <style>
+        :root {
+            /* Paleta de colores accesible y suave */
+            --bg-body: #f1f5f9;
+            --bg-card: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --success-green: #22c55e;
+            --border-soft: #cbd5e1;
+            --shadow-soft: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --focus-ring: 0 0 0 4px #f59e0b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Encabezado */
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            max-width: 800px;
+        }
+
+        .institution {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--accent-purple);
+            margin-bottom: 8px;
+        }
+
+        .course-info {
+            display: inline-flex;
+            gap: 15px;
+            background: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-soft);
+            font-size: 1rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        h1 {
+            margin-top: 20px;
+            font-size: 1.8rem;
+            color: var(--text-primary);
+        }
+
+        .instructions {
+            margin-top: 10px;
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            background: white;
+            padding: 15px 25px;
+            border-radius: 12px;
+            display: inline-block;
+        }
+
+        /* Contenedor del Juego */
+        .game-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            justify-content: center;
+            align-items: flex-start;
+            max-width: 1000px;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        /* Área del Tablero (Donde se arma) */
+        .board-section {
+            text-align: center;
+        }
+
+        .board-label {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+        }
+
+        .puzzle-board {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-template-rows: repeat(3, 100px);
+            gap: 3px;
+            background: var(--border-soft);
+            padding: 3px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .board-slot {
+            width: 100px;
+            height: 100px;
+            background: #e2e8f0;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.9rem;
+            color: #94a3b8;
+            font-weight: 600;
+            border: 2px dashed var(--border-soft);
+        }
+
+        .board-slot.filled {
+            border: 2px solid var(--success-green);
+            background: #f0fdf4;
+        }
+
+        /* Área de Piezas Desordenadas */
+        .pieces-section {
+            text-align: center;
+        }
+
+        .pieces-label {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+        }
+
+        .pieces-container {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            gap: 10px;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-soft);
+            min-height: 340px;
+        }
+
+        /* Piezas del Puzzle */
+        .puzzle-piece {
+            width: 100px;
+            height: 100px;
+            border-radius: 8px;
+            cursor: grab;
+            box-shadow: var(--shadow-soft);
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2.5rem;
+            font-weight: bold;
+            border: 3px solid white;
+            user-select: none;
+        }
+
+        .puzzle-piece:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.15);
+        }
+
+        .puzzle-piece:active {
+            cursor: grabbing;
+        }
+
+        .puzzle-piece:focus {
+            outline: none;
+            box-shadow: var(--focus-ring);
+        }
+
+        .puzzle-piece.placed {
+            cursor: default;
+            box-shadow: none;
+            border: none;
+        }
+
+        /* Estilos de las piezas (colores y contenido) */
+        .piece-0 { background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); color: white; }
+        .piece-1 { background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%); color: white; }
+        .piece-2 { background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); color: white; }
+        .piece-3 { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; }
+        .piece-4 { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; }
+        .piece-5 { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; }
+        .piece-6 { background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); color: white; }
+        .piece-7 { background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%); color: white; }
+        .piece-8 { background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); color: white; }
+
+        /* Mensaje de Éxito */
+        .success-message {
+            display: none;
+            margin-top: 30px;
+            padding: 25px;
+            background: #dcfce7;
+            border: 3px solid var(--success-green);
+            border-radius: 16px;
+            color: #166534;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-align: center;
+            animation: fadeIn 0.5s;
+            max-width: 500px;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .success-icon {
+            font-size: 3rem;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        /* Botones de Control */
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .control-btn {
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.2s, opacity 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-reset {
+            background: var(--text-secondary);
+            color: white;
+        }
+
+        .btn-hint {
+            background: var(--accent-blue);
+            color: white;
+        }
+
+        .control-btn:hover {
+            transform: translateY(-2px);
+            opacity: 0.9;
+        }
+
+        .control-btn:focus {
+            outline: none;
+            box-shadow: var(--focus-ring);
+        }
+
+        /* Barra de Progreso */
+        .progress-container {
+            width: 100%;
+            max-width: 500px;
+            margin-top: 20px;
+        }
+
+        .progress-label {
+            text-align: center;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .progress-bar {
+            height: 16px;
+            background: #e2e8f0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-blue), var(--success-green));
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* Referencia Visual (Imagen completa) */
+        .reference-image {
+            margin-top: 30px;
+            text-align: center;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-soft);
+            max-width: 400px;
+        }
+
+        .reference-title {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .reference-preview {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 2px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .ref-cell {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        /* Animaciones */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .success-message.show {
+            animation: pulse 2s infinite;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .puzzle-board, .pieces-container {
+                grid-template-columns: repeat(3, 80px);
+                grid-template-rows: repeat(3, 80px);
+            }
+            .board-slot, .puzzle-piece {
+                width: 80px;
+                height: 80px;
+                font-size: 2rem;
+            }
+            .game-container {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        /* Accesibilidad: Movimiento reducido */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                transition: none !important;
+                animation: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="institution">Instituto para Sordos Santa Rosa</div>
+        <div class="course-info">
+            <span>🎓 1ro Secundaria</span>
+            <span>📐 Matemáticas</span>
+            <span>👨‍🏫 Prof. Miguel</span>
+        </div>
+        <h1>Rompecabezas: Símbolos Irracionales</h1>
+        <div class="instructions">
+            🔷 Arrastra las piezas al tablero para formar el símbolo √2
+        </div>
+    </header>
+
+    <main class="game-container">
+        
+        <!-- Tablero (Izquierda) -->
+        <section class="board-section">
+            <div class="board-label">📋 Tablero para Armar</div>
+            <div class="puzzle-board" id="puzzleBoard" role="region" aria-label="Tablero del rompecabezas">
+                <!-- 9 slots generados por JS -->
+            </div>
+        </section>
+
+        <!-- Piezas (Derecha) -->
+        <section class="pieces-section">
+            <div class="pieces-label">🧩 Piezas Desordenadas</div>
+            <div class="pieces-container" id="piecesContainer" role="region" aria-label="Piezas del rompecabezas">
+                <!-- 9 piezas generadas por JS -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Barra de Progreso -->
+    <div class="progress-container">
+        <div class="progress-label">Progreso: <span id="progressText">0/9</span> piezas colocadas</div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+    </div>
+
+    <!-- Mensaje de Éxito -->
+    <div class="success-message" id="successMessage" role="alert" aria-live="polite">
+        <span class="success-icon">🎉</span>
+        ¡Excelente! ¡Rompecabezas Completado!
+    </div>
+
+    <!-- Botones de Control -->
+    <div class="controls">
+        <button class="control-btn btn-reset" id="resetBtn" aria-label="Reiniciar rompecabezas">
+            🔄 Reiniciar
+        </button>
+        <button class="control-btn btn-hint" id="hintBtn" aria-label="Mostrar pista visual">
+            💡 Ver Referencia
+        </button>
+    </div>
+
+    <!-- Imagen de Referencia (Oculta por defecto) -->
+    <div class="reference-image" id="referenceImage" style="display: none;">
+        <div class="reference-title">👁️ Así debe quedar:</div>
+        <div class="reference-preview" id="referencePreview">
+            <!-- Generado por JS -->
+        </div>
+    </div>
+
+    <script>
+        // CONFIGURACIÓN DEL PUZZLE (9 piezas - 3x3)
+        // Cada pieza tiene: posición correcta, símbolo/contenido, clase de color
+        const puzzleConfig = [
+            { id: 0, correctSlot: 0, content: "√", class: "piece-0" },
+            { id: 1, correctSlot: 1, content: "2", class: "piece-1" },
+            { id: 2, correctSlot: 2, content: "", class: "piece-2" },
+            { id: 3, correctSlot: 3, content: "", class: "piece-3" },
+            { id: 4, correctSlot: 4, content: "≈", class: "piece-4" },
+            { id: 5, correctSlot: 5, content: "", class: "piece-5" },
+            { id: 6, correctSlot: 6, content: "1.414", class: "piece-6" },
+            { id: 7, correctSlot: 7, content: "...", class: "piece-7" },
+            { id: 8, correctSlot: 8, content: "", class: "piece-8" }
+        ];
+
+        // ESTADO DEL JUEGO
+        let placedPieces = 0;
+        let draggedPiece = null;
+
+        // ELEMENTOS DOM
+        const puzzleBoard = document.getElementById('puzzleBoard');
+        const piecesContainer = document.getElementById('piecesContainer');
+        const progressFill = document.getElementById('progressFill');
+        const progressText = document.getElementById('progressText');
+        const successMessage = document.getElementById('successMessage');
+        const resetBtn = document.getElementById('resetBtn');
+        const hintBtn = document.getElementById('hintBtn');
+        const referenceImage = document.getElementById('referenceImage');
+        const referencePreview = document.getElementById('referencePreview');
+
+        // INICIALIZAR JUEGO
+        function initGame() {
+            // Limpiar estado
+            placedPieces = 0;
+            draggedPiece = null;
+            puzzleBoard.innerHTML = '';
+            piecesContainer.innerHTML = '';
+            successMessage.classList.remove('show');
+            referenceImage.style.display = 'none';
+            updateProgress();
+
+            // Crear slots del tablero
+            for (let i = 0; i < 9; i++) {
+                const slot = document.createElement('div');
+                slot.className = 'board-slot';
+                slot.dataset.slot = i;
+                slot.textContent = i + 1; // Número de referencia
+                
+                // Eventos de Drop
+                slot.addEventListener('dragover', handleDragOver);
+                slot.addEventListener('drop', handleDrop);
+                slot.addEventListener('click', handleSlotClick);
+                
+                puzzleBoard.appendChild(slot);
+            }
+
+            // Crear piezas desordenadas
+            const shuffled = [...puzzleConfig].sort(() => Math.random() - 0.5);
+            shuffled.forEach(piece => {
+                const puzzlePiece = createPiece(piece);
+                piecesContainer.appendChild(puzzlePiece);
+            });
+
+            // Generar referencia visual
+            generateReference();
+        }
+
+        // Crear elemento de pieza
+        function createPiece(piece) {
+            const el = document.createElement('div');
+            el.className = `puzzle-piece ${piece.class}`;
+            el.textContent = piece.content;
+            el.dataset.id = piece.id;
+            el.dataset.correctSlot = piece.correctSlot;
+            el.setAttribute('draggable', 'true');
+            el.setAttribute('tabindex', '0');
+            el.setAttribute('role', 'button');
+            el.setAttribute('aria-label', `Pieza ${piece.id + 1}: ${piece.content || 'vacía'}`);
+
+            // Eventos Drag
+            el.addEventListener('dragstart', handleDragStart);
+            el.addEventListener('dragend', handleDragEnd);
+
+            // Eventos Click/Teclado (para accesibilidad)
+            el.addEventListener('click', () => handlePieceClick(el));
+            el.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    handlePieceClick(el);
+                }
+            });
+
+            return el;
+        }
+
+        // Manejar inicio de arrastre
+        function handleDragStart(e) {
+            draggedPiece = this;
+            setTimeout(() => this.style.opacity = '0.5', 0);
+        }
+
+        // Manejar fin de arrastre
+        function handleDragEnd() {
+            this.style.opacity = '1';
+            draggedPiece = null;
+        }
+
+        // Permitir drop
+        function handleDragOver(e) {
+            e.preventDefault();
+        }
+
+        // Manejar drop en slot
+        function handleDrop(e) {
+            e.preventDefault();
+            if (!draggedPiece || this.classList.contains('filled')) return;
+
+            const correctSlot = parseInt(draggedPiece.dataset.correctSlot);
+            const currentSlot = parseInt(this.dataset.slot);
+
+            if (correctSlot === currentSlot) {
+                // Pieza correcta
+                placePiece(draggedPiece, this);
+            } else {
+                // Pieza incorrecta - feedback visual
+                this.style.borderColor = '#ef4444';
+                setTimeout(() => {
+                    this.style.borderColor = '';
+                }, 500);
+            }
+        }
+
+        // Click en pieza (para mover sin drag)
+        let selectedPiece = null;
+
+        function handlePieceClick(piece) {
+            if (piece.classList.contains('placed')) return;
+
+            // Deseleccionar previa
+            if (selectedPiece) {
+                selectedPiece.style.boxShadow = '';
+                selectedPiece.style.transform = '';
+            }
+
+            // Seleccionar nueva
+            if (selectedPiece === piece) {
+                selectedPiece = null;
+            } else {
+                selectedPiece = piece;
+                piece.style.boxShadow = '0 0 0 4px #f59e0b';
+                piece.style.transform = 'scale(1.1)';
+            }
+        }
+
+        // Click en slot (para colocar pieza seleccionada)
+        function handleSlotClick() {
+            if (!selectedPiece || this.classList.contains('filled')) return;
+
+            const correctSlot = parseInt(selectedPiece.dataset.correctSlot);
+            const currentSlot = parseInt(this.dataset.slot);
+
+            if (correctSlot === currentSlot) {
+                placePiece(selectedPiece, this);
+                selectedPiece = null;
+            } else {
+                this.style.borderColor = '#ef4444';
+                setTimeout(() => {
+                    this.style.borderColor = '';
+                }, 500);
+            }
+        }
+
+        // Colocar pieza correctamente
+        function placePiece(piece, slot) {
+            // Mover pieza al slot
+            slot.innerHTML = '';
+            slot.classList.add('filled');
+            slot.appendChild(piece);
+            
+            piece.classList.add('placed');
+            piece.setAttribute('draggable', 'false');
+            piece.style.boxShadow = '';
+            piece.style.transform = '';
+            piece.style.cursor = 'default';
+
+            // Actualizar progreso
+            placedPieces++;
+            updateProgress();
+
+            // Verificar victoria
+            if (placedPieces === 9) {
+                showSuccess();
+            }
+        }
+
+        // Actualizar barra de progreso
+        function updateProgress() {
+            const percent = (placedPieces / 9) * 100;
+            progressFill.style.width = `${percent}%`;
+            progressText.textContent = `${placedPieces}/9`;
+        }
+
+        // Mostrar mensaje de éxito
+        function showSuccess() {
+            successMessage.classList.add('show');
+            
+            // Animación de celebración en el tablero
+            const slots = document.querySelectorAll('.board-slot');
+            slots.forEach((slot, index) => {
+                setTimeout(() => {
+                    slot.style.animation = 'pulse 0.5s';
+                }, index * 100);
+            });
+        }
+
+        // Generar imagen de referencia
+        function generateReference() {
+            referencePreview.innerHTML = '';
+            const sorted = [...puzzleConfig].sort((a, b) => a.correctSlot - b.correctSlot);
+            
+            sorted.forEach(piece => {
+                const cell = document.createElement('div');
+                cell.className = `ref-cell ${piece.class}`;
+                cell.textContent = piece.content;
+                referencePreview.appendChild(cell);
+            });
+        }
+
+        // Mostrar/Ocultar referencia
+        hintBtn.addEventListener('click', () => {
+            if (referenceImage.style.display === 'none') {
+                referenceImage.style.display = 'block';
+                hintBtn.textContent = '🙈 Ocultar Referencia';
+            } else {
+                referenceImage.style.display = 'none';
+                hintBtn.textContent = '💡 Ver Referencia';
+            }
+        });
+
+        // Reiniciar juego
+        resetBtn.addEventListener('click', initGame);
+
+        // Iniciar al cargar
+        initGame();
+
+    </script>
+</body>
+</html>

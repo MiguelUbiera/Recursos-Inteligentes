@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tarjetas 3D: Números Irracionales</title>
+    <style>
+        :root {
+            /* Paleta de colores suave y accesible */
+            --bg-body: #f1f5f9;
+            --bg-card-front: #ffffff;
+            --bg-card-back: #3b82f6; /* Azul accesible */
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-on-blue: #ffffff;
+            --accent-color: #f59e0b; /* Ámbar para foco */
+            --shadow-soft: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Encabezado */
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            max-width: 800px;
+        }
+
+        .institution {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+        }
+
+        .course-info {
+            display: inline-flex;
+            gap: 15px;
+            background: white;
+            padding: 8px 20px;
+            border-radius: 50px;
+            box-shadow: var(--shadow-soft);
+            font-size: 1rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        h1 {
+            margin-top: 20px;
+            font-size: 2rem;
+            color: var(--text-primary);
+        }
+
+        .instructions {
+            margin-top: 10px;
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        /* Contenedor de la cuadrícula */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            width: 100%;
+            max-width: 1200px;
+            padding: 10px;
+        }
+
+        /* Contenedor de la tarjeta (Perspectiva) */
+        .card-container {
+            background-color: transparent;
+            height: 350px;
+            perspective: 1000px; /* Necesario para el efecto 3D */
+            cursor: pointer;
+        }
+
+        /* La tarjeta interior (la que gira) */
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+            transform-style: preserve-3d;
+            border-radius: 20px;
+            box-shadow: var(--shadow-soft);
+        }
+
+        /* Clase para activar el giro */
+        .card-container.is-flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        /* Estilos comunes para frente y reverso */
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden; /* Safari */
+            backface-visibility: hidden;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+            border: 2px solid transparent;
+        }
+
+        /* Frente de la tarjeta */
+        .card-front {
+            background-color: var(--bg-card-front);
+            color: var(--text-primary);
+            border-color: #e2e8f0;
+        }
+
+        .card-front h2 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--text-primary);
+        }
+
+        .card-front .icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .tap-hint {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        /* Reverso de la tarjeta */
+        .card-back {
+            background-color: var(--bg-card-back);
+            color: var(--text-on-blue);
+            transform: rotateY(180deg);
+            border-color: #2563eb;
+        }
+
+        .card-back h3 {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .card-back p {
+            font-size: 1.3rem;
+            line-height: 1.5;
+            font-weight: 500;
+        }
+
+        .math-example {
+            margin-top: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.4rem;
+            font-weight: bold;
+        }
+
+        /* Accesibilidad: Foco visible */
+        .card-container:focus {
+            outline: none;
+        }
+
+        .card-container:focus .card-inner {
+            box-shadow: 0 0 0 4px var(--accent-color), var(--shadow-hover);
+        }
+
+        /* Hover effect (solo para mouse, no táctil) */
+        @media (hover: hover) {
+            .card-container:hover .card-inner {
+                box-shadow: var(--shadow-hover);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+            .card-container {
+                height: 300px;
+            }
+        }
+
+        /* Preferencias de movimiento reducido */
+        @media (prefers-reduced-motion: reduce) {
+            .card-inner {
+                transition: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="institution">Instituto para Sordos Santa Rosa</div>
+        <div class="course-info">
+            <span>🎓 1ro Secundaria</span>
+            <span>📐 Matemáticas</span>
+            <span>👨‍🏫 Prof. Miguel</span>
+        </div>
+        <h1>Conceptos Clave: Números Irracionales</h1>
+        <p class="instructions">Toca o haz clic en una tarjeta para ver la explicación.</p>
+    </header>
+
+    <main class="cards-grid">
+        
+        <!-- Tarjeta 1 -->
+        <article class="card-container" tabindex="0" role="button" aria-label="Tarjeta: Definición. Toca para voltear.">
+            <div class="card-inner">
+                <div class="card-face card-front">
+                    <span class="icon">❓</span>
+                    <h2>¿Qué es un Número Irracional?</h2>
+                    <div class="tap-hint">👆 Toca para ver</div>
+                </div>
+                <div class="card-face card-back">
+                    <h3>Definición</h3>
+                    <p>Es un número que <strong>NO</strong> se puede escribir como una fracción simple de dos números enteros.</p>
+                    <div class="math-example">No es a/b</div>
+                </div>
+            </div>
+        </article>
+
+        <!-- Tarjeta 2 -->
+        <article class="card-container" tabindex="0" role="button" aria-label="Tarjeta: El número Pi. Toca para voltear.">
+            <div class="card-inner">
+                <div class="card-face card-front">
+                    <span class="icon">🥧</span>
+                    <h2>El Número Pi (π)</h2>
+                    <div class="tap-hint">👆 Toca para ver</div>
+                </div>
+                <div class="card-face card-back">
+                    <h3>El más famoso</h3>
+                    <p>Representa la relación entre la longitud de una circunferencia y su diámetro. Sus decimales son infinitos.</p>
+                    <div class="math-example">π ≈ 3.14159...</div>
+                </div>
+            </div>
+        </article>
+
+        <!-- Tarjeta 3 -->
+        <article class="card-container" tabindex="0" role="button" aria-label="Tarjeta: Raíz de 2. Toca para voltear.">
+            <div class="card-inner">
+                <div class="card-face card-front">
+                    <span class="icon">📐</span>
+                    <h2>Raíz de 2 (√2)</h2>
+                    <div class="tap-hint">👆 Toca para ver</div>
+                </div>
+                <div class="card-face card-back">
+                    <h3>Geometría</h3>
+                    <p>Es la longitud de la diagonal de un cuadrado cuyo lado mide 1. Fue el primer irracional descubierto.</p>
+                    <div class="math-example">√2 ≈ 1.4142...</div>
+                </div>
+            </div>
+        </article>
+
+        <!-- Tarjeta 4 -->
+        <article class="card-container" tabindex="0" role="button" aria-label="Tarjeta: Decimales. Toca para voltear.">
+            <div class="card-inner">
+                <div class="card-face card-front">
+                    <span class="icon">♾️</span>
+                    <h2>Decimales Infinitos</h2>
+                    <div class="tap-hint">👆 Toca para ver</div>
+                </div>
+                <div class="card-face card-back">
+                    <h3>Característica</h3>
+                    <p>Si escribes un irracional en decimal, los números <strong>nunca terminan</strong> y <strong>nunca se repiten</strong> en un patrón.</p>
+                    <div class="math-example">1.4142135...</div>
+                </div>
+            </div>
+        </article>
+
+        <!-- Tarjeta 5 -->
+        <article class="card-container" tabindex="0" role="button" aria-label="Tarjeta: Racional vs Irracional. Toca para voltear.">
+            <div class="card-inner">
+                <div class="card-face card-front">
+                    <span class="icon">⚖️</span>
+                    <h2>Racional vs Irracional</h2>
+                    <div class="tap-hint">👆 Toca para ver</div>
+                </div>
+                <div class="card-face card-back">
+                    <h3>Diferencia</h3>
+                    <p><strong>Racional:</strong> Se puede hacer fracción (ej. ½).<br><strong>Irracional:</strong> No se puede hacer fracción.</p>
+                    <div class="math-example">½ vs √2</div>
+                </div>
+            </div>
+        </article>
+
+    </main>
+
+    <script>
+        // Seleccionar todas las tarjetas
+        const cards = document.querySelectorAll('.card-container');
+
+        // Función para voltear la tarjeta
+        function flipCard(card) {
+            card.classList.toggle('is-flipped');
+            
+            // Accesibilidad: Actualizar etiqueta ARIA dinámicamente
+            const isFlipped = card.classList.contains('is-flipped');
+            card.setAttribute('aria-label', isFlipped ? 'Tarjeta volteada. Toca para regresar.' : 'Tarjeta frontal. Toca para ver explicación.');
+        }
+
+        // Agregar eventos a cada tarjeta
+        cards.forEach(card => {
+            // Click con mouse
+            card.addEventListener('click', () => {
+                flipCard(card);
+            });
+
+            // Teclado (Enter o Espacio)
+            card.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault(); // Evitar scroll con espacio
+                    flipCard(card);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

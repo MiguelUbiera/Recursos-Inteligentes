@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actividad: Números Racionales - Inst. Santa Rosa</title>
+    <style>
+        :root {
+            --bg-color: #f0f4f8; /* Fondo suave azulado */
+            --card-bg: #ffffff;
+            --text-color: #2d3748; /* Gris oscuro para alto contraste */
+            --primary-color: #4a90e2; /* Azul amigable */
+            --success-color: #48bb78; /* Verde claro */
+            --error-color: #f56565; /* Rojo claro */
+            --neutral-hover: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 800px;
+            padding: 40px;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        /* Header Styles */
+        header {
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--neutral-hover);
+            padding-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+
+        .info-bar {
+            font-size: 0.9rem;
+            color: #718096;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            width: 100%;
+            background-color: var(--neutral-hover);
+            border-radius: 10px;
+            margin-bottom: 30px;
+            height: 15px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: var(--primary-color);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        /* Question Area */
+        .question-box {
+            margin-bottom: 30px;
+        }
+
+        .question-text {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
+
+        /* Options Grid */
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .option-card {
+            background-color: var(--bg-color);
+            border: 3px solid transparent;
+            border-radius: 15px;
+            padding: 20px;
+            cursor: pointer;
+            transition: transform 0.2s, border-color 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 150px;
+        }
+
+        .option-card:hover {
+            transform: translateY(-3px);
+            background-color: var(--neutral-hover);
+        }
+
+        .option-card.selected-correct {
+            background-color: #c6f6d5;
+            border-color: var(--success-color);
+        }
+
+        .option-card.selected-incorrect {
+            background-color: #fed7d7;
+            border-color: var(--error-color);
+        }
+
+        .visual-element {
+            font-size: 3rem; /* Large icons/text for visibility */
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: var(--text-color);
+        }
+
+        .option-label {
+            font-size: 1.1rem;
+        }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            min-height: 60px; /* Reserve space to prevent jumping */
+        }
+
+        .btn {
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .btn-next {
+            background-color: var(--primary-color);
+            color: white;
+            display: none; /* Hidden initially */
+        }
+
+        .btn-next:hover {
+            background-color: #357abd;
+        }
+
+        /* Feedback Message */
+        .feedback-msg {
+            font-size: 1.2rem;
+            margin-top: 15px;
+            font-weight: bold;
+            min-height: 1.5em;
+        }
+
+        .feedback-correct { color: var(--success-color); }
+        .feedback-incorrect { color: var(--error-color); }
+
+        /* End Screen */
+        .end-screen {
+            display: none;
+        }
+        
+        .score-display {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin: 20px 0;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Instituto para Sordos Santa Rosa</h1>
+        <div class="info-bar">
+            <span><strong>Asignatura:</strong> Matemáticas</span>
+            <span><strong>Tema:</strong> Números Racionales</span>
+            <span><strong>Profesor:</strong> Miguel Ubiera</span>
+        </div>
+    </header>
+
+    <!-- Progress -->
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- Game Area -->
+    <div id="gameArea">
+        <div class="question-box">
+            <div class="question-text" id="questionText">Cargando pregunta...</div>
+        </div>
+
+        <div class="options-grid" id="optionsGrid">
+            <!-- Options injected by JS -->
+        </div>
+
+        <div class="feedback-msg" id="feedbackMsg"></div>
+
+        <div class="controls">
+            <button class="btn btn-next" id="nextBtn" onclick="nextQuestion()">Siguiente Pregunta ➜</button>
+        </div>
+    </div>
+
+    <!-- End Screen -->
+    <div class="end-screen" id="endScreen">
+        <h2>¡Actividad Completada!</h2>
+        <p>Has terminado la práctica de números racionales.</p>
+        <div class="score-display" id="finalScore"></div>
+        <button class="btn btn-next" style="display:inline-block" onclick="location.reload()">Reiniciar Actividad</button>
+    </div>
+</div>
+
+<script>
+    // --- DATA: Questions Configuration ---
+    // Visual supports suggested: Fractions (Math notation), Pie Charts (Visual representation), Number Line (Spatial).
+    
+    const questions = [
+        {
+            question: "¿Cuál imagen representa la fracción 1/2 (un medio)?",
+            type: "visual_recognition",
+            options: [
+                { id: 1, visual: "🍕", label: "3/4 (Tres cuartos)", correct: false },
+                { id: 2, visual: "🍕", label: "1/2 (Un medio)", correct: true }, // Representación visual simplificada con emoji para el ejemplo
+                { id: 3, visual: "🍕", label: "1/4 (Un cuarto)", correct: false }
+            ],
+            // Note: In a real scenario, replace emojis with <img> tags or SVG graphics of pie charts.
+            // For this code, I will use CSS to draw simple pie charts for better visual representation.
+            customVisuals: [
+                { type: 'pie', value: 0.75 }, // 3/4
+                { type: 'pie', value: 0.50 }, // 1/2
+                { type: 'pie', value: 0.25 }  // 1/4
+            ]
+        },
+        {
+            question: "Selecciona el número racional que es mayor que 1.",
+            type: "concept_association",
+            options: [
+                { id: 1, visual: "1/2", label: "Menor que la unidad", correct: false },
+                { id: 2, visual: "3/2", label: "Mayor que la unidad", correct: true },
+                { id: 3, visual: "0/5", label: "Igual a cero", correct: false }
+            ],
+            customVisuals: [
+                { type: 'text', value: '1/2' },
+                { type: 'text', value: '3/2' },
+                { type: 'text', value: '0/5' }
+            ]
+        },
+        {
+            question: "¿Qué fracción representa la parte coloreada en azul?",
+            type: "visual_identification",
+            options: [
+                { id: 1, visual: "2/5", label: "Dos quintos", correct: false },
+                { id: 2, visual: "3/5", label: "Tres quintos", correct: true },
+                { id: 3, visual: "5/3", label: "Cinco tercios", correct: false },
+                { id: 4, visual: "1/5", label: "Un quinto", correct: false }
+            ],
+            customVisuals: [
+                { type: 'bar', value: 0.60, color: '#4a90e2' } // Visual bar representing 3/5
+            ]
+        },
+        {
+            question: "Ubica el número racional 0.5 en la recta numérica.",
+            type: "spatial_location",
+            options: [
+                { id: 1, visual: "A", label: "Inicio (0)", correct: false },
+                { id: 2, visual: "B", label: "Mitad (0.5)", correct: true },
+                { id: 3, visual: "C", label: "Final (1)", correct: false }
+            ],
+            customVisuals: [
+                { type: 'line', points: ['A (0)', 'B (0.5)', 'C (1)'] }
+            ]
+        },
+        {
+            question: "¿Cuál es la representación decimal de 1/4?",
+            type: "conversion",
+            options: [
+                { id: 1, visual: "0.25", label: "Veinticinco centésimos", correct: true },
+                { id: 2, visual: "0.50", label: "Cincuenta centésimos", correct: false },
+                { id: 3, visual: "0.75", label: "Setenta y cinco centésimos", correct: false }
+            ],
+            customVisuals: [
+                { type: 'text', value: '0.25' },
+                { type: 'text', value: '0.50' },
+                { type: 'text', value: '0.75' }
+            ]
+        }
+    ];
+
+    // --- STATE MANAGEMENT ---
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let isAnswered = false;
+
+    // --- DOM ELEMENTS ---
+    const questionTextEl = document.getElementById('questionText');
+    const optionsGridEl = document.getElementById('optionsGrid');
+    const feedbackMsgEl = document.getElementById('feedbackMsg');
+    const nextBtnEl = document.getElementById('nextBtn');
+    const progressBarEl = document.getElementById('progressBar');
+    const gameAreaEl = document.getElementById('gameArea');
+    const endScreenEl = document.getElementById('endScreen');
+    const finalScoreEl = document.getElementById('finalScore');
+
+    // --- FUNCTIONS ---
+
+    function initGame() {
+        currentQuestionIndex = 0;
+        score = 0;
+        loadQuestion();
+    }
+
+    function loadQuestion() {
+        isAnswered = false;
+        const currentQ = questions[currentQuestionIndex];
+        
+        // Update Progress
+        const progress = ((currentQuestionIndex) / questions.length) * 100;
+        progressBarEl.style.width = `${progress}%`;
+
+        // Reset UI
+        feedbackMsgEl.textContent = "";
+        feedbackMsgEl.className = "feedback-msg";
+        nextBtnEl.style.display = "none";
+        optionsGridEl.innerHTML = "";
+
+        // Set Question Text
+        questionTextEl.textContent = currentQ.question;
+
+        // Generate Options
+        currentQ.options.forEach((opt, index) => {
+            const card = document.createElement('div');
+            card.className = 'option-card';
+            card.onclick = () => checkAnswer(opt, card);
+
+            // Render Visual Content based on type
+            const visualContainer = document.createElement('div');
+            visualContainer.className = 'visual-element';
+            
+            // Custom Rendering Logic for better visuals than just emojis
+            if(currentQ.customVisuals && currentQ.customVisuals[index]) {
+                const vData = currentQ.customVisuals[index];
+                if(vData.type === 'pie') {
+                    visualContainer.innerHTML = createPieChart(vData.value);
+                } else if (vData.type === 'bar') {
+                    visualContainer.innerHTML = createBarChart(vData.value, vData.color);
+                } else if (vData.type === 'line') {
+                    visualContainer.innerHTML = createNumberLine(vData.points);
+                } else {
+                    visualContainer.textContent = vData.value;
+                }
+            } else {
+                // Fallback to text/emoji if no custom visual defined
+                visualContainer.textContent = opt.visual; 
+            }
+
+            const label = document.createElement('div');
+            label.className = 'option-label';
+            label.textContent = opt.label;
+
+            card.appendChild(visualContainer);
+            card.appendChild(label);
+            optionsGridEl.appendChild(card);
+        });
+    }
+
+    function checkAnswer(option, cardElement) {
+        if (isAnswered) return; // Prevent multiple clicks
+        isAnswered = true;
+
+        const currentQ = questions[currentQuestionIndex];
+
+        if (option.correct) {
+            // Correct
+            cardElement.classList.add('selected-correct');
+            feedbackMsgEl.textContent = "¡Correcto! Muy bien.";
+            feedbackMsgEl.classList.add('feedback-correct');
+            score++;
+        } else {
+            // Incorrect
+            cardElement.classList.add('selected-incorrect');
+            feedbackMsgEl.textContent = "Incorrecto. Inténtalo de nuevo en la próxima.";
+            feedbackMsgEl.classList.add('feedback-incorrect');
+            
+            // Highlight the correct one automatically for learning
+            const allCards = optionsGridEl.children;
+            currentQ.options.forEach((opt, idx) => {
+                if(opt.correct) {
+                    allCards[idx].classList.add('selected-correct');
+                }
+            });
+        }
+
+        nextBtnEl.style.display = "block";
+    }
+
+    function nextQuestion() {
+        currentQuestionIndex++;
+        if (currentQuestionIndex < questions.length) {
+            loadQuestion();
+        } else {
+            showEndScreen();
+        }
+    }
+
+    function showEndScreen() {
+        gameAreaEl.style.display = 'none';
+        endScreenEl.style.display = 'block';
+        progressBarEl.style.width = '100%';
+        finalScoreEl.textContent = `Puntaje: ${score} / ${questions.length}`;
+    }
+
+    // --- HELPER VISUAL GENERATORS (SVG/CSS) ---
+    
+    function createPieChart(percent) {
+        // Simple CSS conic-gradient for pie chart
+        const color = '#4a90e2';
+        const bg = '#e2e8f0';
+        return `<div style="width: 80px; height: 80px; border-radius: 50%; background: conic-gradient(${color} 0% ${percent*100}%, ${bg} ${percent*100}% 100%); border: 2px solid #ccc;"></div>`;
+    }
+
+    function createBarChart(percent, color) {
+        return `<div style="width: 100px; height: 20px; background: #e2e8f0; border-radius: 10px; overflow: hidden;"><div style="width: ${percent*100}%; height: 100%; background: ${color};"></div></div>`;
+    }
+
+    function createNumberLine(points) {
+        // Simple visual representation of a line with points A, B, C
+        return `
+            <div style="position: relative; width: 120px; height: 40px; display: flex; align-items: center; justify-content: space-between;">
+                <div style="position: absolute; top: 50%; left: 0; width: 100%; height: 4px; background: #2d3748;"></div>
+                <div style="z-index: 2; background: white; padding: 0 5px; font-weight: bold;">0</div>
+                <div style="z-index: 2; background: white; padding: 0 5px; font-weight: bold; color: #4a90e2;">0.5</div>
+                <div style="z-index: 2; background: white; padding: 0 5px; font-weight: bold;">1</div>
+            </div>
+        `;
+    }
+
+    // Start the game
+    initGame();
+
+</script>
+
+</body>
+</html>

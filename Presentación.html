@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presentación: Números Irracionales</title>
+    <style>
+        :root {
+            /* Paleta de colores accesible y suave */
+            --bg-body: #f1f5f9;
+            --bg-slide: #ffffff;
+            --text-primary: #0f172a;
+            --text-secondary: #334155;
+            --accent-blue: #2563eb;
+            --accent-purple: #7c3aed;
+            --accent-teal: #0d9488;
+            --border-soft: #cbd5e1;
+            --shadow-card: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            --focus-ring: 0 0 0 4px rgba(37, 99, 235, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-primary);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Encabezado */
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .institution {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--accent-purple);
+            margin-bottom: 5px;
+        }
+
+        .course-info {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            background: white;
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 15px;
+            border: 1px solid var(--border-soft);
+        }
+
+        /* Contenedor de la presentación */
+        .presentation-container {
+            width: 100%;
+            max-width: 800px;
+            background: var(--bg-slide);
+            border-radius: 20px;
+            box-shadow: var(--shadow-card);
+            overflow: hidden;
+            border: 2px solid var(--border-soft);
+            position: relative;
+        }
+
+        /* Área de diapositivas */
+        .slides-wrapper {
+            position: relative;
+            height: 500px; /* Altura fija para consistencia */
+            overflow: hidden;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            transform: translateX(50px);
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(0);
+            z-index: 10;
+        }
+
+        .slide.prev {
+            transform: translateX(-50px);
+        }
+
+        /* Contenido de la diapositiva */
+        .slide-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .slide-title {
+            font-size: 2rem;
+            color: var(--accent-blue);
+            margin-bottom: 20px;
+            font-weight: 800;
+            line-height: 1.2;
+        }
+
+        .slide-content {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .slide-example {
+            background: #f8fafc;
+            border: 2px solid var(--border-soft);
+            border-radius: 12px;
+            padding: 20px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.4rem;
+            color: var(--text-primary);
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .image-placeholder {
+            width: 100%;
+            max-width: 400px;
+            height: 200px;
+            background: #e2e8f0;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-top: 20px;
+            border: 2px dashed var(--border-soft);
+        }
+
+        /* Controles de navegación */
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background: #f8fafc;
+            border-top: 2px solid var(--border-soft);
+        }
+
+        .nav-btn {
+            padding: 12px 24px;
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+        }
+
+        .nav-btn:disabled {
+            background: #cbd5e1;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .nav-btn:focus {
+            outline: none;
+            box-shadow: var(--focus-ring);
+        }
+
+        .progress-indicator {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            background: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid var(--border-soft);
+        }
+
+        /* Barra de progreso visual */
+        .progress-bar-container {
+            height: 6px;
+            background: #e2e8f0;
+            width: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+            width: 0%;
+            transition: width 0.5s ease;
+            border-radius: 0 4px 4px 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .slides-wrapper {
+                height: 450px;
+            }
+            .slide {
+                padding: 25px 20px;
+            }
+            .slide-title {
+                font-size: 1.6rem;
+            }
+            .slide-content {
+                font-size: 1.1rem;
+            }
+            .controls {
+                padding: 15px 20px;
+                flex-direction: column;
+                gap: 15px;
+            }
+            .nav-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* Accesibilidad: Movimiento reducido */
+        @media (prefers-reduced-motion: reduce) {
+            .slide {
+                transition: none;
+            }
+            .progress-bar-fill {
+                transition: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Encabezado -->
+    <header>
+        <div class="institution">Instituto para Sordos Santa Rosa</div>
+        <div class="course-info">
+            🎓 Primero de Secundaria • 📐 Matemáticas • 👨‍🏫 Profesor Miguel
+        </div>
+    </header>
+
+    <!-- Contenedor Principal -->
+    <main class="presentation-container">
+        
+        <!-- Barra de progreso superior -->
+        <div class="progress-bar-container">
+            <div class="progress-bar-fill" id="progressBar"></div>
+        </div>
+
+        <!-- Área de Diapositivas -->
+        <div class="slides-wrapper" role="region" aria-label="Presentación de diapositivas" aria-live="polite">
+            
+            <!-- Diapositiva 1: Portada -->
+            <div class="slide active" data-index="0">
+                <span class="slide-icon">👋</span>
+                <h1 class="slide-title">Bienvenidos a la Clase</h1>
+                <p class="slide-content">Hoy exploraremos un tipo de números muy especial que no se pueden escribir como fracción simple.</p>
+                <div class="image-placeholder">
+                    📷 Imagen: Portada colorida con símbolos matemáticos flotando
+                </div>
+            </div>
+
+            <!-- Diapositiva 2: Definición -->
+            <div class="slide" data-index="1">
+                <span class="slide-icon">❓</span>
+                <h1 class="slide-title">¿Qué son los Números Irracionales?</h1>
+                <p class="slide-content">Son números que <strong>NO</strong> pueden escribirse como una fracción de dos enteros.</p>
+                <div class="slide-example">
+                    No son como ½ o ¾
+                </div>
+                <div class="image-placeholder">
+                    📷 Imagen: Un signo de prohibido 🚫 sobre una fracción
+                </div>
+            </div>
+
+            <!-- Diapositiva 3: Características -->
+            <div class="slide" data-index="2">
+                <span class="slide-icon">♾️</span>
+                <h1 class="slide-title">Sus Decimales son Infinitos</h1>
+                <p class="slide-content">Si los escribimos en decimal, los números nunca terminan y <strong>nunca se repiten</strong> en un patrón.</p>
+                <div class="slide-example">
+                    1.4142135... (continúa para siempre)
+                </div>
+                <div class="image-placeholder">
+                    📷 Imagen: Una línea de números que se pierde en el horizonte
+                </div>
+            </div>
+
+            <!-- Diapositiva 4: Ejemplos Clave -->
+            <div class="slide" data-index="3">
+                <span class="slide-icon">✨</span>
+                <h1 class="slide-title">Ejemplos Famosos</h1>
+                <p class="slide-content">Los más conocidos son la raíz cuadrada de 2 y el número Pi.</p>
+                <div class="slide-example">
+                    √2 ≈ 1.414<br>
+                    π ≈ 3.14159
+                </div>
+                <div class="image-placeholder">
+                    📷 Imagen: Símbolo de Pi (π) grande y una raíz cuadrada
+                </div>
+            </div>
+
+            <!-- Diapositiva 5: Aplicación -->
+            <div class="slide" data-index="4">
+                <span class="slide-icon">📐</span>
+                <h1 class="slide-title">¿Dónde los usamos?</h1>
+                <p class="slide-content">Son esenciales para medir círculos, calcular diagonales y en la arquitectura.</p>
+                <div class="slide-example">
+                    Circunferencia = 2 · π · r
+                </div>
+                <div class="image-placeholder">
+                    📷 Imagen: Un edificio famoso o una rueda
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Controles Inferiores -->
+        <div class="controls">
+            <button class="nav-btn" id="prevBtn" aria-label="Diapositiva anterior" disabled>
+                ⬅ Anterior
+            </button>
+            
+            <div class="progress-indicator" aria-live="polite">
+                <span id="currentSlideNum">1</span> de <span id="totalSlides">5</span>
+            </div>
+            
+            <button class="nav-btn" id="nextBtn" aria-label="Siguiente diapositiva">
+                Siguiente ➡
+            </button>
+        </div>
+
+    </main>
+
+    <script>
+        // ============================================
+        // LÓGICA DE LA PRESENTACIÓN
+        // ============================================
+        
+        const slides = document.querySelectorAll('.slide');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const currentSlideNum = document.getElementById('currentSlideNum');
+        const totalSlides = document.getElementById('totalSlides');
+        const progressBar = document.getElementById('progressBar');
+        
+        let currentIndex = 0;
+        const total = slides.length;
+
+        // Inicializar contador total
+        totalSlides.textContent = total;
+
+        // Función para actualizar la diapositiva
+        function updateSlide() {
+            // Actualizar clases de las diapositivas
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active', 'prev');
+                if (index === currentIndex) {
+                    slide.classList.add('active');
+                } else if (index < currentIndex) {
+                    slide.classList.add('prev');
+                }
+            });
+
+            // Actualizar estado de los botones
+            prevBtn.disabled = (currentIndex === 0);
+            nextBtn.disabled = (currentIndex === total - 1);
+            nextBtn.textContent = (currentIndex === total - 1) ? "Finalizar" : "Siguiente ➡";
+
+            // Actualizar indicador de texto
+            currentSlideNum.textContent = currentIndex + 1;
+
+            // Actualizar barra de progreso
+            const progressPercent = ((currentIndex + 1) / total) * 100;
+            progressBar.style.width = `${progressPercent}%`;
+
+            // Accesibilidad: Enfocar el título de la nueva diapositiva
+            const activeSlideTitle = slides[currentIndex].querySelector('.slide-title');
+            if(activeSlideTitle) {
+                activeSlideTitle.setAttribute('tabindex', '-1');
+                activeSlideTitle.focus();
+            }
+        }
+
+        // Event Listeners para botones
+        nextBtn.addEventListener('click', () => {
+            if (currentIndex < total - 1) {
+                currentIndex++;
+                updateSlide();
+            } else {
+                // Opcional: Reiniciar o mostrar mensaje de fin
+                alert("¡Presentación terminada! Puedes repasar las diapositivas.");
+                currentIndex = 0;
+                updateSlide();
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateSlide();
+            }
+        });
+
+        // Navegación con teclado
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                if (currentIndex < total - 1) {
+                    currentIndex++;
+                    updateSlide();
+                }
+            }
+            if (e.key === 'ArrowLeft') {
+                if (currentIndex > 0) {
+                    currentIndex--;
+                    updateSlide();
+                }
+            }
+        });
+
+        // Inicializar al cargar
+        updateSlide();
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Tarjetas de vocabulario visual - Números Racionales - Instituto para Sordos Santa Rosa">
+    <title>Tarjetas de Vocabulario - Números Racionales</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --color-fondo: #f0f9ff;
+            --color-tarjeta: #ffffff;
+            --color-texto-principal: #1e293b;
+            --color-texto-secundario: #475569;
+            --color-acento: #0ea5e9;
+            --color-acento-suave: #e0f2fe;
+            --color-borde: #e2e8f0;
+            --sombra-suave: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --radio-borde: 16px;
+            --transicion-suave: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--color-fondo);
+            color: var(--color-texto-principal);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px 20px;
+            background-color: var(--color-tarjeta);
+            border-radius: var(--radio-borde);
+            box-shadow: var(--sombra-suave);
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: var(--color-texto-principal);
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .info-clase {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+            font-size: 1.1rem;
+            color: var(--color-texto-secundario);
+        }
+
+        .info-item {
+            background-color: var(--color-acento-suave);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+
+        .container-principal {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .tarjeta-contenedor {
+            background-color: var(--color-tarjeta);
+            border-radius: var(--radio-borde);
+            box-shadow: var(--sombra-suave);
+            overflow: hidden;
+            transition: var(--transicion-suave);
+            border: 2px solid var(--color-borde);
+        }
+
+        .tarjeta {
+            padding: 40px;
+            text-align: center;
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .tarjeta.activa {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .imagen-concepto {
+            width: 100%;
+            max-width: 400px;
+            height: 250px;
+            object-fit: contain;
+            margin-bottom: 25px;
+            border-radius: 12px;
+            background-color: var(--color-acento-suave);
+            padding: 20px;
+        }
+
+        .termino {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--color-texto-principal);
+            margin-bottom: 15px;
+            letter-spacing: 0.5px;
+        }
+
+        .tipo-imagen {
+            display: inline-block;
+            background-color: var(--color-acento);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .contenido-oculto {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, opacity 0.4s ease, padding 0.4s ease;
+            opacity: 0;
+            background-color: var(--color-fondo);
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+
+        .contenido-oculto.revelado {
+            max-height: 500px;
+            opacity: 1;
+            padding: 25px;
+            border: 2px solid var(--color-borde);
+        }
+
+        .definicion {
+            font-size: 1.3rem;
+            color: var(--color-texto-principal);
+            margin-bottom: 20px;
+            line-height: 1.6;
+            font-weight: 500;
+        }
+
+        .ejemplo {
+            font-size: 1.1rem;
+            color: var(--color-texto-secundario);
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--color-acento);
+            text-align: left;
+        }
+
+        .ejemplo-label {
+            font-weight: 700;
+            color: var(--color-acento);
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .btn-revelar {
+            background-color: var(--color-acento);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border-radius: 30px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: var(--transicion-suave);
+            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .btn-revelar:hover {
+            background-color: #0284c7;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .btn-revelar:active {
+            transform: translateY(0);
+        }
+
+        .btn-revelar.revelado {
+            background-color: var(--color-texto-secundario);
+        }
+
+        .navegacion {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .btn-nav {
+            background-color: var(--color-tarjeta);
+            color: var(--color-texto-principal);
+            border: 2px solid var(--color-borde);
+            padding: 12px 24px;
+            font-size: 1rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: var(--transicion-suave);
+            font-weight: 600;
+            min-width: 120px;
+        }
+
+        .btn-nav:hover:not(:disabled) {
+            background-color: var(--color-acento-suave);
+            border-color: var(--color-acento);
+            color: var(--color-acento);
+        }
+
+        .btn-nav:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .indicador {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--color-texto-principal);
+            background-color: var(--color-tarjeta);
+            padding: 10px 20px;
+            border-radius: 20px;
+            box-shadow: var(--sombra-suave);
+            min-width: 100px;
+            text-align: center;
+        }
+
+        .puntos-indicadores {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .punto {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: var(--color-borde);
+            cursor: pointer;
+            transition: var(--transicion-suave);
+            border: 2px solid transparent;
+        }
+
+        .punto.activo {
+            background-color: var(--color-acento);
+            transform: scale(1.2);
+            border-color: var(--color-acento-suave);
+        }
+
+        .punto:hover {
+            background-color: var(--color-acento);
+        }
+
+        .instrucciones {
+            text-align: center;
+            margin-bottom: 20px;
+            color: var(--color-texto-secundario);
+            font-size: 1rem;
+            padding: 15px;
+            background-color: var(--color-tarjeta);
+            border-radius: var(--radio-borde);
+            box-shadow: var(--sombra-suave);
+        }
+
+        @media (max-width: 600px) {
+            .tarjeta {
+                padding: 25px 20px;
+            }
+            
+            .termino {
+                font-size: 2rem;
+            }
+            
+            .imagen-concepto {
+                height: 200px;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .info-clase {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+
+        /* Accesibilidad: alto contraste y foco visible */
+        button:focus {
+            outline: 3px solid var(--color-acento);
+            outline-offset: 2px;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+        /* Modo reducido de movimiento */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Instituto para Sordos Santa Rosa</h1>
+        <div class="info-clase">
+            <span class="info-item">Profesor: Miguel Ubiera</span>
+            <span class="info-item">Grado: [completar]</span>
+            <span class="info-item">Área: Matemáticas</span>
+            <span class="info-item">Tema: Números Racionales</span>
+        </div>
+    </header>
+
+    <main class="container-principal">
+        <div class="instrucciones" role="note" aria-label="Instrucciones de uso">
+            👆 Toca la tarjeta o el botón "Ver definición" para revelar la información
+        </div>
+
+        <div class="tarjeta-contenedor" role="region" aria-label="Tarjetas de vocabulario" aria-live="polite">
+            
+            <!-- Tarjeta 1 -->
+            <article class="tarjeta activa" data-index="0" aria-label="Tarjeta 1 de 6: Número Racional">
+                <span class="tipo-imagen">Ilustración: Fracciones visuales</span>
+                <img src="https://images.unsplash.com/photo-1509228468518-180dd4864904?w=600&h=400&fit=crop" 
+                     alt="Representación visual de fracciones con círculos y rectángulos divididos en partes iguales" 
+                     class="imagen-concepto">
+                <h2 class="termino">Número Racional</h2>
+                
+                <div class="contenido-oculto" id="contenido-0">
+                    <p class="definicion">
+                        Número que se puede expresar como el cociente de dos números enteros, 
+                        donde el denominador es diferente de cero. Se representa como una fracción a/b.
+                    </p>
+                    <div class="ejemplo">
+                        <span class="ejemplo-label">Ejemplos visuales:</span>
+                        3/4 (tres cuartos), -2/5 (menos dos quintos), 0.75 (setenta y cinco centésimos)
+                    </div>
+                </div>
+                
+                <button class="btn-revelar" onclick="revelarContenido(0)" aria-expanded="false" aria-controls="contenido-0">
+                    Ver definición
+                </button>
+            </article>
+
+            <!-- Tarjeta 2 -->
+            <article class="tarjeta" data-index="1" aria-label="Tarjeta 2 de 6: Numerador">
+                <span class="tipo-imagen">Ilustración: Parte superior resaltada</span>
+                <img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=600&h=400&fit=crop" 
+                     alt="Fracción matemática con el número superior (numerador) destacado en color" 
+                     class="imagen-concepto">
+                <h2 class="termino">Numerador</h2>
+                
+                <div class="contenido-oculto" id="contenido-1">
+                    <p class="definicion">
+                        Es el número que aparece en la parte <strong>superior</strong> de una fracción. 
+                        Indica cuántas partes de la unidad se están considerando o tomando.
+                    </p>
+                    <div class="ejemplo">
+                        <span class="ejemplo-label">Ejemplo:</span>
+                        En la fracción 3/4, el número <strong>3</strong> es el numerador. 
+                        Significa que tomamos 3 partes de 4.
+                    </div>
+                </div>
+                
+                <button class="btn-revelar" onclick="revelarContenido(1)" aria-expanded="false" aria-controls="contenido-1">
+                    Ver definición
+                </button>
+            </article>
+
+            <!-- Tarjeta 3 -->
+            <article class="tarjeta" data-index="2" aria-label="Tarjeta 3 de 6: Denominador">
+                <span class="tipo-imagen">Ilustración: Parte inferior resaltada</span>
+                <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=600&h=400&fit=crop" 
+                     alt="Fracción matemática con el número inferior (denominador) destacado en color" 
+                     class="imagen-concepto">
+                <h2 class="termino">Denominador</h2>
+                
+                <div class="contenido-oculto" id="contenido-2">
+                    <p class="definicion">
+                        Es el número que aparece en la parte <strong>inferior</strong> de una fracción. 
+                        Indica en cuántas partes iguales se divide la unidad completa.
+                    </p>
+                    <div class="ejemplo">
+                        <span class="ejemplo-label">Ejemplo:</span>
+                        En la fracción 3/4, el número <strong>4</strong> es el denominador. 
+                        Significa que el entero se dividió en 4 partes iguales.
+                    </div>
+                </div>
+                
+                <button class="btn-revelar" onclick="revelarContenido(2)" aria-expanded="false" aria-controls="contenido-2">
+                    Ver definición
+                </button>
+            </article>
+
+            <!-- Tarjeta 4 -->
+            <article class="tarjeta" data-index="3" aria-label="Tarjeta 4 de 6: Fracción Propia">
+                <span class="tipo-imagen">Fotografía: Menos de un entero</span>
+                <img src="https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=600&h=400&fit=crop" 
+                     alt="Tarta o pizza con menos de la mitad consumida, representando fracción menor a 1" 
+                     class="imagen-concepto">
+                <h2 class="termino">Fracción Propia</h2>
+                
+                <div class="contenido-oculto" id="contenido-3">
+                    <p class="definicion">
+                        Fracción donde el numerador es <strong>menor</strong> que el denominador. 
+                        Su valor siempre es menor que 1 (un entero completo).
+                    </p>
+                    <div class="ejemplo">
+                        <span class="ejemplo-label">Ejemplos:</span>
+                        2/5 (dos quintos), 7/8 (siete octavos), 1/3 (un tercio). 
+                        Todas representan menos de un entero.
+                    </div>
+                </div>
+                
+                <button class="btn-revelar" onclick="revelarContenido(3)" aria-expanded="false" aria-controls="contenido-3">
+                    Ver definición
+                </button>
+            </article>
+
+            <!-- Tarjeta 5 -->
+            <article class="tarjeta" data-index="4" aria-label="Tarjeta 5 de 6: Fracción Impropia">
+                <span class="tipo-imagen">Ilustración: Más de un entero</span>
+                <img src="https://images.unsplash.com/photo-1517433670267-08bbd4be890f?w=600&h=400&fit=crop" 
+                     alt="Representación de más de un pastel completo, mostrando fracción mayor a 1" 
+                     class="imagen-concepto">
+                <h2 class="termino">Fracción Impropia</h2>
+                
+                <div class="contenido-oculto" id="contenido-4">
+                    <p class="definicion">
+                        Fracción donde el numerador es <strong>mayor o igual</strong> que el denominador. 
+                        Su valor es mayor o igual a 1 (uno o más enteros completos).
+                    </p>
+                    <div class="ejemplo">
+                        <span class="ejemplo-label">Ejemplos:</span>
+                        5/3 (cinco tercios = 1 entero y 2/3), 9/4 (nueve cuartos = 2 enteros y 1/4), 7/7 (siete séptimos = 1 entero)
+                    </div>
+                </div>
+                
+                <button class="btn-revelar" onclick="revelarContenido(4)" aria-expanded="false" aria-controls="contenido-4">
+                    Ver definición
+                </button>
+            </article>
+
+            <!-- Tarjeta 6 -->
+            <article class="tarjeta" data-index="5" aria-label="Tarjeta 6 de 6: Número Mixto">
+                <span class="tipo-imagen">Ilustración: Entero + Fracción</span>
+                <img src="https://images.unsplash.com/photo-1488477181946-6428a0291777?w=600&h=400&fit=crop" 
+                     alt="Combinación visual de un entero completo más una fracción adicional" 
+                     class="imagen-concepto">
+                <h2 class="termino">Número Mixto</h2>
+                
+                <div class="contenido-oculto" id="contenido-5">
+                    <p class="definicion">
+                        Número formado por una <strong>parte entera</strong> y una <strong>fracción propia</strong>. 
+                        Es otra forma de escribir fracciones impropias.
+                    </p>
+                    <div class="ejemplo">
+                        <span class="ejemplo-label">Ejemplo:</span>
+                        2 1/3 se lee "dos enteros y un tercio". 
+                        Equivale a la fracción impropia 7/3.
+                    </div>
+                </div>
+                
+                <button class="btn-revelar" onclick="revelarContenido(5)" aria-expanded="false" aria-controls="contenido-5">
+                    Ver definición
+                </button>
+            </article>
+
+        </div>
+
+        <div class="navegacion" role="navigation" aria-label="Navegación entre tarjetas">
+            <button class="btn-nav" id="btnAnterior" onclick="cambiarTarjeta(-1)" aria-label="Tarjeta anterior">
+                ← Anterior
+            </button>
+            
+            <div class="indicador" id="indicador" aria-live="polite">
+                1 / 6
+            </div>
+            
+            <button class="btn-nav" id="btnSiguiente" onclick="cambiarTarjeta(1)" aria-label="Siguiente tarjeta">
+                Siguiente →
+            </button>
+        </div>
+
+        <div class="puntos-indicadores" role="tablist" aria-label="Selección rápida de tarjetas">
+            <button class="punto activo" onclick="irATarjeta(0)" role="tab" aria-selected="true" aria-label="Ir a tarjeta 1"></button>
+            <button class="punto" onclick="irATarjeta(1)" role="tab" aria-selected="false" aria-label="Ir a tarjeta 2"></button>
+            <button class="punto" onclick="irATarjeta(2)" role="tab" aria-selected="false" aria-label="Ir a tarjeta 3"></button>
+            <button class="punto" onclick="irATarjeta(3)" role="tab" aria-selected="false" aria-label="Ir a tarjeta 4"></button>
+            <button class="punto" onclick="irATarjeta(4)" role="tab" aria-selected="false" aria-label="Ir a tarjeta 5"></button>
+            <button class="punto" onclick="irATarjeta(5)" role="tab" aria-selected="false" aria-label="Ir a tarjeta 6"></button>
+        </div>
+
+    </main>
+
+    <script>
+        let tarjetaActual = 0;
+        const totalTarjetas = 6;
+        const tarjetas = document.querySelectorAll('.tarjeta');
+        const puntos = document.querySelectorAll('.punto');
+        const indicador = document.getElementById('indicador');
+        const btnAnterior = document.getElementById('btnAnterior');
+        const btnSiguiente = document.getElementById('btnSiguiente');
+
+        function actualizarNavegacion() {
+            // Actualizar indicador numérico
+            indicador.textContent = `${tarjetaActual + 1} / ${totalTarjetas}`;
+            
+            // Actualizar botones
+            btnAnterior.disabled = tarjetaActual === 0;
+            btnSiguiente.disabled = tarjetaActual === totalTarjetas - 1;
+            
+            // Actualizar puntos
+            puntos.forEach((punto, index) => {
+                if (index === tarjetaActual) {
+                    punto.classList.add('activo');
+                    punto.setAttribute('aria-selected', 'true');
+                } else {
+                    punto.classList.remove('activo');
+                    punto.setAttribute('aria-selected', 'false');
+                }
+            });
+            
+            // Actualizar visibilidad de tarjetas
+            tarjetas.forEach((tarjeta, index) => {
+                if (index === tarjetaActual) {
+                    tarjeta.classList.add('activa');
+                } else {
+                    tarjeta.classList.remove('activa');
+                    // Cerrar contenido si se cambia de tarjeta
+                    const contenido = tarjeta.querySelector('.contenido-oculto');
+                    const btn = tarjeta.querySelector('.btn-revelar');
+                    if (contenido) contenido.classList.remove('revelado');
+                    if (btn) {
+                        btn.classList.remove('revelado');
+                        btn.textContent = 'Ver definición';
+                        btn.setAttribute('aria-expanded', 'false');
+                    }
+                }
+            });
+        }
+
+        function cambiarTarjeta(direccion) {
+            const nuevaTarjeta = tarjetaActual + direccion;
+            if (nuevaTarjeta >= 0 && nuevaTarjeta < totalTarjetas) {
+                tarjetaActual = nuevaTarjeta;
+                actualizarNavegacion();
+                
+            // Anunciar cambio para lectores de pantalla
+                const termino = tarjetas[tarjetaActual].querySelector('.termino').textContent;
+                indicador.setAttribute('aria-label', `Tarjeta ${tarjetaActual + 1} de ${totalTarjetas}: ${termino}`);
+            }
+        }
+
+        function irATarjeta(index) {
+            tarjetaActual = index;
+            actualizarNavegacion();
+            
+            const termino = tarjetas[tarjetaActual].querySelector('.termino').textContent;
+            indicador.setAttribute('aria-label', `Tarjeta ${tarjetaActual + 1} de ${totalTarjetas}: ${termino}`);
+        }
+
+        function revelarContenido(index) {
+            const contenido = document.getElementById(`contenido-${index}`);
+            const btn = event.target;
+            
+            if (contenido.classList.contains('revelado')) {
+                // Ocultar
+                contenido.classList.remove('revelado');
+                btn.classList.remove('revelado');
+                btn.textContent = 'Ver definición';
+                btn.setAttribute('aria-expanded', 'false');
+            } else {
+                // Mostrar
+                contenido.classList.add('revelado');
+                btn.classList.add('revelado');
+                btn.textContent = 'Ocultar';
+                btn.setAttribute('aria-expanded', 'true');
+            }
+        }
+
+        // Navegación con teclado
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') {
+                cambiarTarjeta(-1);
+            } else if (e.key === 'ArrowRight') {
+                cambiarTarjeta(1);
+            }
+        });
+
+        // Inicializar
+        actualizarNavegacion();
+    </script>
+
+</body>
+</html>

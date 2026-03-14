@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rueda de la Suerte: Números Irracionales</title>
+    <style>
+        :root {
+            /* Paleta de colores pastel y accesible */
+            --bg-body: #f8fafc;
+            --text-main: #1e293b;
+            --text-light: #ffffff;
+            --wheel-border: #ffffff;
+            
+            /* Colores de los segmentos (Suaves pero distinguibles) */
+            --color-1: #3b82f6; /* Azul */
+            --color-2: #8b5cf6; /* Violeta */
+            --color-3: #ec4899; /* Rosa */
+            --color-4: #f59e0b; /* Ámbar */
+            --color-5: #10b981; /* Esmeralda */
+            --color-6: #06b6d4; /* Cian */
+
+            --shadow-soft: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --focus-ring: 0 0 0 4px #f59e0b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Encabezado */
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .institution {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--color-2);
+            margin-bottom: 5px;
+        }
+
+        .course-info {
+            font-size: 1rem;
+            color: #64748b;
+            background: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            display: inline-block;
+            box-shadow: var(--shadow-soft);
+        }
+
+        /* Contenedor Principal */
+        .main-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            justify-content: center;
+            align-items: flex-start;
+            max-width: 1000px;
+            width: 100%;
+        }
+
+        /* Sección de la Rueda */
+        .wheel-section {
+            position: relative;
+            width: 400px;
+            height: 400px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* La Rueda */
+        .wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 8px solid var(--wheel-border);
+            box-shadow: var(--shadow-soft);
+            position: relative;
+            overflow: hidden;
+            transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99); /* Efecto de frenado suave */
+            background: conic-gradient(
+                var(--color-1) 0deg 60deg,
+                var(--color-2) 60deg 120deg,
+                var(--color-3) 120deg 180deg,
+                var(--color-4) 180deg 240deg,
+                var(--color-5) 240deg 300deg,
+                var(--color-6) 300deg 360deg
+            );
+        }
+
+        /* Textos dentro de la rueda */
+        .wheel-label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform-origin: 0 0;
+            font-weight: 700;
+            color: white;
+            font-size: 1.1rem;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            user-select: none;
+            width: 180px; /* Mitad del ancho menos borde */
+            text-align: right;
+            padding-right: 20px;
+        }
+
+        /* Posicionamiento de las 6 etiquetas (360 / 6 = 60 grados) */
+        /* Ajustamos el ángulo para que el texto quede centrado en el segmento */
+        .label-1 { transform: rotate(-30deg) translate(0, -50%); } /* 0-60 */
+        .label-2 { transform: rotate(30deg) translate(0, -50%); }  /* 60-120 */
+        .label-3 { transform: rotate(90deg) translate(0, -50%); }  /* 120-180 */
+        .label-4 { transform: rotate(150deg) translate(0, -50%); } /* 180-240 */
+        .label-5 { transform: rotate(210deg) translate(0, -50%); } /* 240-300 */
+        .label-6 { transform: rotate(270deg) translate(0, -50%); } /* 300-360 */
+
+        /* Flecha indicadora */
+        .pointer {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+            border-top: 30px solid #ef4444; /* Rojo para alto contraste */
+            z-index: 10;
+            filter: drop-shadow(0 2px 2px rgba(0,0,0,0.3));
+        }
+
+        /* Botón Central */
+        .spin-btn {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: white;
+            border: 4px solid var(--text-main);
+            color: var(--text-main);
+            font-weight: 800;
+            font-size: 1rem;
+            cursor: pointer;
+            z-index: 20;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            transition: transform 0.2s, background 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .spin-btn:hover {
+            background: #f1f5f9;
+            transform: scale(1.05);
+        }
+
+        .spin-btn:focus {
+            outline: none;
+            box-shadow: var(--focus-ring);
+        }
+
+        /* Panel de Información */
+        .info-panel {
+            flex: 1;
+            min-width: 300px;
+            max-width: 500px;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: var(--shadow-soft);
+            border: 2px solid #e2e8f0;
+            opacity: 0.5; /* Atenuado hasta que se seleccione algo */
+            transition: opacity 0.5s;
+        }
+
+        .info-panel.active {
+            opacity: 1;
+            border-color: var(--color-2);
+        }
+
+        .info-title {
+            font-size: 1.8rem;
+            color: var(--text-main);
+            margin-bottom: 15px;
+            border-bottom: 3px solid #f1f5f9;
+            padding-bottom: 10px;
+        }
+
+        .info-content {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            color: #334155;
+        }
+
+        .info-example {
+            margin-top: 20px;
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 5px solid var(--color-1);
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            font-size: 1.3rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .wheel-section {
+                width: 300px;
+                height: 300px;
+            }
+            .wheel-label {
+                font-size: 0.9rem;
+                width: 130px;
+            }
+            .main-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            .info-panel {
+                width: 100%;
+            }
+        }
+
+        /* Accesibilidad: Movimiento reducido */
+        @media (prefers-reduced-motion: reduce) {
+            .wheel {
+                transition: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="institution">Instituto para Sordos Santa Rosa</div>
+        <div class="course-info">
+            🎓 1ro Secundaria • 📐 Matemáticas • 👨‍🏫 Prof. Miguel
+        </div>
+    </header>
+
+    <main class="main-container">
+        
+        <!-- Sección de la Rueda -->
+        <section class="wheel-section">
+            <div class="pointer" aria-hidden="true"></div>
+            
+            <div class="wheel" id="wheel" role="img" aria-label="Rueda de opciones interactiva">
+                <!-- Las etiquetas se posicionan con CSS -->
+                <div class="wheel-label label-1">Definición</div>
+                <div class="wheel-label label-2">Raíz de 2</div>
+                <div class="wheel-label label-3">Número Pi</div>
+                <div class="wheel-label label-4">Decimales</div>
+                <div class="wheel-label label-5">Geometría</div>
+                <div class="wheel-label label-6">Historia</div>
+            </div>
+
+            <button class="spin-btn" id="spinBtn" aria-label="Girar la rueda al azar">
+                GIRAR
+            </button>
+        </section>
+
+        <!-- Panel de Información -->
+        <aside class="info-panel" id="infoPanel" aria-live="polite">
+            <h2 class="info-title" id="infoTitle">Selecciona un tema</h2>
+            <div class="info-content" id="infoText">
+                Haz clic en el botón "GIRAR" o selecciona una opción para ver la explicación detallada.
+            </div>
+            <div class="info-example" id="infoExample" style="display: none;">
+                <!-- Ejemplo matemático -->
+            </div>
+        </aside>
+
+    </main>
+
+    <script>
+        // DATOS DE LAS 6 OPCIONES
+        const wheelData = [
+            {
+                id: 1,
+                title: "Definición",
+                text: "Un número irracional es un número que <strong>NO</strong> puede escribirse como una fracción simple (a/b). Sus decimales son infinitos y no tienen un patrón que se repita.",
+                example: "No es como ½ (0.5)"
+            },
+            {
+                id: 2,
+                title: "Raíz de 2 (√2)",
+                text: "Es el número irracional más famoso de la geometría. Representa la longitud de la diagonal de un cuadrado cuyo lado mide 1. Fue el primero en descubrirse.",
+                example: "√2 ≈ 1.4142135..."
+            },
+            {
+                id: 3,
+                title: "Número Pi (π)",
+                text: "Es la relación entre la longitud de una circunferencia y su diámetro. Es fundamental para calcular áreas de círculos y volúmenes de esferas.",
+                example: "π ≈ 3.1415926..."
+            },
+            {
+                id: 4,
+                title: "Decimales Infinitos",
+                text: "La característica principal de los irracionales es que su parte decimal nunca termina y nunca se vuelve periódica (no se repite como 0.333...).",
+                example: "1.7320508..."
+            },
+            {
+                id: 5,
+                title: "Geometría",
+                text: "Los irracionales aparecen naturalmente al medir distancias. Por ejemplo, la diagonal de un rectángulo o la circunferencia de un círculo suelen ser irracionales.",
+                example: "Diagonal = l · √2"
+            },
+            {
+                id: 6,
+                title: "Historia",
+                text: "Los pitagóricos descubrieron los irracionales. Según la leyenda, Hipaso de Metaponto fue expulsado por revelar que √2 no era un número racional.",
+                example: "Descubierto ~500 a.C."
+            }
+        ];
+
+        // VARIABLES DE ESTADO
+        let currentRotation = 0;
+        const segmentAngle = 360 / 6; // 60 grados por segmento
+        const wheel = document.getElementById('wheel');
+        const spinBtn = document.getElementById('spinBtn');
+        const infoPanel = document.getElementById('infoPanel');
+        const infoTitle = document.getElementById('infoTitle');
+        const infoText = document.getElementById('infoText');
+        const infoExample = document.getElementById('infoExample');
+
+        // FUNCIÓN PARA GIRAR
+        function spinWheel() {
+            // Deshabilitar botón durante el giro
+            spinBtn.disabled = true;
+            infoPanel.classList.remove('active');
+
+            // Calcular giro aleatorio
+            // Mínimo 5 vueltas completas (1800 grados) + aleatorio entre 0 y 360
+            const randomDegree = Math.floor(Math.random() * 360);
+            const totalSpin = 1800 + randomDegree; 
+            
+            // Actualizar rotación acumulada para que siempre gire hacia adelante
+            currentRotation += totalSpin;
+            
+            // Aplicar rotación CSS
+            wheel.style.transform = `rotate(${currentRotation}deg)`;
+
+            // Esperar a que termine la animación (4 segundos según CSS)
+            setTimeout(() => {
+                showResult(currentRotation);
+                spinBtn.disabled = false;
+                spinBtn.focus(); // Regresar foco al botón para accesibilidad
+            }, 4000);
+        }
+
+        // FUNCIÓN PARA MOSTRAR RESULTADO
+        function showResult(rotation) {
+            // Normalizar los grados a 0-360
+            const actualDeg = rotation % 360;
+            
+            // Calcular qué segmento quedó arriba (debajo del puntero)
+            // El puntero está en 0 grados (arriba). 
+            // Si la rueda gira X grados, el segmento que queda en 0 es:
+            // (360 - (X % 360)) / 60
+            
+            let winningIndex = Math.floor((360 - actualDeg) / segmentAngle);
+            
+            // Ajuste por si cae exactamente en el límite (360 = 0)
+            if (winningIndex >= 6) winningIndex = 0;
+
+            // Mostrar información
+            const data = wheelData[winningIndex];
+            updateInfoPanel(data);
+        }
+
+        // ACTUALIZAR PANEL DE INFORMACIÓN
+        function updateInfoPanel(data) {
+            infoTitle.textContent = data.title;
+            infoTitle.style.color = getComputedStyle(document.documentElement).getPropertyValue(`--color-${data.id}`);
+            
+            infoText.innerHTML = data.text;
+            
+            infoExample.textContent = data.example;
+            infoExample.style.display = 'block';
+            infoExample.style.borderLeftColor = getComputedStyle(document.documentElement).getPropertyValue(`--color-${data.id}`);
+
+            infoPanel.classList.add('active');
+            
+            // Animación suave de entrada para el texto
+            infoPanel.style.transform = "translateY(0)";
+            infoPanel.style.opacity = "1";
+        }
+
+        // EVENT LISTENERS
+        spinBtn.addEventListener('click', spinWheel);
+
+        // Accesibilidad: Girar con tecla Enter si el botón tiene foco
+        spinBtn.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                spinWheel();
+            }
+        });
+
+    </script>
+</body>
+</html>

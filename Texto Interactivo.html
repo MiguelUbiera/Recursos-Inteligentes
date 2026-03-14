@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Texto Interactivo: Números Irracionales</title>
+    <style>
+        :root {
+            /* Paleta de colores suave y accesible */
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+            --highlight-bg: #dbeafe; /* Azul muy suave */
+            --highlight-text: #1e40af; /* Azul oscuro para contraste */
+            --highlight-hover: #bfdbfe;
+            --tooltip-bg: #ffffff;
+            --tooltip-border: #e2e8f0;
+            --accent-color: #3b82f6;
+            --shadow-soft: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-tooltip: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --focus-ring: 0 0 0 3px #f59e0b; /* Ámbar para alto contraste */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-primary);
+            line-height: 1.8;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Encabezado */
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            max-width: 800px;
+        }
+
+        .institution {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            margin-bottom: 8px;
+        }
+
+        .course-info {
+            display: inline-flex;
+            gap: 15px;
+            background: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-soft);
+            font-size: 1rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* Contenedor del Texto */
+        .text-container {
+            background: var(--bg-card);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-soft);
+            max-width: 800px;
+            width: 100%;
+            font-size: 1.4rem; /* Texto grande para legibilidad */
+            line-height: 2;
+            position: relative;
+            border: 2px solid var(--tooltip-border);
+        }
+
+        /* Palabras Clave Interactivas */
+        .keyword {
+            background-color: var(--highlight-bg);
+            color: var(--highlight-text);
+            padding: 2px 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 700;
+            border-bottom: 2px solid var(--accent-color);
+            transition: all 0.2s ease;
+            position: relative;
+            display: inline-block;
+        }
+
+        .keyword:hover {
+            background-color: var(--highlight-hover);
+            transform: translateY(-2px);
+        }
+
+        .keyword:focus {
+            outline: none;
+            box-shadow: var(--focus-ring);
+            z-index: 10;
+        }
+
+        /* Tooltip (Caja Emergente) */
+        .tooltip-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .tooltip-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .tooltip-box {
+            background: var(--tooltip-bg);
+            width: 100%;
+            max-width: 450px;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: var(--shadow-tooltip);
+            border: 2px solid var(--accent-color);
+            position: relative;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+            text-align: left;
+        }
+
+        .tooltip-overlay.active .tooltip-box {
+            transform: translateY(0);
+        }
+
+        .tooltip-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--tooltip-border);
+            padding-bottom: 10px;
+        }
+
+        .tooltip-title {
+            font-size: 1.5rem;
+            color: var(--accent-color);
+            font-weight: 800;
+        }
+
+        .close-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s;
+        }
+
+        .close-btn:hover {
+            transform: rotate(90deg);
+            background: #dc2626;
+        }
+
+        .close-btn:focus {
+            outline: var(--focus-ring);
+        }
+
+        .tooltip-content {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .tooltip-visual {
+            margin-top: 20px;
+            background: #f1f5f9;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            font-size: 1.3rem;
+            color: var(--text-primary);
+            border: 1px dashed var(--tooltip-border);
+        }
+
+        /* Instrucciones */
+        .instructions {
+            margin-top: 20px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 1rem;
+            background: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            display: inline-block;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .text-container {
+                padding: 25px;
+                font-size: 1.2rem;
+            }
+            .tooltip-box {
+                padding: 20px;
+            }
+        }
+
+        /* Accesibilidad: Movimiento reducido */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                transition: none !important;
+                transform: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="institution">Instituto para Sordos Santa Rosa</div>
+        <div class="course-info">
+            <span>🎓 1ro Secundaria</span>
+            <span>📐 Matemáticas</span>
+            <span>👨‍🏫 Prof. Miguel</span>
+        </div>
+    </header>
+
+    <div class="instructions">
+        👆 Toca las palabras <span style="color:var(--accent-color); font-weight:bold; text-decoration:underline;">subrayadas</span> para ver su significado.
+    </div>
+    <br>
+
+    <main class="text-container">
+        <p>
+            Un número 
+            <span class="keyword" tabindex="0" data-term="Irracional" data-def="Es un número real que NO puede escribirse como una fracción simple (división de dos enteros)." data-visual="No es a/b">irracional</span> 
+            es aquel que tiene una parte decimal infinita. A diferencia de los números racionales, sus 
+            <span class="keyword" tabindex="0" data-term="Decimales" data-def="Son los números después de la coma. En los irracionales, nunca terminan y nunca forman un patrón repetitivo." data-visual="1.4142135...">decimales</span> 
+            no siguen un patrón repetitivo.
+            <br><br>
+            Esto significa que no podemos expresarlos exactamente como una 
+            <span class="keyword" tabindex="0" data-term="Fracción" data-def="Una forma de escribir un número como división: Numerador / Denominador. Ejemplo: 1/2." data-visual="1 / 2">fracción</span>. 
+            Los ejemplos más famosos en matemáticas son el número 
+            <span class="keyword" tabindex="0" data-term="Pi (π)" data-def="Es la relación entre la longitud de una circunferencia y su diámetro. Es fundamental en geometría." data-visual="π ≈ 3.14159...">Pi</span> 
+            y la 
+            <span class="keyword" tabindex="0" data-term="Raíz Cuadrada" data-def="Operación inversa a elevar al cuadrado. La raíz de 2 es el primer número irracional descubierto." data-visual="√2 ≈ 1.414...">raíz cuadrada</span> 
+            de 2.
+        </p>
+    </main>
+
+    <!-- Overlay y Caja del Tooltip -->
+    <div class="tooltip-overlay" id="tooltipOverlay" role="dialog" aria-modal="true" aria-labelledby="tooltipTitle">
+        <div class="tooltip-box">
+            <div class="tooltip-header">
+                <h2 class="tooltip-title" id="tooltipTitle">Término</h2>
+                <button class="close-btn" id="closeBtn" aria-label="Cerrar">×</button>
+            </div>
+            <div class="tooltip-content" id="tooltipDef">
+                Definición aquí...
+            </div>
+            <div class="tooltip-visual" id="tooltipVisual">
+                Ejemplo visual
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Elementos del DOM
+        const keywords = document.querySelectorAll('.keyword');
+        const overlay = document.getElementById('tooltipOverlay');
+        const closeBtn = document.getElementById('closeBtn');
+        const tooltipTitle = document.getElementById('tooltipTitle');
+        const tooltipDef = document.getElementById('tooltipDef');
+        const tooltipVisual = document.getElementById('tooltipVisual');
+
+        let activeKeyword = null;
+
+        // Función para abrir el tooltip
+        function openTooltip(keywordElement) {
+            activeKeyword = keywordElement;
+            
+            // Obtener datos del elemento HTML
+            const term = keywordElement.getAttribute('data-term');
+            const def = keywordElement.getAttribute('data-def');
+            const visual = keywordElement.getAttribute('data-visual');
+
+            // Rellenar contenido
+            tooltipTitle.textContent = term;
+            tooltipDef.textContent = def;
+            tooltipVisual.textContent = visual;
+
+            // Mostrar overlay
+            overlay.classList.add('active');
+            
+            // Accesibilidad: Enfocar botón de cerrar
+            setTimeout(() => closeBtn.focus(), 100);
+        }
+
+        // Función para cerrar el tooltip
+        function closeTooltip() {
+            overlay.classList.remove('active');
+            
+            // Regresar foco a la palabra que se abrió
+            if (activeKeyword) {
+                activeKeyword.focus();
+            }
+        }
+
+        // Event Listeners para las palabras clave
+        keywords.forEach(keyword => {
+            // Click
+            keyword.addEventListener('click', () => {
+                openTooltip(keyword);
+            });
+
+            // Teclado (Enter o Espacio)
+            keyword.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    openTooltip(keyword);
+                }
+            });
+        });
+
+        // Cerrar con el botón X
+        closeBtn.addEventListener('click', closeTooltip);
+
+        // Cerrar haciendo clic fuera de la caja (en el fondo oscuro)
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) {
+                closeTooltip();
+            }
+        });
+
+        // Cerrar con tecla Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && overlay.classList.contains('active')) {
+                closeTooltip();
+            }
+        });
+
+    </script>
+</body>
+</html>
