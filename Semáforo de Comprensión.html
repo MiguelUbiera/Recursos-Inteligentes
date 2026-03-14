@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Semáforo de comprensión · Números irracionales</title>
+  <style>
+    /* === RESET Y ESTILOS GLOBALES === */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background-color: #eef2f5;  /* fondo tenue y suave */
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 1.5rem;
+      line-height: 1.5;
+      color: #1e2b3c;             /* alto contraste sobre fondo claro */
+    }
+
+    .tarjeta {
+      max-width: 950px;
+      width: 100%;
+      background-color: #ffffffdf;
+      backdrop-filter: blur(2px);
+      border-radius: 2.5rem 2.5rem 2rem 2rem;
+      box-shadow: 0 15px 30px -10px rgba(0, 20, 30, 0.15);
+      padding: 2rem 2rem 2.5rem;
+      border: 1px solid rgba(180, 200, 210, 0.4);
+    }
+
+    /* === ENCABEZADO INSTITUCIONAL === */
+    .institucion {
+      text-align: center;
+      margin-bottom: 1.8rem;
+      border-bottom: 2px solid #cbd8e4;
+      padding-bottom: 1rem;
+    }
+
+    .institucion h1 {
+      font-size: 1.9rem;
+      font-weight: 500;
+      letter-spacing: 1px;
+      color: #103c5c;
+      margin-bottom: 0.2rem;
+    }
+
+    .institucion .profesor {
+      font-size: 1.2rem;
+      font-weight: 400;
+      color: #2b4b65;
+      margin: 0.3rem 0 0.6rem;
+    }
+
+    .institucion .detalles {
+      font-size: 1.1rem;
+      background-color: #d9e6f2;
+      display: inline-block;
+      padding: 0.4rem 1.8rem;
+      border-radius: 40px;
+      color: #103c5c;
+      font-weight: 500;
+      box-shadow: inset 0 -2px 0 #b0c8da;
+    }
+
+    .detalles span {
+      background-color: #f5faff;
+      padding: 0.1rem 0.5rem;
+      border-radius: 30px;
+      margin: 0 0.2rem;
+      font-weight: 600;
+      color: #0b3c4f;
+    }
+
+    /* === CONTEXTO DEL TEMA (NÚMEROS IRRACIONALES) === */
+    .contexto-tema {
+      background-color: #e6f0f9;
+      border-left: 8px solid #7899b3;
+      padding: 1rem 1.5rem;
+      border-radius: 1.5rem 0.8rem 0.8rem 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 6px 10px -5px rgba(0,30,40,0.1);
+    }
+
+    .contexto-tema p {
+      font-size: 1.2rem;
+      font-weight: 400;
+      color: #143240;
+    }
+
+    .contexto-tema strong {
+      color: #154c6b;
+      font-weight: 600;
+    }
+
+    /* === INSTRUCCIÓN PRINCIPAL === */
+    .instruccion {
+      font-size: 1.7rem;
+      font-weight: 500;
+      text-align: center;
+      margin: 1.8rem 0 1.2rem;
+      color: #1a445a;
+      background: rgba(210, 230, 245, 0.5);
+      padding: 0.5rem 1rem;
+      border-radius: 60px;
+      display: inline-block;
+      width: auto;
+      margin-left: auto;
+      margin-right: auto;
+      backdrop-filter: blur(4px);
+      border: 1px solid #b8d2e5;
+    }
+
+    /* === CONTENEDOR DE LOS TRES CIRCULOS (SEMÁFORO) === */
+    .semaforo {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2rem 1.2rem;
+      margin: 2.2rem 0 2rem;
+    }
+
+    /* cada opción es un área cliqueable */
+    .opcion {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      transition: transform 0.1s ease;
+      border-radius: 2rem;
+      padding: 0.5rem 0.5rem 1rem;
+      background-color: transparent;
+      border: 3px solid transparent;
+      outline: none;
+      box-shadow: 0 2px 6px rgba(0,0,0,0);
+      user-select: none;
+    }
+
+    .opcion:focus-visible {
+      outline: 4px solid #2b7a9c;
+      outline-offset: 3px;
+      border-radius: 3rem;
+    }
+
+    /* círculo en sí */
+    .circulo {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      margin-bottom: 0.8rem;
+      border: 4px solid rgba(30, 40, 50, 0.25);  /* borde definido pero suave */
+      box-shadow: 0 8px 12px -6px rgba(0, 20, 20, 0.2), 0 0 0 1px rgba(255,255,255,0.6) inset;
+      transition: all 0.15s cubic-bezier(0.2, 0, 0, 1);
+    }
+
+    /* colores específicos (tonos amigables, no saturados) */
+    .circulo.verde {
+      background-color: #b0d9b0;  /* verde pastel */
+      background: radial-gradient(circle at 35% 35%, #d0f0d0, #8fc8a5);
+    }
+    .circulo.amarillo {
+      background-color: #f8e6a0;
+      background: radial-gradient(circle at 35% 35%, #fff2b5, #f0cf80);
+    }
+    .circulo.rojo {
+      background-color: #f6c0b0;
+      background: radial-gradient(circle at 35% 35%, #ffdbd0, #e89f8f);
+    }
+
+    /* etiqueta de texto debajo del círculo */
+    .etiqueta {
+      font-size: 1.45rem;
+      font-weight: 600;
+      text-align: center;
+      color: #103c4a;
+      background-color: rgba(255, 255, 255, 0.7);
+      padding: 0.3rem 1rem;
+      border-radius: 40px;
+      border: 1px solid #acc4d6;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      backdrop-filter: blur(2px);
+    }
+
+    /* --- ESTADO ACTIVO (confirmación visual) --- */
+    .opcion.active .circulo {
+      border: 5px solid #2c4f6e;
+      box-shadow: 0 0 0 4px rgba(255, 255, 240, 0.9), 0 12px 18px -8px #103c5c;
+      transform: scale(1.03);
+    }
+
+    .opcion.active .etiqueta {
+      background-color: #2c4f6e;
+      color: white;
+      border-color: #143d57;
+      box-shadow: 0 6px 10px rgba(0, 30, 40, 0.2);
+    }
+
+    /* mensaje de confirmación breve */
+    .confirmacion {
+      text-align: center;
+      font-size: 1.5rem;
+      min-height: 3.2rem;
+      padding: 0.6rem;
+      margin: 0.5rem 0 1.2rem;
+      background-color: #f1f9ff;
+      border-radius: 50px;
+      border: 1px solid #b4cfdf;
+      color: #103a50;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* área de duda (solo visible si se elige amarillo o rojo) */
+    .area-duda {
+      margin-top: 2rem;
+      border-top: 2px dashed #b0cbd9;
+      padding-top: 1.8rem;
+      transition: opacity 0.1s;
+    }
+
+    .oculto {
+      display: none;
+    }
+
+    .etiqueta-duda {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #1f5470;
+      margin-bottom: 0.8rem;
+      display: block;
+    }
+
+    .campo-duda {
+      width: 100%;
+      padding: 1rem 1.2rem;
+      font-size: 1.3rem;
+      border: 3px solid #acc6db;
+      border-radius: 50px;
+      background-color: #fefefd;
+      resize: vertical;
+      font-family: inherit;
+      box-shadow: inset 0 4px 6px rgba(0,0,0,0.02), 0 2px 4px rgba(0,0,0,0.03);
+      transition: border 0.1s;
+    }
+
+    .campo-duda:focus {
+      border-color: #226688;
+      outline: none;
+      background-color: #ffffff;
+      box-shadow: 0 0 0 4px #c5e2f0;
+    }
+
+    /* pie ligero con nombre del profesor */
+    .pie-recurso {
+      margin-top: 2.8rem;
+      font-size: 1.1rem;
+      text-align: center;
+      color: #366077;
+      border-top: 1px solid #ccdeec;
+      padding-top: 1.2rem;
+    }
+
+    /* ajuste responsive para móviles */
+    @media (max-width: 650px) {
+      .tarjeta { padding: 1.2rem; }
+      .circulo { width: 120px; height: 120px; }
+      .etiqueta { font-size: 1.2rem; }
+      .instruccion { font-size: 1.5rem; }
+      .confirmacion { font-size: 1.3rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="tarjeta">
+    <!-- ENCABEZADO INSTITUTO Y PROFESOR -->
+    <div class="institucion">
+      <h1>Instituto para Sordos Santa Rosa</h1>
+      <div class="profesor">Prof. Miguel Ubiera</div>
+      <div class="detalles">
+        <span>Grado: [completar]</span> · 
+        <span>Asignatura: [completar]</span> · 
+        <span>Tema: Números irracionales</span>
+      </div>
+    </div>
+
+    <!-- BREVE CONTENIDO SOBRE EL TEMA (totalmente visual) -->
+    <div class="contexto-tema">
+      <p>📘 <strong>Los números irracionales</strong> son aquellos que <strong>no pueden expresarse como una fracción</strong> exacta. Tienen infinitas cifras decimales no periódicas. Ejemplos clásicos: <strong>π (pi), √2, φ (número áureo)</strong>. Aparecen en geometría, raíces y constantes científicas. ¡Son fascinantes!</p>
+    </div>
+
+    <!-- INSTRUCCIÓN VISUAL PRINCIPAL -->
+    <div class="instruccion">
+      ⚫ Selecciona cómo te sientes con el tema ⚫
+    </div>
+
+    <!-- SEMÁFORO DE COMPRENSIÓN (TRES CIRCULOS) -->
+    <div class="semaforo">
+      <!-- Opción verde: Entendí todo -->
+      <div class="opcion" id="opcionVerde" data-nivel="verde" tabindex="0" role="button" aria-label="Entendí todo">
+        <div class="circulo verde"></div>
+        <span class="etiqueta">Entendí todo</span>
+      </div>
+      <!-- Opción amarilla: Tengo dudas -->
+      <div class="opcion" id="opcionAmarilla" data-nivel="amarillo" tabindex="0" role="button" aria-label="Tengo dudas">
+        <div class="circulo amarillo"></div>
+        <span class="etiqueta">Tengo dudas</span>
+      </div>
+      <!-- Opción roja: Necesito ayuda -->
+      <div class="opcion" id="opcionRoja" data-nivel="rojo" tabindex="0" role="button" aria-label="Necesito ayuda">
+        <div class="circulo rojo"></div>
+        <span class="etiqueta">Necesito ayuda</span>
+      </div>
+    </div>
+
+    <!-- CONFIRMACIÓN VISUAL BREVE (mensaje dinámico) -->
+    <div class="confirmacion" id="mensajeConfirmacion">
+      🌱 Esperando tu elección...
+    </div>
+
+    <!-- CAMPO DE TEXTO OPCIONAL PARA DUDAS (solo amarillo/rojo) -->
+    <div class="area-duda oculto" id="areaDuda">
+      <label for="dudaTexto" class="etiqueta-duda">✏️ Escribe tu duda o lo que necesitas:</label>
+      <textarea id="dudaTexto" class="campo-duda" rows="2" placeholder="Ejemplo: ¿por qué π es irracional?..."></textarea>
+      <!-- pequeño aviso visual adicional (opcional) -->
+      <p style="margin-top: 0.4rem; color: #3c6e8c; font-size: 1rem;">Puedes escribir con confianza, es solo para tí.</p>
+    </div>
+
+    <!-- PIE CON PROFESOR (reiteración sutil) -->
+    <div class="pie-recurso">
+      ✦ Material interactivo para comprensión visual – Prof. Miguel Ubiera ✦
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT: INTERACCIÓN, RESALTADO Y CAMPO DE TEXTO -->
+  <script>
+    (function() {
+      // Elementos del DOM
+      const opciones = document.querySelectorAll('.opcion');
+      const mensajeConfirmacion = document.getElementById('mensajeConfirmacion');
+      const areaDuda = document.getElementById('areaDuda');
+      const dudaTextarea = document.getElementById('dudaTexto');
+
+      // Variable para guardar la opción activa actual
+      let opcionActiva = null;
+
+      // Función para quitar el active de todas las opciones
+      function quitarActive() {
+        opciones.forEach(op => op.classList.remove('active'));
+      }
+
+      // Función para actualizar mensaje según el nivel
+      function actualizarMensaje(nivel) {
+        let texto = '';
+        if (nivel === 'verde') texto = '✅ ¡Entendido! Me alegra que lo domines.';
+        else if (nivel === 'amarillo') texto = '🟡 Tienes dudas. Puedes escribirlas abajo.';
+        else if (nivel === 'rojo') texto = '🔴 Necesitas ayuda. Cuéntanos qué pasa.';
+        else texto = '🌱 Esperando tu elección...';
+        mensajeConfirmacion.textContent = texto;
+      }
+
+      // Función para manejar la selección de una opción
+      function seleccionarOpcion(opcion) {
+        const nivel = opcion.dataset.nivel; // 'verde', 'amarillo', 'rojo'
+
+        // Quitar resaltado de todos y resaltar el actual
+        quitarActive();
+        opcion.classList.add('active');
+        opcionActiva = nivel;
+
+        // Actualizar mensaje de confirmación breve
+        actualizarMensaje(nivel);
+
+        // Gestionar campo de texto (dudas)
+        if (nivel === 'amarillo' || nivel === 'rojo') {
+          areaDuda.classList.remove('oculto');
+          // Enfocar el textarea para que puedan escribir inmediatamente
+          setTimeout(() => dudaTextarea.focus(), 50);
+        } else {
+          // Si es verde: ocultar área y limpiar texto (para no guardar dudas previas)
+          areaDuda.classList.add('oculto');
+          dudaTextarea.value = '';   // limpiar campo
+        }
+      }
+
+      // Asignar evento click a cada opción
+      opciones.forEach(opcion => {
+        opcion.addEventListener('click', function(e) {
+          seleccionarOpcion(this);
+        });
+
+        // Accesibilidad: permitir selección con Enter o Espacio (role button)
+        opcion.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();  // evitar scroll con espacio
+            seleccionarOpcion(this);
+          }
+        });
+      });
+
+      // Si se hace clic en cualquier parte del área de duda, no se pierde la selección.
+      // (pero no necesitamos prevenir nada especial)
+
+      // Inicializar todo: por defecto ninguna opción activa, campo oculto
+      quitarActive();
+      areaDuda.classList.add('oculto');
+      dudaTextarea.value = '';
+
+      // Opcional: si el usuario empieza a escribir en el campo y luego cambia a verde,
+      // se limpia (ya está implementado). Si cambia de amarillo a rojo, el texto se conserva.
+      // (lo cual puede ser útil si quiere complementar su duda)
+
+      // Pequeña mejora: al cambiar de amarillo a rojo o viceversa, no borramos el texto.
+      // Pero si vuelve a verde, se borra. Eso ya está.
+      // Además, se podría mantener el texto al cambiar entre amarillo y rojo sin limpiar.
+      // Lo implementamos no limpiando a menos que sea verde.
+      // La función seleccionarOpcion ya lo hace: solo limpia en verde.
+    })();
+  </script>
+</body>
+</html>

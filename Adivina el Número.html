@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adivinanza visual · Números irracionales</title>
+    <!-- Fuente clara y legible -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #eef3f7;  /* fondo tenue y suave */
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .game-container {
+            max-width: 750px;
+            width: 100%;
+            background: #ffffffd9;        /* blanco con un toque translúcido */
+            backdrop-filter: blur(2px);
+            border-radius: 42px;
+            padding: 32px 28px;
+            box-shadow: 0 20px 40px -12px rgba(0, 20, 30, 0.25);
+            border: 1px solid #cfddee;
+        }
+
+        /* Encabezado institucional */
+        .header {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 24px;
+            padding-bottom: 12px;
+            border-bottom: 2px dashed #b7c9d9;
+            color: #1a3b4f;               /* alto contraste sobre fondo suave */
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+        .institution {
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+        .teacher {
+            background: #d4e0ec;
+            padding: 5px 14px;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            color: #0f2b3a;
+        }
+        .round-info {
+            background: #e0eefb;
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-weight: 600;
+            color: #144a66;
+        }
+
+        /* título principal */
+        h2 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #12344a;
+            margin: 0 0 8px 0;
+            line-height: 1.2;
+        }
+        .subtitulo {
+            color: #2c4b63;
+            margin-bottom: 32px;
+            font-size: 1.1rem;
+            font-weight: 400;
+            border-left: 6px solid #98b9d2;
+            padding-left: 18px;
+        }
+
+        /* Área de la imagen misteriosa */
+        .image-area {
+            background: #dbe8f2;
+            border-radius: 48px;
+            padding: 30px 20px;
+            margin-bottom: 32px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 2px solid #bed3e6;
+            box-shadow: inset 0 4px 12px #b0c4dbaa;
+        }
+        .blurred-image {
+            width: 260px;
+            height: 260px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #ffffffb3;
+            border-radius: 40px;
+            box-shadow: 0 6px 14px #97aebf66;
+            overflow: hidden;             /* para mantener el recorte si aplicáramos zoom */
+        }
+        .blurred-image svg {
+            width: 90%;
+            height: 90%;
+            filter: blur(8px) brightness(1.1); /* efecto borroso + suave */
+            transition: filter 0.2s;
+            /* también se puede simular zoom aumentando scale, pero mantenemos solo blur */
+        }
+        /* pequeño mensaje visual */
+        .hint-text {
+            text-align: center;
+            margin-top: 12px;
+            color: #1f4b66;
+            font-weight: 500;
+            background: #ebf3fa;
+            padding: 6px 16px;
+            border-radius: 40px;
+            display: inline-block;
+        }
+
+        /* opciones de respuesta */
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+            margin: 32px 0 28px;
+        }
+        .option-btn {
+            background: #ecf3fa;
+            border: 2px solid #b2cade;
+            border-radius: 60px;
+            padding: 18px 12px;
+            font-size: 1.35rem;
+            font-weight: 600;
+            color: #102c3b;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            box-shadow: 0 6px 0 #99b1c7;
+            letter-spacing: 0.5px;
+            font-family: 'Inter', sans-serif;
+        }
+        .option-btn:hover:not(:disabled) {
+            background: #dae9f7;
+            border-color: #7fa3c2;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 0 #7f9bb3;
+        }
+        .option-btn.correct {
+            background: #a5d6b6;
+            border-color: #2e7d5e;
+            color: #003d2b;
+            box-shadow: 0 6px 0 #1b5e46;
+            transform: scale(1.02);
+            pointer-events: none;          /* ya no se puede pulsar */
+        }
+        .option-btn.incorrect {
+            background: #f5cfcf;
+            border-color: #c65f5f;
+            color: #631e1e;
+            box-shadow: 0 6px 0 #aa4c4c;
+            transform: scale(0.98);
+            pointer-events: none;           /* se deshabilita tras fallo */
+            opacity: 0.7;
+        }
+        .option-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+            transform: scale(0.98);
+            box-shadow: 0 3px 0 #99aebb;
+        }
+
+        /* Botón siguiente */
+        .next-area {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0 10px;
+        }
+        #nextBtn {
+            background: #c1ddec;
+            border: none;
+            border-radius: 60px;
+            padding: 16px 44px;
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #113946;
+            border: 2px solid #9cb9d2;
+            box-shadow: 0 8px 0 #7e9bb6;
+            cursor: pointer;
+            transition: 0.1s ease;
+            letter-spacing: 2px;
+        }
+        #nextBtn:hover:not(:disabled) {
+            background: #d1e9fc;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 0 #6f8da8;
+        }
+        #nextBtn:disabled {
+            opacity: 0.4;
+            cursor: default;
+            box-shadow: 0 5px 0 #9ab1c7;
+            transform: translateY(3px);
+        }
+
+        /* feedback visual extra (solo texto opcional) */
+        .status-message {
+            min-height: 40px;
+            font-weight: 500;
+            color: #0f3b4f;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* pie de lección */
+        .lesson-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 28px;
+            padding-top: 14px;
+            border-top: 1px dashed #b4ccdf;
+            color: #1f4d68;
+            font-size: 0.95rem;
+        }
+    </style>
+</head>
+<body>
+<div class="game-container">
+    <!-- encabezado con datos institucionales -->
+    <div class="header">
+        <span class="institution">Instituto para Sordos Santa Rosa</span>
+        <span class="teacher">Prof. Miguel Ubiera</span>
+    </div>
+
+    <h2>🔍 Adivina el número irracional</h2>
+    <div class="subtitulo">Observa la imagen borrosa · elige la opción correcta</div>
+
+    <!-- INFO DE GRADO / ASIGNATURA (rellenable) -->
+    <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px;">
+        <span class="round-info">Grado: [completar]</span>
+        <span class="round-info">Área: Matemática</span>
+        <span class="round-info">Tema: Números irracionales</span>
+    </div>
+
+    <!-- ronda actual -->
+    <div id="roundCounter" style="text-align: right; margin-bottom: 4px; font-weight: 600; color: #1e506e;">Ronda 1 / 5</div>
+
+    <!-- imagen borrosa -->
+    <div class="image-area">
+        <div class="blurred-image" id="blurredImageContainer">
+            <!-- aquí se inyecta el SVG mediante js -->
+        </div>
+    </div>
+    <div class="hint-text">🧐 ¿Qué número representa?</div>
+
+    <!-- botones de opciones -->
+    <div class="options-grid" id="optionsContainer"></div>
+
+    <!-- botón siguiente + feedback -->
+    <div class="next-area">
+        <button id="nextBtn" disabled>SIGUIENTE ➔</button>
+    </div>
+    <div class="status-message" id="statusMessage">Elige una opción</div>
+
+    <!-- pie con datos de la clase -->
+    <div class="lesson-footer">
+        <span>🎯 Cierre visual · todo sin audio</span>
+        <span>🔵🔴 feedback en colores</span>
+    </div>
+</div>
+
+<script>
+    (function() {
+        // --- DEFINICIÓN DE LAS RONDAS (números irracionales) ---
+        // Cada ronda contiene: SVG (como string), respuestaCorrecta, opciones (array)
+        const rounds = [
+            { // Ronda 1: π (Pi)
+                svg: `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="60" cy="60" r="40" fill="none" stroke="#1e3b4f" stroke-width="8"/>
+                        <text x="60" y="80" font-size="48" text-anchor="middle" fill="#1e3b4f" font-family="Arial, sans-serif" font-weight="bold">π</text>
+                      </svg>`,
+                correcta: "π (Pi)",
+                opciones: ["π (Pi)", "e (Euler)", "φ (Phi)", "√2"]
+            },
+            { // Ronda 2: √2 (Raíz cuadrada de 2)
+                svg: `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M25 70 L45 25 L80 25" stroke="#1e3b4f" stroke-width="9" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                        <rect x="60" y="45" width="30" height="30" fill="none" stroke="#1e3b4f" stroke-width="7" rx="4"/>
+                        <line x1="60" y1="45" x2="90" y2="75" stroke="#1e3b4f" stroke-width="7"/>
+                        <text x="80" y="105" font-size="22" fill="#1e3b4f" font-weight="bold">√2</text>
+                      </svg>`,
+                correcta: "√2",
+                opciones: ["√2", "√3", "π (Pi)", "φ (Phi)"]
+            },
+            { // Ronda 3: φ (Phi, número áureo)
+                svg: `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="25" y="30" width="70" height="43" fill="none" stroke="#1e3b4f" stroke-width="7" rx="6"/>
+                        <rect x="60" y="30" width="35" height="43" fill="none" stroke="#1e3b4f" stroke-width="7" rx="4"/>
+                        <path d="M25 73 L60 73 L60 95" stroke="#1e3b4f" stroke-width="7" fill="none"/>
+                        <text x="45" y="100" font-size="38" fill="#1e3b4f" font-weight="bold">φ</text>
+                      </svg>`,
+                correcta: "φ (Phi)",
+                opciones: ["φ (Phi)", "π (Pi)", "e (Euler)", "√5"]
+            },
+            { // Ronda 4: e (número de Euler)
+                svg: `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M25 70 Q 50 30 75 70 Q 100 100 90 50" stroke="#1e3b4f" stroke-width="8" fill="none"/>
+                        <text x="45" y="85" font-size="48" fill="#1e3b4f" font-weight="bold">e</text>
+                      </svg>`,
+                correcta: "e (Euler)",
+                opciones: ["e (Euler)", "π (Pi)", "φ (Phi)", "√2"]
+            },
+            { // Ronda 5: √3 (raíz de tres)
+                svg: `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+                        <polygon points="30,80 90,80 60,30" fill="none" stroke="#1e3b4f" stroke-width="8"/>
+                        <text x="45" y="105" font-size="28" fill="#1e3b4f" font-weight="bold">√3</text>
+                      </svg>`,
+                correcta: "√3",
+                opciones: ["√3", "√2", "π (Pi)", "e (Euler)"]
+            }
+        ];
+
+        // elementos del DOM
+        const containerImg = document.getElementById('blurredImageContainer');
+        const optionsDiv = document.getElementById('optionsContainer');
+        const nextBtn = document.getElementById('nextBtn');
+        const statusEl = document.getElementById('statusMessage');
+        const roundCounterSpan = document.getElementById('roundCounter');
+
+        let currentRoundIndex = 0;          // 0-based
+        let roundFinished = false;           // si ya se acertó en la ronda actual
+        let totalRounds = rounds.length;
+
+        // Función para renderizar la ronda actual
+        function loadRound(index) {
+            // resetear estado
+            roundFinished = false;
+            const round = rounds[index];
+
+            // Actualizar contador de rondas
+            roundCounterSpan.textContent = `Ronda ${index+1} / ${totalRounds}`;
+
+            // inyectar SVG dentro del contenedor de imagen borrosa
+            containerImg.innerHTML = round.svg;
+
+            // generar botones de opciones
+            optionsDiv.innerHTML = '';
+            round.opciones.forEach(opcion => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.textContent = opcion;
+                btn.setAttribute('data-value', opcion);
+                btn.addEventListener('click', () => manejarSeleccion(opcion, btn));
+                optionsDiv.appendChild(btn);
+            });
+
+            // deshabilitar botón siguiente hasta que acierte
+            nextBtn.disabled = true;
+            // mensaje inicial
+            statusEl.textContent = '🤔 ¿Cuál es? Haz clic en una opción';
+            // si estamos en la última ronda, cambiar texto del botón
+            if (index === totalRounds - 1) {
+                nextBtn.textContent = 'FINALIZAR 🏁';
+            } else {
+                nextBtn.textContent = 'SIGUIENTE ➔';
+            }
+        }
+
+        // Maneja la selección de una opción
+        function manejarSeleccion(opcionTexto, boton) {
+            // Si la ronda ya se completó, no hacer nada
+            if (roundFinished) return;
+
+            const round = rounds[currentRoundIndex];
+            const esCorrecta = (opcionTexto === round.correcta);
+
+            // Si ya está deshabilitado por incorrecto (clase incorrect), no procesar de nuevo
+            if (boton.disabled) return;
+
+            if (esCorrecta) {
+                // --- ACIERTO ---
+                // marcar el botón como correcto
+                boton.classList.add('correct');
+                // deshabilitar todos los botones de opciones (no se puede volver a elegir)
+                const allBtns = document.querySelectorAll('.option-btn');
+                allBtns.forEach(btn => {
+                    btn.disabled = true;
+                });
+                // marcar ronda como terminada
+                roundFinished = true;
+                // habilitar botón siguiente
+                nextBtn.disabled = false;
+                statusEl.textContent = '✅ ¡Correcto! Bien visto.';
+            } else {
+                // --- INCORRECTO ---
+                // marcar este botón como incorrecto (feedback visual) y deshabilitarlo
+                boton.classList.add('incorrect');
+                boton.disabled = true;   // no se puede volver a elegir esta opción
+
+                // Mensaje de error, pero se puede seguir intentando con otras
+                statusEl.textContent = '❌ No es ese. Prueba con otra opción.';
+
+                // opcional: si ya no quedan botones habilitados (todos incorrectos) algo raro, pero dejamos
+                const remaining = document.querySelectorAll('.option-btn:not(.incorrect):not([disabled])').length;
+                if (remaining === 0) {
+                    statusEl.textContent = '😕 Has agotado las opciones... Recarga la página.';
+                    // deshabilitamos todo? pero no hay correcta, sería error de diseño.
+                }
+            }
+        }
+
+        // Evento para botón siguiente
+        nextBtn.addEventListener('click', function() {
+            // solo funciona si está habilitado (ronda acertada)
+            if (nextBtn.disabled) return;
+
+            if (currentRoundIndex === totalRounds - 1) {
+                // última ronda: mostrar mensaje de cierre
+                statusEl.innerHTML = '🎉 ¡Juego completado! Repasamos números irracionales.';
+                nextBtn.disabled = true;   // deshabilitar definitivo
+                // deshabilitar cualquier botón de opciones (por si acaso)
+                document.querySelectorAll('.option-btn').forEach(btn => btn.disabled = true);
+                // Podemos cambiar el mensaje en el contador
+                roundCounterSpan.textContent = '¡Listo! 5/5';
+                return;
+            }
+
+            // avanzar a la siguiente ronda
+            currentRoundIndex++;
+            loadRound(currentRoundIndex);
+        });
+
+        // Inicializar primera ronda
+        loadRound(0);
+
+        // Pequeño detalle: si el usuario hace clic en un botón ya incorrecto (deshabilitado) no pasa nada.
+        // Todo es visual, sin sonidos.
+    })();
+</script>
+
+<!-- NOTA: La información de grado y asignatura se deja como [completar] en el diseño visible.
+     El profesor Miguel Ubiera puede adaptar fácilmente el array 'rounds' para cambiar imágenes o conceptos. -->
+</body>
+</html>
