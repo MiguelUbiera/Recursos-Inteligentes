@@ -1,282 +1,1098 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clase: Números Racionales - Prof. Miguel Ubiera</title>
-    <style>
-        /* --- CONFIGURACIÓN GENERAL Y FUENTES --- */
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;600;800&display=swap');
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5">
+  <title>Inicio · Alimentamos a cada animal</title>
+  <meta name="description" content="Actividad de inicio de la secuencia Correspondencia Uno a Uno · Secuencia321®">
+  <style>
+    /* Reset y base */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html, body {
+      width: 100%;
+      min-height: 100vh;
+      font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+      background: #fcf8f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    /* Contenedor principal con dimensiones fijas 1400x640 */
+    .app {
+      position: relative;
+      width: 100%;
+      max-width: 1400px;
+      height: 640px; /* Altura fija para evitar scroll en pantallas grandes */
+      background: #fcf8f0;
+      overflow: hidden;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+      border-radius: 32px;
+      border: 2px solid #dac8ae;
+      display: flex;
+      flex-direction: column;
+    }
+    /* Zonas funcionales */
+    .header {
+      flex: 0 0 10%; /* 64px de 640 */
+      min-height: 44px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 24px;
+      background: rgba(255,252,240,0.7);
+      backdrop-filter: blur(2px);
+      border-bottom: 1px solid #e3d7c4;
+      z-index: 5;
+    }
+    .header .titulo {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #2d6a4f;
+      letter-spacing: 0.3px;
+    }
+    .header .titulo span {
+      color: #e68a2e;
+    }
+    .header .progreso {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #4f5f6b;
+      background: #ede7db;
+      padding: 2px 16px;
+      border-radius: 40px;
+    }
+    .cronometro {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #6f7e8a;
+      background: #ede7db;
+      padding: 2px 12px;
+      border-radius: 30px;
+      font-feature-settings: "tnum";
+      letter-spacing: 0.5px;
+    }
 
-        :root {
-            --primary-color: #6C63FF;
-            --secondary-color: #00D2FF;
-            --accent-color: #FF6584;
-            --text-light: #ffffff;
-            --glass-bg: rgba(255, 255, 255, 0.1);
-            --glass-border: rgba(255, 255, 255, 0.2);
-        }
+    .main {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      min-height: 0;
+    }
+    .pantalla {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 16px 32px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+      background: #fcf8f0;
+      overflow: hidden;
+    }
+    .pantalla.activa {
+      opacity: 1;
+      pointer-events: auto;
+    }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    /* Portada */
+    .portada {
+      background: radial-gradient(ellipse at 70% 30%, #f2ece0, #fcf8f0);
+      gap: 4px;
+    }
+    .portada .contenido {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 32px;
+      width: 100%;
+      max-width: 1100px;
+    }
+    .portada .texto {
+      flex: 1;
+      text-align: left;
+    }
+    .portada .texto h1 {
+      font-size: 2.6rem;
+      color: #2d6a4f;
+      line-height: 1.1;
+    }
+    .portada .texto h1 span {
+      color: #e68a2e;
+    }
+    .portada .texto p {
+      font-size: 1.1rem;
+      color: #4f5f6b;
+      margin: 10px 0 18px;
+      max-width: 480px;
+    }
+    .portada .texto .badge {
+      display: inline-block;
+      background: #2d6a4f;
+      color: #fef7e9;
+      padding: 4px 18px;
+      border-radius: 30px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+    .btn-primario {
+      background: #e68a2e;
+      border: none;
+      padding: 12px 38px;
+      border-radius: 60px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #fff;
+      cursor: pointer;
+      box-shadow: 0 4px 0 #b86f20;
+      transition: 0.1s ease;
+      touch-action: manipulation;
+    }
+    .btn-primario:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 0 #b86f20;
+    }
+    .btn-primario:active {
+      transform: translateY(2px);
+      box-shadow: 0 2px 0 #b86f20;
+    }
+    .portada .ilustracion {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 4.2rem;
+      gap: 20px;
+      flex-wrap: wrap;
+      position: relative;
+      min-height: 150px;
+    }
+    .portada .ilustracion .flotante {
+      animation: flotar 4s ease-in-out infinite alternate;
+    }
+    .portada .ilustracion .flotante:nth-child(2) { animation-delay: 0.7s; }
+    .portada .ilustracion .flotante:nth-child(3) { animation-delay: 1.4s; }
+    .portada .ilustracion .flotante:nth-child(4) { animation-delay: 2.1s; }
+    @keyframes flotar {
+      0% { transform: translateY(0px) rotate(0deg); }
+      100% { transform: translateY(-14px) rotate(3deg); }
+    }
 
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-            color: var(--text-light);
-            min-height: 100vh;
-            overflow: hidden; /* Evita barras de desplazamiento por las animaciones */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-        }
+    /* Interacción */
+    .interaccion {
+      gap: 6px;
+      padding: 8px 20px;
+    }
+    .interaccion h2 {
+      font-size: 1.4rem;
+      color: #2d6a4f;
+      text-align: center;
+      margin-bottom: 2px;
+    }
+    .interaccion .escena {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 24px 48px;
+      background: #f2ece0;
+      border-radius: 30px;
+      padding: 14px 24px;
+      min-height: 150px;
+      width: 100%;
+      max-width: 960px;
+    }
+    .columna {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+    .fila {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+    }
+    .elemento {
+      font-size: 2.6rem;
+      transition: 0.15s;
+      user-select: none;
+      position: relative;
+    }
+    .elemento.bandeja {
+      font-size: 2.4rem;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 12px;
+      border: 3px solid transparent;
+      transition: 0.1s;
+    }
+    .elemento.bandeja:hover {
+      transform: scale(1.05);
+    }
+    .elemento.bandeja.seleccionada {
+      border-color: #e68a2e;
+      background: rgba(230,138,46,0.15);
+      transform: scale(1.08);
+    }
+    .elemento.bandeja.acertada {
+      border-color: #2d6a4f;
+      background: rgba(45,106,79,0.2);
+    }
+    .elemento.bandeja.fallida {
+      border-color: #c0392b;
+      background: rgba(192,57,43,0.15);
+    }
+    .elemento.animal {
+      font-size: 2.8rem;
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 16px;
+      border: 3px solid transparent;
+      transition: 0.1s;
+    }
+    .elemento.animal:hover {
+      transform: scale(1.05);
+    }
+    .elemento.animal.seleccionado {
+      border-color: #e68a2e;
+      background: rgba(230,138,46,0.15);
+    }
+    .elemento.animal.correcto {
+      border-color: #2d6a4f;
+      background: rgba(45,106,79,0.15);
+    }
+    .elemento.animal.incorrecto {
+      border-color: #c0392b;
+      background: rgba(192,57,43,0.15);
+    }
+    .elemento.animal.destacado {
+      animation: destello 0.5s ease 2;
+    }
+    @keyframes destello {
+      0%, 100% { border-color: transparent; }
+      50% { border-color: #f9c74f; background: rgba(249,199,79,0.25); }
+    }
 
-        /* --- FONDO ANIMADO (FORMAS GEOMÉTRICAS) --- */
-        .background-shapes {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            overflow: hidden;
-        }
+    .mensaje {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #2d6a4f;
+      text-align: center;
+      min-height: 40px;
+      padding: 4px 16px;
+      border-radius: 30px;
+      background: #f3ede4;
+      max-width: 720px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .mensaje.acierto {
+      background: #e2f0e6;
+      color: #1f4f3a;
+    }
+    .mensaje.error {
+      background: #f3d8d8;
+      color: #7a2a1a;
+    }
+    .opciones {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .opciones button {
+      background: #e8dccc;
+      border: none;
+      padding: 8px 24px;
+      border-radius: 60px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #2d4a3a;
+      cursor: pointer;
+      transition: 0.15s;
+      touch-action: manipulation;
+      box-shadow: 0 2px 0 #c4b6a0;
+    }
+    .opciones button:hover {
+      background: #d4c4ae;
+      transform: translateY(-2px);
+    }
+    .opciones button:active {
+      transform: translateY(2px);
+      box-shadow: 0 0px 0 #c4b6a0;
+    }
+    .opciones button:disabled {
+      opacity: 0.5;
+      cursor: default;
+      transform: none;
+    }
 
-        .shape {
-            position: absolute;
-            border-radius: 50%;
-            opacity: 0.3;
-            animation: float 10s infinite ease-in-out;
-        }
+    .navegacion {
+      display: flex;
+      gap: 12px;
+      margin-top: 4px;
+    }
+    .btn-secundario {
+      background: #ded4c1;
+      border: none;
+      padding: 6px 20px;
+      border-radius: 40px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #2d4a3a;
+      cursor: pointer;
+      transition: 0.15s;
+      touch-action: manipulation;
+    }
+    .btn-secundario:hover {
+      background: #cfc3ae;
+    }
+    .btn-secundario:disabled {
+      opacity: 0.4;
+      cursor: default;
+    }
 
-        .shape:nth-child(1) {
-            width: 300px;
-            height: 300px;
-            background: var(--primary-color);
-            top: -50px;
-            left: -50px;
-            animation-delay: 0s;
-        }
+    /* Pantalla final */
+    .final {
+      background: #fcf8f0;
+      gap: 8px;
+      text-align: center;
+      padding: 24px;
+    }
+    .final .icono {
+      font-size: 3.2rem;
+    }
+    .final h2 {
+      font-size: 1.8rem;
+      color: #2d6a4f;
+    }
+    .final .pregunta-pendiente {
+      background: #e2f0e6;
+      border-radius: 30px;
+      padding: 16px 28px;
+      max-width: 680px;
+      border: 3px solid #e68a2e;
+    }
+    .final .pregunta-pendiente p {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #1f4f3a;
+    }
+    .final .acciones {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 4px;
+    }
 
-        .shape:nth-child(2) {
-            width: 200px;
-            height: 200px;
-            background: var(--secondary-color);
-            bottom: 10%;
-            right: -50px;
-            animation-delay: -2s;
-            border-radius: 20px; /* Cuadrado redondeado */
-        }
+    /* Pie */
+    .footer {
+      flex: 0 0 8%; /* ~51px de 640 */
+      min-height: 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 0.7rem;
+      color: #8f9aa3;
+      border-top: 1px solid #e3d7c4;
+      background: rgba(255,252,240,0.6);
+    }
+    .footer strong {
+      color: #2d6a4f;
+    }
 
-        .shape:nth-child(3) {
-            width: 150px;
-            height: 150px;
-            background: var(--accent-color);
-            top: 40%;
-            left: 20%;
-            animation-delay: -5s;
-        }
+    /* Confeti */
+    .confeti {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 999;
+      overflow: hidden;
+    }
+    .confeti span {
+      position: absolute;
+      display: block;
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      animation: caer 1.2s ease-out forwards;
+    }
+    @keyframes caer {
+      0% { opacity: 1; transform: translateY(-20px) rotate(0deg) scale(0.5); }
+      100% { opacity: 0; transform: translateY(90vh) rotate(720deg) scale(1.2); }
+    }
 
-        /* --- CONTENEDOR PRINCIPAL --- */
-        .container {
-            position: relative;
-            z-index: 10;
-            width: 90%;
-            max-width: 1200px;
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
-            padding: 20px;
-        }
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .app { height: auto; min-height: 100vh; border-radius: 0; max-width: 100%; }
+      .portada .contenido { flex-direction: column; text-align: center; gap: 12px; }
+      .portada .texto { text-align: center; }
+      .portada .texto p { max-width: 100%; }
+      .interaccion .escena { flex-direction: column; gap: 12px; }
+      .pantalla { padding: 10px 14px; }
+      .portada .ilustracion { font-size: 3rem; min-height: 100px; }
+      .interaccion h2 { font-size: 1.1rem; }
+      .elemento { font-size: 2rem; }
+      .elemento.bandeja { font-size: 1.8rem; }
+      .elemento.animal { font-size: 2.2rem; }
+    }
+    @media (max-width: 600px) {
+      .header { padding: 0 10px; flex-wrap: wrap; gap: 2px; }
+      .header .titulo { font-size: 0.85rem; }
+      .portada .texto h1 { font-size: 1.6rem; }
+      .portada .ilustracion { font-size: 2.2rem; gap: 8px; }
+      .opciones button { padding: 6px 14px; font-size: 0.8rem; }
+      .btn-primario { padding: 8px 18px; font-size: 0.9rem; }
+      .mensaje { font-size: 0.8rem; min-height: 32px; }
+    }
 
-        /* --- HEADER --- */
-        header {
-            text-align: center;
-            margin-bottom: 20px;
-            animation: slideDown 1.5s ease-out forwards;
-        }
-
-        .school-name {
-            font-size: 1.2rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: var(--secondary-color);
-            margin-bottom: 5px;
-        }
-
-        .prof-info {
-            font-size: 1rem;
-            opacity: 0.8;
-        }
-
-        /* --- TÍTULO PRINCIPAL --- */
-        .main-title {
-            font-size: 5rem;
-            font-weight: 800;
-            text-align: center;
-            background: linear-gradient(to right, #fff, var(--secondary-color));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin: 20px 0;
-            text-shadow: 0 10px 20px rgba(0,0,0,0.3);
-            animation: pulseText 3s infinite ease-in-out;
-        }
-
-        /* --- GRID DE CONTENIDO --- */
-        .content-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-        }
-
-        /* --- TARJETAS (CARDS) --- */
-        .card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-            transition: transform 0.3s ease;
-            opacity: 0; /* Oculto inicialmente para la animación */
-            animation: fadeInUp 1s ease-out forwards;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            background: rgba(255, 255, 255, 0.15);
-        }
-
-        /* Retrasos para animación en cascada */
-        .card:nth-child(1) { animation-delay: 0.5s; }
-        .card:nth-child(2) { animation-delay: 1.0s; }
-        .card:nth-child(3) { animation-delay: 1.5s; }
-
-        .card h2 {
-            font-size: 1.8rem;
-            color: var(--secondary-color);
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .card p, .card ul {
-            font-size: 1.1rem;
-            line-height: 1.6;
-        }
-
-        .math-symbol {
-            font-family: 'Times New Roman', serif;
-            font-style: italic;
-            font-size: 1.4rem;
-            color: var(--accent-color);
-            background: rgba(255,255,255,0.1);
-            padding: 2px 8px;
-            border-radius: 5px;
-        }
-
-        .example-box {
-            margin-top: 15px;
-            background: rgba(0,0,0,0.2);
-            padding: 10px;
-            border-radius: 10px;
-            text-align: center;
-            font-size: 1.3rem;
-            font-weight: bold;
-            color: var(--text-light);
-        }
-
-        /* --- ANIMACIONES (KEYFRAMES) --- */
-        
-        @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(10deg); }
-        }
-
-        @keyframes slideDown {
-            0% { transform: translateY(-50px); opacity: 0; }
-            100% { transform: translateY(0); opacity: 1; }
-        }
-
-        @keyframes fadeInUp {
-            0% { transform: translateY(30px); opacity: 0; }
-            100% { transform: translateY(0); opacity: 1; }
-        }
-
-        @keyframes pulseText {
-            0%, 100% { transform: scale(1); filter: brightness(100%); }
-            50% { transform: scale(1.02); filter: brightness(120%); }
-        }
-
-        /* --- RESPONSIVE --- */
-        @media (max-width: 768px) {
-            .main-title { font-size: 3rem; }
-            .card { padding: 20px; }
-        }
-    </style>
+    @media (prefers-reduced-motion: reduce) {
+      .portada .ilustracion .flotante,
+      .confeti span,
+      .elemento.animal.destacado {
+        animation: none !important;
+      }
+      .pantalla { transition: none; }
+    }
+  </style>
 </head>
 <body>
+<div class="app" role="main" aria-label="Actividad de inicio: Alimentamos a cada animal">
+  <!-- Encabezado -->
+  <header class="header">
+    <div class="titulo">🧑‍🌾 <span>El zoológico</span> del cuidador</div>
+    <div class="progreso" id="progreso">Paso 1 de 10</div>
+    <div class="cronometro" id="cronometro">00:00</div>
+  </header>
 
-    <!-- Formas de fondo animadas -->
-    <div class="background-shapes">
-        <div class="shape"></div>
-        <div class="shape"></div>
-        <div class="shape"></div>
-    </div>
-
-    <div class="container">
-        <!-- Encabezado -->
-        <header>
-            <div class="school-name">Instituto Sol de Santa Rosa</div>
-            <div class="prof-info">Profesor: Miguel Ubiera | Grado: [Completar] | Área: Matemáticas</div>
-        </header>
-
-        <!-- Título Principal -->
-        <h1 class="main-title">Números Racionales</h1>
-
-        <!-- Contenido en Tarjetas -->
-        <div class="content-grid">
-            
-            <!-- Tarjeta 1: Definición -->
-            <div class="card">
-                <h2>📌 ¿Qué son?</h2>
-                <p>Son todos los números que pueden expresarse como el cociente (división) de dos números enteros.</p>
-                <div class="example-box">
-                    a / b <br>
-                    <span style="font-size: 0.8rem; font-weight: normal;">donde b ≠ 0</span>
-                </div>
-            </div>
-
-            <!-- Tarjeta 2: Representación -->
-            <div class="card">
-                <h2>🔢 Representación</h2>
-                <p>El conjunto de los números racionales se representa con la letra <strong>Q</strong>.</p>
-                <p>Pueden escribirse como:</p>
-                <ul>
-                    <li>Fracciones: <span class="math-symbol">½, -3/4</span></li>
-                    <li>Decimales exactos: <span class="math-symbol">0.5, 0.75</span></li>
-                    <li>Decimales periódicos: <span class="math-symbol">0.333...</span></li>
-                </ul>
-            </div>
-
-            <!-- Tarjeta 3: Características -->
-            <div class="card">
-                <h2>✨ Características</h2>
-                <p>1. Son infinitos (hay infinitos racionales entre dos números).</p>
-                <p>2. Incluyen a los números enteros y naturales.</p>
-                <p>3. Se pueden ubicar en la recta numérica.</p>
-                <div class="example-box" style="background: var(--primary-color);">
-                    Ejemplo: 2 = <span class="math-symbol">2/1</span>
-                </div>
-            </div>
-
+  <!-- Contenido principal -->
+  <div class="main" id="main">
+    <!-- Pantalla de portada -->
+    <div class="pantalla activa portada" id="pantalla-portada">
+      <div class="contenido">
+        <div class="texto">
+          <div class="badge">Recuperación diagnóstica · Misión 1</div>
+          <h1>Alimentamos a <span>cada animal</span></h1>
+          <p>Los cuidadores del zoológico necesitan tu ayuda. Cada animal debe recibir una bandeja de alimento. Ayúdanos a revisar si hay suficientes bandejas para todos.</p>
+          <button class="btn-primario" id="btn-comenzar">🚀 Comenzar exploración</button>
         </div>
+        <div class="ilustracion">
+          <span class="flotante">🐵</span>
+          <span class="flotante">🐘</span>
+          <span class="flotante">🦒</span>
+          <span class="flotante">🍽️</span>
+          <span class="flotante">🍽️</span>
+          <span class="flotante">🍽️</span>
+        </div>
+      </div>
     </div>
 
+    <!-- Contenedor de interacciones (se inyecta con JS) -->
+    <div id="contenedor-interacciones"></div>
+
+    <!-- Pantalla final -->
+    <div class="pantalla final" id="pantalla-final">
+      <div class="icono">🌿</div>
+      <h2>¡Buen trabajo!</h2>
+      <p style="font-size:1rem; color:#4f5f6b; max-width:600px;">Has ayudado al cuidador a revisar algunas distribuciones.</p>
+      <div class="pregunta-pendiente">
+        <p>❓ Ahora hay un problema más grande:</p>
+        <p style="font-size:1.05rem; font-weight:700;">¿Cómo podemos saber si hay suficientes bandejas para <strong>todos</strong> los animales <strong>sin contar</strong> uno por uno?</p>
+        <p style="font-size:0.85rem; color:#4f5f6b;">Descubriremos la respuesta en el siguiente momento.</p>
+      </div>
+      <div class="acciones">
+        <button class="btn-secundario" id="btn-reiniciar">🔄 Revisar</button>
+        <button class="btn-primario" id="btn-continuar">Continuar con el desarrollo →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pie de página -->
+  <footer class="footer">
+    <strong>Secuencia321®</strong> · Miguel Ubiera
+  </footer>
+</div>
+
+<script>
+  (function() {
+    "use strict";
+
+    // ---- CRONÓMETRO ----
+    let tiempoSegundos = 0;
+    let cronoInterval = null;
+    const cronoEl = document.getElementById('cronometro');
+
+    function formatearTiempo(s) {
+      const m = Math.floor(s / 60);
+      const seg = s % 60;
+      return `${String(m).padStart(2, '0')}:${String(seg).padStart(2, '0')}`;
+    }
+    function iniciarCronometro() {
+      if (cronoInterval) return;
+      cronoInterval = setInterval(() => {
+        tiempoSegundos++;
+        cronoEl.textContent = formatearTiempo(tiempoSegundos);
+      }, 1000);
+    }
+    function detenerCronometro() {
+      if (cronoInterval) {
+        clearInterval(cronoInterval);
+        cronoInterval = null;
+      }
+    }
+
+    // ---- CONFIGURACIÓN DE INTERACCIONES (10 pasos) ----
+    const pasos = [];
+
+    // 0: 3 animales, 3 bandejas correctas
+    pasos.push({
+      tipo: 'seleccion',
+      titulo: 'Observa esta distribución',
+      animales: ['🐵', '🐘', '🦒'],
+      bandejas: ['🍽️', '🍽️', '🍽️'],
+      pregunta: '¿Qué ocurre aquí?',
+      opciones: [
+        { texto: 'Cada animal tiene su bandeja', correcto: true },
+        { texto: 'Falta o sobra una bandeja', correcto: false }
+      ],
+      mensajeAcierto: '✅ ¡Correcto! Cada animal tiene su bandeja. No sobra ni falta ninguna.',
+      mensajeError: '❌ Observa con atención. Coloca una bandeja junto a cada animal y comprueba si alguna queda sola.'
+    });
+
+    // 1: 4 animales, 4 bandejas correctas
+    pasos.push({
+      tipo: 'seleccion',
+      titulo: 'Observa esta otra distribución',
+      animales: ['🐧', '🐻', '🦁', '🐶'],
+      bandejas: ['🍽️', '🍽️', '🍽️', '🍽️'],
+      pregunta: '¿Qué ocurre aquí?',
+      opciones: [
+        { texto: 'Cada animal tiene su bandeja', correcto: true },
+        { texto: 'Falta o sobra una bandeja', correcto: false }
+      ],
+      mensajeAcierto: '✅ ¡Muy bien! Cada animal tiene su bandeja. No sobra ni falta ninguna.',
+      mensajeError: '❌ Revisa con atención. ¿Hay una bandeja para cada animal?'
+    });
+
+    // 2: 2 animales, 3 bandejas (sobra 1)
+    pasos.push({
+      tipo: 'tocar-sobrante',
+      titulo: 'El cuidador ha preparado estas bandejas',
+      animales: ['🐧', '🐻'],
+      bandejas: ['🍽️', '🍽️', '🍽️'],
+      indiceSobrante: 2,
+      mensajeAcierto: '✅ ¡Muy bien! Has señalado la bandeja que sobra. Hay dos animales pero tres bandejas. Sobra una.',
+      mensajeError: '❌ Esa bandeja sí tiene un animal. Busca la bandeja que no está emparejada con ningún animal.'
+    });
+
+    // 3: 3 animales, 4 bandejas (sobra 1)
+    pasos.push({
+      tipo: 'tocar-sobrante',
+      titulo: 'El cuidador ha preparado estas bandejas',
+      animales: ['🐘', '🦒', '🐵'],
+      bandejas: ['🍽️', '🍽️', '🍽️', '🍽️'],
+      indiceSobrante: 3,
+      mensajeAcierto: '✅ ¡Excelente! Has señalado la bandeja que sobra. Hay tres animales pero cuatro bandejas. Sobra una.',
+      mensajeError: '❌ Esa bandeja sí tiene un animal. Busca la bandeja que no está emparejada con ningún animal.'
+    });
+
+    // 4: 3 animales, 2 bandejas (falta 1) - tocar animal sin bandeja
+    pasos.push({
+      tipo: 'tocar-faltante',
+      titulo: 'El cuidador ha preparado estas bandejas',
+      animales: ['🐵', '🐘', '🦒'],
+      bandejas: ['🍽️', '🍽️'],
+      indiceFaltante: 2,
+      mensajeAcierto: '✅ ¡Correcto! Has señalado el animal que se queda sin bandeja. Hay tres animales pero dos bandejas. Falta una.',
+      mensajeError: '❌ Ese animal ya tiene su bandeja. Busca el animal que no tiene ninguna.'
+    });
+
+    // 5: 4 animales, 3 bandejas (falta 1)
+    pasos.push({
+      tipo: 'tocar-faltante',
+      titulo: 'El cuidador ha preparado estas bandejas',
+      animales: ['🐧', '🐻', '🦁', '🐶'],
+      bandejas: ['🍽️', '🍽️', '🍽️'],
+      indiceFaltante: 3,
+      mensajeAcierto: '✅ ¡Muy bien! Has señalado el animal que se queda sin bandeja. Hay cuatro animales pero tres bandejas. Falta una.',
+      mensajeError: '❌ Ese animal ya tiene su bandeja. Busca el animal que no tiene ninguna.'
+    });
+
+    // 6: doble asignación (3 animales, 3 bandejas)
+    pasos.push({
+      tipo: 'doble-asignacion',
+      titulo: 'El cuidador ha colocado algunas bandejas',
+      animales: ['🐘', '🦒', '🐧'],
+      bandejas: ['🍽️', '🍽️', '🍽️'],
+      doble: 0,
+      faltante: 1,
+      mensajePaso1: '✅ Has señalado al animal que tiene dos bandejas. Ahora encuentra al animal que no tiene ninguna.',
+      mensajePaso2: '✅ ¡Excelente! El elefante tiene dos bandejas y la jirafa no tiene ninguna. No hay correspondencia uno a uno.',
+      mensajeErrorPaso1: '❌ Este animal tiene una bandeja. Busca al que tiene dos bandejas.',
+      mensajeErrorPaso2: '❌ Ese animal tiene una bandeja. Busca al que no tiene ninguna.'
+    });
+
+    // 7: doble asignación (4 animales)
+    pasos.push({
+      tipo: 'doble-asignacion',
+      titulo: 'El cuidador ha colocado algunas bandejas',
+      animales: ['🐵', '🐻', '🦁', '🐶'],
+      bandejas: ['🍽️', '🍽️', '🍽️', '🍽️'],
+      doble: 1,
+      faltante: 3,
+      mensajePaso1: '✅ Has señalado al animal que tiene dos bandejas. Ahora encuentra al animal que no tiene ninguna.',
+      mensajePaso2: '✅ ¡Excelente! El oso tiene dos bandejas y el perro no tiene ninguna. No hay correspondencia uno a uno.',
+      mensajeErrorPaso1: '❌ Este animal tiene una bandeja. Busca al que tiene dos bandejas.',
+      mensajeErrorPaso2: '❌ Ese animal tiene una bandeja. Busca al que no tiene ninguna.'
+    });
+
+    // 8: predicción (4 animales, 4 bandejas desordenadas)
+    pasos.push({
+      tipo: 'prediccion',
+      titulo: 'Imagina el emparejamiento',
+      animales: ['🐵', '🐘', '🦒', '🐧'],
+      bandejas: ['🍽️', '🍽️', '🍽️', '🍽️'],
+      pregunta: 'Hay 4 animales y 4 bandejas. ¿Crees que se pueden emparejar para que cada uno tenga su bandeja?',
+      opciones: [
+        { texto: 'Sí, se pueden emparejar', correcto: true },
+        { texto: 'No, no se pueden emparejar', correcto: false }
+      ],
+      mensajeAcierto: '✅ ¡Correcto! Vamos a emparejarlos. Cada animal encontró una bandeja y no quedó ninguna sola.',
+      mensajeError: '❌ Vamos a comprobarlo. Cada animal tiene su bandeja y no sobra ninguna.'
+    });
+
+    // 9: predicción (5 animales, 5 bandejas desordenadas)
+    pasos.push({
+      tipo: 'prediccion',
+      titulo: 'Imagina el emparejamiento',
+      animales: ['🐵', '🐘', '🦒', '🐧', '🐻'],
+      bandejas: ['🍽️', '🍽️', '🍽️', '🍽️', '🍽️'],
+      pregunta: 'Hay 5 animales y 5 bandejas. ¿Crees que se pueden emparejar para que cada uno tenga su bandeja?',
+      opciones: [
+        { texto: 'Sí, se pueden emparejar', correcto: true },
+        { texto: 'No, no se pueden emparejar', correcto: false }
+      ],
+      mensajeAcierto: '✅ ¡Excelente! Vamos a emparejarlos. Todos los animales tienen su bandeja y no sobró ninguna.',
+      mensajeError: '❌ Vamos a comprobarlo. Todos los animales tienen su bandeja y no falta ninguna.'
+    });
+
+    // ---- ESTADO ----
+    let pasoActual = 0;
+    let totalPasos = pasos.length;
+    let bloqueado = false;
+    let contadorErrores = 0;
+
+    const contenedor = document.getElementById('contenedor-interacciones');
+    const portada = document.getElementById('pantalla-portada');
+    const pantallaFinal = document.getElementById('pantalla-final');
+    const progresoEl = document.getElementById('progreso');
+    const btnComenzar = document.getElementById('btn-comenzar');
+    const btnReiniciar = document.getElementById('btn-reiniciar');
+    const btnContinuar = document.getElementById('btn-continuar');
+
+    function actualizarProgreso() {
+      progresoEl.textContent = `Paso ${pasoActual+1} de ${totalPasos}`;
+    }
+
+    function mostrarPantalla(id) {
+      document.querySelectorAll('.pantalla').forEach(p => p.classList.remove('activa'));
+      document.getElementById(id).classList.add('activa');
+    }
+
+    // Generar HTML de cada paso
+    function generarHTMLPaso(paso, idx) {
+      let html = `<div class="pantalla interaccion" id="pantalla-paso-${idx}">`;
+      html += `<h2>${paso.titulo}</h2>`;
+      html += `<div class="escena">`;
+
+      if (paso.tipo === 'seleccion' || paso.tipo === 'prediccion') {
+        html += `<div class="columna"><div class="fila">`;
+        paso.animales.forEach(a => html += `<span class="elemento animal">${a}</span>`);
+        html += `</div><span style="font-weight:600; color:#4f5f6b; font-size:0.8rem;">Animales</span></div>`;
+        html += `<div class="columna"><div class="fila">`;
+        paso.bandejas.forEach(b => html += `<span class="elemento bandeja">${b}</span>`);
+        html += `</div><span style="font-weight:600; color:#4f5f6b; font-size:0.8rem;">Bandejas</span></div>`;
+      } else if (paso.tipo === 'tocar-sobrante' || paso.tipo === 'tocar-faltante') {
+        html += `<div class="columna"><div class="fila">`;
+        paso.animales.forEach(a => html += `<span class="elemento animal" data-idx="${idx}">${a}</span>`);
+        html += `</div><span style="font-weight:600; color:#4f5f6b; font-size:0.8rem;">Animales</span></div>`;
+        html += `<div class="columna"><div class="fila">`;
+        paso.bandejas.forEach((b, i) => {
+          let extra = (paso.tipo === 'tocar-sobrante') ? ` data-idx="${i}"` : '';
+          html += `<span class="elemento bandeja"${extra}>${b}</span>`;
+        });
+        html += `</div><span style="font-weight:600; color:#4f5f6b; font-size:0.8rem;">Bandejas</span></div>`;
+      } else if (paso.tipo === 'doble-asignacion') {
+        html += `<div class="columna"><div class="fila">`;
+        paso.animales.forEach((a, i) => {
+          html += `<span class="elemento animal" data-idx="${i}">${a}</span>`;
+        });
+        html += `</div><div class="fila">`;
+        paso.animales.forEach((a, i) => {
+          let num = 1;
+          if (i === paso.doble) num = 2;
+          else if (i === paso.faltante) num = 0;
+          let bandejasHtml = '';
+          for (let j = 0; j < num; j++) {
+            bandejasHtml += `<span class="elemento bandeja" style="font-size:1.8rem;">🍽️</span>`;
+          }
+          if (num === 0) {
+            bandejasHtml = `<span style="font-size:1.2rem; color:#b8a690; border:2px dashed #b8a690; border-radius:12px; padding:2px 8px;">vacío</span>`;
+          }
+          html += `<div style="display:flex; flex-direction:column; align-items:center; margin:0 6px;">`;
+          html += `<div style="display:flex; gap:3px; flex-wrap:wrap; justify-content:center; min-height:40px; align-items:center;">${bandejasHtml}</div>`;
+          html += `<span style="font-size:0.6rem; color:#8f9aa3;">${i+1}</span>`;
+          html += `</div>`;
+        });
+        html += `</div></div>`;
+      }
+
+      html += `</div>`;
+      html += `<div class="mensaje" id="mensaje-paso-${idx}">${paso.pregunta || 'Selecciona una opción.'}</div>`;
+
+      if (paso.tipo === 'seleccion' || paso.tipo === 'prediccion') {
+        html += `<div class="opciones" id="opciones-paso-${idx}">`;
+        paso.opciones.forEach((op, oi) => {
+          html += `<button data-correcto="${op.correcto}" data-idx="${oi}">${op.texto}</button>`;
+        });
+        html += `</div>`;
+      } else {
+        html += `<div class="opciones" style="display:none;"></div>`;
+      }
+
+      html += `<div class="navegacion" id="nav-paso-${idx}" style="display:none;">`;
+      html += `<button class="btn-secundario" data-paso="${idx}" data-accion="siguiente">Siguiente →</button>`;
+      html += `</div>`;
+      html += `</div>`;
+      return html;
+    }
+
+    function generarInteracciones() {
+      let html = '';
+      pasos.forEach((p, i) => html += generarHTMLPaso(p, i));
+      contenedor.innerHTML = html;
+    }
+    generarInteracciones();
+
+    function mostrarPaso(idx) {
+      document.querySelectorAll('.pantalla.interaccion').forEach(p => p.classList.remove('activa'));
+      const pasoEl = document.getElementById(`pantalla-paso-${idx}`);
+      if (pasoEl) {
+        pasoEl.classList.add('activa');
+        const nav = document.getElementById(`nav-paso-${idx}`);
+        if (nav) nav.style.display = 'none';
+        const msj = document.getElementById(`mensaje-paso-${idx}`);
+        if (msj) {
+          msj.textContent = pasos[idx].pregunta || 'Selecciona una opción.';
+          msj.className = 'mensaje';
+        }
+        const elementos = pasoEl.querySelectorAll('.elemento');
+        elementos.forEach(el => {
+          el.classList.remove('seleccionada', 'acertada', 'fallida', 'seleccionado', 'correcto', 'incorrecto', 'destacado');
+        });
+        const opts = pasoEl.querySelectorAll('.opciones button');
+        opts.forEach(b => b.disabled = false);
+        contadorErrores = 0;
+        if (pasos[idx].tipo === 'doble-asignacion') {
+          pasoEl._pasoDoble = { paso1: false, paso2: false };
+        }
+        if (pasos[idx].tipo === 'tocar-sobrante') configurarTocarSobrante(idx);
+        else if (pasos[idx].tipo === 'tocar-faltante') configurarTocarFaltante(idx);
+        else if (pasos[idx].tipo === 'doble-asignacion') configurarDobleAsignacion(idx);
+        else if (pasos[idx].tipo === 'seleccion' || pasos[idx].tipo === 'prediccion') configurarSeleccion(idx);
+        actualizarProgreso();
+      }
+    }
+
+    function configurarSeleccion(idx) {
+      const paso = pasos[idx];
+      const contenedorOpciones = document.getElementById(`opciones-paso-${idx}`);
+      if (!contenedorOpciones) return;
+      const botones = contenedorOpciones.querySelectorAll('button');
+      const mensajeEl = document.getElementById(`mensaje-paso-${idx}`);
+      const navEl = document.getElementById(`nav-paso-${idx}`);
+      botones.forEach(btn => {
+        btn.disabled = false;
+        btn.onclick = function() {
+          if (bloqueado) return;
+          const correcto = this.dataset.correcto === 'true';
+          botones.forEach(b => b.disabled = true);
+          bloqueado = true;
+          if (correcto) {
+            mensajeEl.textContent = paso.mensajeAcierto;
+            mensajeEl.className = 'mensaje acierto';
+            lanzarConfeti();
+            if (navEl) navEl.style.display = 'flex';
+            this.style.background = '#2d6a4f';
+            this.style.color = '#fff';
+          } else {
+            mensajeEl.textContent = paso.mensajeError;
+            mensajeEl.className = 'mensaje error';
+            contadorErrores++;
+            if (contadorErrores >= 3) {
+              botones.forEach(b => {
+                if (b.dataset.correcto === 'true') {
+                  b.style.animation = 'destello 0.6s ease 2';
+                  setTimeout(() => b.style.animation = '', 1300);
+                }
+              });
+              contadorErrores = 0;
+            }
+            setTimeout(() => {
+              botones.forEach(b => b.disabled = false);
+              bloqueado = false;
+            }, 800);
+          }
+          if (correcto) setTimeout(() => bloqueado = false, 400);
+        };
+      });
+    }
+
+    function configurarTocarSobrante(idx) {
+      const paso = pasos[idx];
+      const pasoEl = document.getElementById(`pantalla-paso-${idx}`);
+      const bandejas = pasoEl.querySelectorAll('.elemento.bandeja');
+      const mensajeEl = document.getElementById(`mensaje-paso-${idx}`);
+      const navEl = document.getElementById(`nav-paso-${idx}`);
+      bandejas.forEach((bandeja, i) => {
+        bandeja.onclick = function() {
+          if (bloqueado) return;
+          const esSobrante = (i === paso.indiceSobrante);
+          bloqueado = true;
+          bandejas.forEach(b => b.classList.remove('seleccionada', 'acertada', 'fallida'));
+          if (esSobrante) {
+            this.classList.add('acertada');
+            mensajeEl.textContent = paso.mensajeAcierto;
+            mensajeEl.className = 'mensaje acierto';
+            lanzarConfeti();
+            if (navEl) navEl.style.display = 'flex';
+            setTimeout(() => bloqueado = false, 400);
+          } else {
+            this.classList.add('fallida');
+            mensajeEl.textContent = paso.mensajeError;
+            mensajeEl.className = 'mensaje error';
+            contadorErrores++;
+            if (contadorErrores >= 3) {
+              bandejas.forEach((b, bi) => {
+                if (bi === paso.indiceSobrante) {
+                  b.classList.add('destacado');
+                  setTimeout(() => b.classList.remove('destacado'), 1200);
+                }
+              });
+              contadorErrores = 0;
+            }
+            setTimeout(() => {
+              this.classList.remove('fallida');
+              bloqueado = false;
+            }, 800);
+          }
+        };
+      });
+    }
+
+    function configurarTocarFaltante(idx) {
+      const paso = pasos[idx];
+      const pasoEl = document.getElementById(`pantalla-paso-${idx}`);
+      const animales = pasoEl.querySelectorAll('.elemento.animal');
+      const mensajeEl = document.getElementById(`mensaje-paso-${idx}`);
+      const navEl = document.getElementById(`nav-paso-${idx}`);
+      animales.forEach((animal, i) => {
+        animal.onclick = function() {
+          if (bloqueado) return;
+          const esFaltante = (i === paso.indiceFaltante);
+          bloqueado = true;
+          animales.forEach(a => a.classList.remove('seleccionado', 'correcto', 'incorrecto'));
+          if (esFaltante) {
+            this.classList.add('correcto');
+            mensajeEl.textContent = paso.mensajeAcierto;
+            mensajeEl.className = 'mensaje acierto';
+            lanzarConfeti();
+            if (navEl) navEl.style.display = 'flex';
+            setTimeout(() => bloqueado = false, 400);
+          } else {
+            this.classList.add('incorrecto');
+            mensajeEl.textContent = paso.mensajeError;
+            mensajeEl.className = 'mensaje error';
+            contadorErrores++;
+            if (contadorErrores >= 3) {
+              animales.forEach((a, ai) => {
+                if (ai === paso.indiceFaltante) {
+                  a.classList.add('destacado');
+                  setTimeout(() => a.classList.remove('destacado'), 1200);
+                }
+              });
+              contadorErrores = 0;
+            }
+            setTimeout(() => {
+              this.classList.remove('incorrecto');
+              bloqueado = false;
+            }, 800);
+          }
+        };
+      });
+    }
+
+    function configurarDobleAsignacion(idx) {
+      const paso = pasos[idx];
+      const pasoEl = document.getElementById(`pantalla-paso-${idx}`);
+      if (!pasoEl._pasoDoble) pasoEl._pasoDoble = { paso1: false, paso2: false };
+      const estado = pasoEl._pasoDoble;
+      const animales = pasoEl.querySelectorAll('.elemento.animal');
+      const mensajeEl = document.getElementById(`mensaje-paso-${idx}`);
+      const navEl = document.getElementById(`nav-paso-${idx}`);
+      estado.paso1 = false; estado.paso2 = false;
+      animales.forEach(a => a.classList.remove('seleccionado', 'correcto', 'incorrecto'));
+      animales.forEach((animal, i) => {
+        animal.onclick = function() {
+          if (bloqueado) return;
+          if (estado.paso2) return;
+          if (!estado.paso1) {
+            if (i === paso.doble) {
+              this.classList.add('seleccionado');
+              mensajeEl.textContent = paso.mensajePaso1;
+              mensajeEl.className = 'mensaje acierto';
+              estado.paso1 = true;
+              animales.forEach(a => a.style.pointerEvents = 'none');
+              setTimeout(() => animales.forEach(a => a.style.pointerEvents = 'auto'), 300);
+            } else {
+              mensajeEl.textContent = paso.mensajeErrorPaso1;
+              mensajeEl.className = 'mensaje error';
+              contadorErrores++;
+              if (contadorErrores >= 3) {
+                animales.forEach((a, ai) => {
+                  if (ai === paso.doble) {
+                    a.classList.add('destacado');
+                    setTimeout(() => a.classList.remove('destacado'), 1200);
+                  }
+                });
+                contadorErrores = 0;
+              }
+            }
+          } else {
+            if (i === paso.faltante) {
+              this.classList.add('correcto');
+              animales.forEach((a, ai) => { if (ai === paso.doble) a.classList.add('correcto'); });
+              mensajeEl.textContent = paso.mensajePaso2;
+              mensajeEl.className = 'mensaje acierto';
+              estado.paso2 = true;
+              lanzarConfeti();
+              if (navEl) navEl.style.display = 'flex';
+              bloqueado = false;
+            } else {
+              mensajeEl.textContent = paso.mensajeErrorPaso2;
+              mensajeEl.className = 'mensaje error';
+              contadorErrores++;
+              if (contadorErrores >= 3) {
+                animales.forEach((a, ai) => {
+                  if (ai === paso.faltante) {
+                    a.classList.add('destacado');
+                    setTimeout(() => a.classList.remove('destacado'), 1200);
+                  }
+                });
+                contadorErrores = 0;
+              }
+            }
+          }
+        };
+      });
+    }
+
+    function lanzarConfeti() {
+      const contenedor = document.createElement('div');
+      contenedor.className = 'confeti';
+      const colores = ['#f9c74f', '#e68a2e', '#2d6a4f', '#c0392b', '#3498db', '#9b59b6'];
+      for (let i = 0; i < 30; i++) {
+        const span = document.createElement('span');
+        span.style.left = Math.random() * 100 + '%';
+        span.style.background = colores[Math.floor(Math.random() * colores.length)];
+        span.style.width = (Math.random() * 8 + 4) + 'px';
+        span.style.height = (Math.random() * 8 + 4) + 'px';
+        span.style.animationDuration = (Math.random() * 0.8 + 0.6) + 's';
+        span.style.animationDelay = (Math.random() * 0.3) + 's';
+        contenedor.appendChild(span);
+      }
+      document.body.appendChild(contenedor);
+      setTimeout(() => contenedor.remove(), 2000);
+    }
+
+    // Eventos de navegación (delegación)
+    document.addEventListener('click', function(e) {
+      const btn = e.target.closest('[data-accion="siguiente"]');
+      if (btn) {
+        const idx = parseInt(btn.dataset.paso);
+        if (idx < totalPasos - 1) {
+          pasoActual = idx + 1;
+          mostrarPaso(pasoActual);
+        } else {
+          detenerCronometro();
+          mostrarPantalla('pantalla-final');
+        }
+      }
+    });
+
+    btnComenzar.addEventListener('click', function() {
+      portada.classList.remove('activa');
+      pasoActual = 0;
+      mostrarPaso(0);
+      iniciarCronometro();
+    });
+
+    btnReiniciar.addEventListener('click', function() {
+      detenerCronometro();
+      tiempoSegundos = 0;
+      cronoEl.textContent = '00:00';
+      pantallaFinal.classList.remove('activa');
+      pasoActual = 0;
+      mostrarPaso(0);
+      iniciarCronometro();
+    });
+
+    btnContinuar.addEventListener('click', function() {
+      window.location.href = 'desarrollo.html';
+    });
+
+    // Inicio: portada
+    mostrarPantalla('pantalla-portada');
+
+    // Ficha de continuidad (comentario)
+    /*
+    FICHA DE CONTINUIDAD DE LA SECUENCIA
+    Área: Números y Aritmética
+    Dominio: Conteo y Numeración
+    Núcleo: Principios y Estrategias de Conteo
+    Unidad: Correspondencia Uno a Uno
+    Título: El zoológico del cuidador
+    Situación: Los cuidadores de un zoológico infantil deben distribuir porciones de alimento a los animales. Cada animal recibe una bandeja idéntica. Necesitan saber si hay suficientes bandejas para todos los animales.
+    Propósito inferido: Establecer y verificar relaciones de correspondencia uno a uno entre dos colecciones de objetos.
+    Conocimientos previos: Reconocimiento de animales. Comprensión de la idea de dar una cosa a cada uno.
+    Mecánica: Selección, toque de sobrante, toque de faltante, doble asignación (dos toques), predicción.
+    Representaciones: Colecciones de objetos (animales y bandejas), columnas alineadas, emojis.
+    Errores previsibles: Confundir la correspondencia con la simple presencia de elementos sin emparejar. No detectar sobrantes o faltantes.
+    Identidad visual: Verde bosque (#2d6a4f), naranja cálido (#e68a2e), blanco crema (#fcf8f0). Ambientación de zoológico infantil. Emojis como iconografía.
+    Elementos dinámicos: Portada con flotantes, confeti en aciertos, animaciones de selección.
+    Pregunta pendiente: ¿Cómo podemos saber si hay suficientes bandejas para todos los animales sin contar uno por uno?
+    Desarrollo sugerido: Organizamos las porciones
+    Cierre sugerido: La distribución final
+    */
+  })();
+</script>
 </body>
 </html>
