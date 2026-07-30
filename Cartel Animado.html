@@ -21,12 +21,12 @@
       align-items: center;
       justify-content: center;
     }
-    /* Contenedor principal con dimensiones fijas 1600x750 */
+    /* Contenedor principal con dimensiones fijas 1600x705 */
     .app {
       position: relative;
       width: 100%;
       max-width: 1600px;
-      height: 750px;
+      height: 705px;
       background: #fcf8f0;
       overflow: hidden;
       box-shadow: 0 12px 40px rgba(0,0,0,0.15);
@@ -37,19 +37,19 @@
     }
     /* Zonas funcionales */
     .header {
-      flex: 0 0 9%; /* ~67px de 750 */
-      min-height: 44px;
+      flex: 0 0 9%; /* ~63px de 705 */
+      min-height: 40px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0 28px;
+      padding: 0 24px;
       background: rgba(255,252,240,0.7);
       backdrop-filter: blur(2px);
       border-bottom: 1px solid #e3d7c4;
       z-index: 5;
     }
     .header .titulo {
-      font-size: 1.3rem;
+      font-size: 1.25rem;
       font-weight: 700;
       color: #2d6a4f;
       letter-spacing: 0.3px;
@@ -58,19 +58,19 @@
       color: #e68a2e;
     }
     .header .progreso {
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       font-weight: 600;
       color: #4f5f6b;
       background: #ede7db;
-      padding: 4px 18px;
+      padding: 3px 16px;
       border-radius: 40px;
     }
     .cronometro {
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       font-weight: 600;
       color: #6f7e8a;
       background: #ede7db;
-      padding: 4px 14px;
+      padding: 3px 12px;
       border-radius: 30px;
       font-feature-settings: "tnum";
       letter-spacing: 0.5px;
@@ -78,7 +78,7 @@
 
     /* Barra de progreso */
     .progress-bar-container {
-      flex: 0 0 6px;
+      flex: 0 0 5px;
       background: #e3d7c4;
       position: relative;
       z-index: 5;
@@ -104,7 +104,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 20px 36px;
+      padding: 16px 32px;
       opacity: 0;
       pointer-events: none;
       background: #fcf8f0;
@@ -125,16 +125,16 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 40px;
+      gap: 36px;
       width: 100%;
-      max-width: 1200px;
+      max-width: 1150px;
     }
     .portada .texto {
       flex: 1;
       text-align: left;
     }
     .portada .texto h1 {
-      font-size: 3rem;
+      font-size: 2.8rem;
       color: #2d6a4f;
       line-height: 1.1;
     }
@@ -142,28 +142,28 @@
       color: #e68a2e;
     }
     .portada .texto p {
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       color: #2d4a3a;
-      margin: 12px 0 20px;
-      max-width: 520px;
+      margin: 10px 0 18px;
+      max-width: 500px;
     }
     .portada .texto .badge {
       display: inline-block;
       background: #2d6a4f;
       color: #fef7e9;
-      padding: 6px 22px;
+      padding: 5px 20px;
       border-radius: 30px;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       font-weight: 700;
       letter-spacing: 0.5px;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
     .btn-primario {
       background: #e68a2e;
       border: none;
-      padding: 14px 44px;
+      padding: 12px 40px;
       border-radius: 60px;
-      font-size: 1.2rem;
+      font-size: 1.15rem;
       font-weight: 700;
       color: #fff;
       cursor: pointer;
@@ -184,11 +184,33 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      font-size: 5rem;
-      gap: 24px;
-      flex-wrap: wrap;
       position: relative;
-      min-height: 180px;
+      min-height: 160px;
+      background: #f0ece4;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.05);
+    }
+    .portada .ilustracion img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      display: block;
+      width: auto;
+      height: auto;
+    }
+    .portada .ilustracion .fallback-emojis {
+      display: none;
+      font-size: 4.5rem;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+    }
+    .portada .ilustracion img:not([src]) + .fallback-emojis,
+    .portada .ilustracion img[src=""] + .fallback-emojis,
+    .portada .ilustracion img.error + .fallback-emojis {
+      display: flex;
     }
     .portada .ilustracion .flotante {
       animation: flotar 4s ease-in-out infinite alternate;
@@ -198,46 +220,46 @@
     .portada .ilustracion .flotante:nth-child(4) { animation-delay: 2.1s; }
     @keyframes flotar {
       0% { transform: translateY(0px) rotate(0deg); }
-      100% { transform: translateY(-16px) rotate(3deg); }
+      100% { transform: translateY(-14px) rotate(3deg); }
     }
 
     /* Interacción */
     .interaccion {
-      gap: 8px;
-      padding: 10px 24px;
+      gap: 6px;
+      padding: 8px 20px;
     }
     .interaccion h2 {
-      font-size: 1.6rem;
+      font-size: 1.5rem;
       color: #2d6a4f;
       text-align: center;
-      margin-bottom: 4px;
+      margin-bottom: 2px;
     }
     .interaccion .escena {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
       align-items: center;
-      gap: 28px 56px;
+      gap: 24px 48px;
       background: #f2ece0;
       border-radius: 30px;
-      padding: 18px 28px;
-      min-height: 170px;
+      padding: 14px 24px;
+      min-height: 150px;
       width: 100%;
-      max-width: 1060px;
+      max-width: 1020px;
       position: relative;
     }
     .columna {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
     }
     .fila {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
       align-items: center;
-      gap: 14px;
+      gap: 12px;
       position: relative;
     }
     .linea-conexion {
@@ -248,21 +270,21 @@
       z-index: 0;
     }
     .elemento {
-      font-size: 4rem; /* Aumentado para animales */
+      font-size: 3.6rem;
       transition: 0.15s;
       user-select: none;
       position: relative;
       z-index: 1;
-      padding: 6px;
+      padding: 4px;
     }
     .elemento.bandeja {
-      font-size: 3.8rem; /* Aumentado para bandejas */
+      font-size: 3.4rem;
       cursor: pointer;
-      padding: 8px 14px;
+      padding: 6px 12px;
       border-radius: 16px;
       border: 3px solid transparent;
       transition: 0.1s;
-      min-width: 70px;
+      min-width: 64px;
       text-align: center;
     }
     .elemento.bandeja:hover {
@@ -282,13 +304,13 @@
       background: rgba(192,57,43,0.15);
     }
     .elemento.animal {
-      font-size: 4rem;
+      font-size: 3.6rem;
       cursor: pointer;
-      padding: 8px 14px;
+      padding: 6px 12px;
       border-radius: 20px;
       border: 3px solid transparent;
       transition: 0.1s;
-      min-width: 70px;
+      min-width: 64px;
       text-align: center;
     }
     .elemento.animal:hover {
@@ -314,70 +336,68 @@
       50% { transform: scale(1.2); border-color: #f9c74f; background: rgba(249,199,79,0.3); }
     }
 
-    /* Elemento "sin bandeja" (círculo con ?) */
     .sin-bandeja {
       display: inline-flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      width: 3.8rem;
-      height: 3.8rem;
+      width: 3.4rem;
+      height: 3.4rem;
       border: 3px dashed #e68a2e;
       border-radius: 50%;
       background: #f0ece4;
-      font-size: 2.4rem;
+      font-size: 2rem;
       color: #b8a690;
       box-shadow: inset 0 2px 6px rgba(0,0,0,0.05);
       text-align: center;
       line-height: 1;
     }
     .sin-bandeja .icono {
-      font-size: 2.6rem;
+      font-size: 2.2rem;
       font-weight: 300;
       color: #b8a690;
     }
     .sin-bandeja .etiqueta {
-      font-size: 0.65rem;
+      font-size: 0.6rem;
       font-weight: 600;
       color: #8f9aa3;
       margin-top: 2px;
     }
 
-    /* Pila de bandejas (doble asignación) */
     .pila-bandejas {
       display: flex;
       flex-direction: column;
       align-items: center;
       position: relative;
-      width: 3.8rem;
-      height: 3.8rem;
+      width: 3.4rem;
+      height: 3.4rem;
     }
     .pila-bandejas .bandeja-base {
-      font-size: 3.8rem;
+      font-size: 3.4rem;
       line-height: 1;
       position: absolute;
       top: 0;
       left: 0;
     }
     .pila-bandejas .bandeja-superior {
-      font-size: 3.8rem;
+      font-size: 3.4rem;
       line-height: 1;
       position: absolute;
-      top: 6px;
-      left: 6px;
+      top: 5px;
+      left: 5px;
       filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
     }
 
     .mensaje {
-      font-size: 1.05rem;
+      font-size: 1rem;
       font-weight: 600;
       color: #2d6a4f;
       text-align: center;
-      min-height: 44px;
-      padding: 6px 18px;
+      min-height: 40px;
+      padding: 4px 16px;
       border-radius: 30px;
       background: #f3ede4;
-      max-width: 760px;
+      max-width: 720px;
       width: 100%;
       display: flex;
       align-items: center;
@@ -393,18 +413,18 @@
     }
     .opciones {
       display: flex;
-      gap: 16px;
+      gap: 14px;
       flex-wrap: wrap;
       justify-content: center;
     }
     .opciones button {
       background: #e8dccc;
       border: none;
-      padding: 14px 32px;
-      min-height: 54px;
-      min-width: 140px;
+      padding: 12px 28px;
+      min-height: 48px;
+      min-width: 130px;
       border-radius: 60px;
-      font-size: 1rem;
+      font-size: 0.95rem;
       font-weight: 700;
       color: #2d4a3a;
       cursor: pointer;
@@ -428,21 +448,21 @@
 
     .navegacion {
       display: flex;
-      gap: 14px;
-      margin-top: 6px;
+      gap: 12px;
+      margin-top: 4px;
     }
     .btn-secundario {
       background: #ded4c1;
       border: none;
-      padding: 8px 24px;
+      padding: 6px 20px;
       border-radius: 40px;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       font-weight: 700;
       color: #2d4a3a;
       cursor: pointer;
       transition: 0.15s;
       touch-action: manipulation;
-      min-height: 44px;
+      min-height: 40px;
     }
     .btn-secundario:hover {
       background: #cfc3ae;
@@ -455,45 +475,44 @@
     /* Pantalla final */
     .final {
       background: #fcf8f0;
-      gap: 8px;
+      gap: 6px;
       text-align: center;
-      padding: 28px;
+      padding: 24px;
     }
     .final .icono {
-      font-size: 3.6rem;
+      font-size: 3.2rem;
     }
     .final h2 {
-      font-size: 2rem;
+      font-size: 1.8rem;
       color: #2d6a4f;
     }
     .final .pregunta-pendiente {
       background: #e2f0e6;
       border-radius: 30px;
-      padding: 18px 32px;
-      max-width: 720px;
+      padding: 16px 28px;
+      max-width: 680px;
       border: 3px solid #e68a2e;
     }
     .final .pregunta-pendiente p {
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       font-weight: 600;
       color: #1f4f3a;
     }
     .final .acciones {
       display: flex;
-      gap: 16px;
+      gap: 14px;
       flex-wrap: wrap;
       justify-content: center;
-      margin-top: 6px;
+      margin-top: 4px;
     }
 
-    /* Pie */
     .footer {
-      flex: 0 0 7%; /* ~52px de 750 */
-      min-height: 32px;
+      flex: 0 0 7%; /* ~49px de 705 */
+      min-height: 28px;
       display: flex;
       justify-content: center;
       align-items: center;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       color: #8f9aa3;
       border-top: 1px solid #e3d7c4;
       background: rgba(255,252,240,0.6);
@@ -502,7 +521,6 @@
       color: #2d6a4f;
     }
 
-    /* Confeti */
     .confeti {
       position: fixed;
       top: 0;
@@ -534,29 +552,29 @@
       .portada .texto p { max-width: 100%; }
       .interaccion .escena { flex-direction: column; gap: 12px; }
       .pantalla { padding: 10px 14px; }
-      .portada .ilustracion { font-size: 3rem; min-height: 100px; }
+      .portada .ilustracion { min-height: 100px; }
       .interaccion h2 { font-size: 1.2rem; }
-      .elemento { font-size: 3rem; }
-      .elemento.bandeja { font-size: 2.8rem; }
-      .elemento.animal { font-size: 3rem; }
-      .sin-bandeja { width: 2.8rem; height: 2.8rem; font-size: 1.8rem; }
+      .elemento { font-size: 2.8rem; }
+      .elemento.bandeja { font-size: 2.6rem; }
+      .elemento.animal { font-size: 2.8rem; }
+      .sin-bandeja { width: 2.6rem; height: 2.6rem; font-size: 1.6rem; }
       .pila-bandejas .bandeja-base,
-      .pila-bandejas .bandeja-superior { font-size: 2.8rem; }
+      .pila-bandejas .bandeja-superior { font-size: 2.6rem; }
     }
     @media (max-width: 600px) {
       .header { padding: 0 10px; flex-wrap: wrap; gap: 2px; }
       .header .titulo { font-size: 0.85rem; }
       .portada .texto h1 { font-size: 1.6rem; }
-      .portada .ilustracion { font-size: 2.2rem; gap: 8px; }
-      .opciones button { padding: 8px 16px; font-size: 0.8rem; min-height: 40px; min-width: 80px; }
+      .portada .ilustracion { min-height: 80px; }
+      .opciones button { padding: 8px 14px; font-size: 0.8rem; min-height: 36px; min-width: 70px; }
       .btn-primario { padding: 8px 18px; font-size: 0.9rem; }
       .mensaje { font-size: 0.8rem; min-height: 32px; }
-      .elemento { font-size: 2.2rem; }
-      .elemento.bandeja { font-size: 2rem; }
-      .elemento.animal { font-size: 2.2rem; }
-      .sin-bandeja { width: 2rem; height: 2rem; font-size: 1.2rem; }
+      .elemento { font-size: 2rem; }
+      .elemento.bandeja { font-size: 1.8rem; }
+      .elemento.animal { font-size: 2rem; }
+      .sin-bandeja { width: 1.8rem; height: 1.8rem; font-size: 1rem; }
       .pila-bandejas .bandeja-base,
-      .pila-bandejas .bandeja-superior { font-size: 2rem; }
+      .pila-bandejas .bandeja-superior { font-size: 1.8rem; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -595,12 +613,17 @@
           <button class="btn-primario" id="btn-comenzar">🚀 Comenzar exploración</button>
         </div>
         <div class="ilustracion">
-          <span class="flotante">🐵</span>
-          <span class="flotante">🐘</span>
-          <span class="flotante">🦒</span>
-          <span class="flotante">🍽️</span>
-          <span class="flotante">🍽️</span>
-          <span class="flotante">🍽️</span>
+          <!-- Imagen principal de la portada -->
+          <img src="img/Inicio.png" alt="Ilustración de la actividad de inicio" id="imgPortada" onerror="this.classList.add('error');">
+          <!-- Fallback: emojis flotantes si la imagen no se carga -->
+          <div class="fallback-emojis">
+            <span class="flotante">🐵</span>
+            <span class="flotante">🐘</span>
+            <span class="flotante">🦒</span>
+            <span class="flotante">🍽️</span>
+            <span class="flotante">🍽️</span>
+            <span class="flotante">🍽️</span>
+          </div>
         </div>
       </div>
     </div>
@@ -612,11 +635,11 @@
     <div class="pantalla final" id="pantalla-final">
       <div class="icono">🌿</div>
       <h2>¡Buen trabajo!</h2>
-      <p style="font-size:1.1rem; color:#4f5f6b; max-width:620px;">Has ayudado al cuidador a revisar algunas distribuciones.</p>
+      <p style="font-size:1.05rem; color:#4f5f6b; max-width:600px;">Has ayudado al cuidador a revisar algunas distribuciones.</p>
       <div class="pregunta-pendiente">
         <p>❓ Ahora hay un problema más grande:</p>
-        <p style="font-size:1.1rem; font-weight:700;">¿Cómo podemos saber si hay suficientes bandejas para <strong>todos</strong> los animales <strong>sin contar</strong> uno por uno?</p>
-        <p style="font-size:0.9rem; color:#4f5f6b;">Descubriremos la respuesta en el siguiente momento.</p>
+        <p style="font-size:1.05rem; font-weight:700;">¿Cómo podemos saber si hay suficientes bandejas para <strong>todos</strong> los animales <strong>sin contar</strong> uno por uno?</p>
+        <p style="font-size:0.85rem; color:#4f5f6b;">Descubriremos la respuesta en el siguiente momento.</p>
       </div>
       <div class="acciones">
         <button class="btn-secundario" id="btn-reiniciar">🔄 Revisar</button>
@@ -875,7 +898,7 @@
           if (num === 0) {
             contenido = `<div class="sin-bandeja"><span class="icono">?</span><span class="etiqueta">sin bandeja</span></div>`;
           } else if (num === 1) {
-            contenido = `<span class="elemento bandeja" style="font-size:3.8rem; cursor:default; border:none; background:none; padding:0;">🍽️</span>`;
+            contenido = `<span class="elemento bandeja" style="font-size:3.4rem; cursor:default; border:none; background:none; padding:0;">🍽️</span>`;
           } else if (num === 2) {
             contenido = `<div class="pila-bandejas">
               <span class="bandeja-base">🍽️</span>
@@ -883,8 +906,8 @@
             </div>`;
           }
           html += `<div style="display:flex; flex-direction:column; align-items:center; margin:0 8px;">`;
-          html += `<div style="display:flex; gap:4px; flex-wrap:wrap; justify-content:center; min-height:56px; align-items:center;">${contenido}</div>`;
-          html += `<span style="font-size:0.65rem; color:#8f9aa3;">${i+1}</span>`;
+          html += `<div style="display:flex; gap:4px; flex-wrap:wrap; justify-content:center; min-height:50px; align-items:center;">${contenido}</div>`;
+          html += `<span style="font-size:0.6rem; color:#8f9aa3;">${i+1}</span>`;
           html += `</div>`;
         });
         html += `</div></div>`;
@@ -1243,26 +1266,6 @@
 
     mostrarPantalla('pantalla-portada');
     progressBarFill.style.width = '0%';
-
-    /*
-    FICHA DE CONTINUIDAD DE LA SECUENCIA
-    Área: Números y Aritmética
-    Dominio: Conteo y Numeración
-    Núcleo: Principios y Estrategias de Conteo
-    Unidad: Correspondencia Uno a Uno
-    Título: El zoológico del cuidador
-    Situación: Los cuidadores de un zoológico infantil deben distribuir porciones de alimento a los animales. Cada animal recibe una bandeja idéntica. Necesitan saber si hay suficientes bandejas para todos los animales.
-    Propósito inferido: Establecer y verificar relaciones de correspondencia uno a uno entre dos colecciones de objetos.
-    Conocimientos previos: Reconocimiento de animales. Comprensión de la idea de dar una cosa a cada uno.
-    Mecánica: Selección, toque de sobrante, toque de faltante, doble asignación (dos toques), predicción.
-    Representaciones: Colecciones de objetos (animales y bandejas), columnas alineadas, emojis, pila de bandejas, círculo con "?" para ausencia.
-    Errores previsibles: Confundir la correspondencia con la simple presencia de elementos sin emparejar. No detectar sobrantes o faltantes.
-    Identidad visual: Verde bosque (#2d6a4f), naranja cálido (#e68a2e), blanco crema (#fcf8f0). Ambientación de zoológico infantil. Emojis como iconografía.
-    Elementos dinámicos: Portada con flotantes, confeti en aciertos, animaciones de selección, barra de progreso, líneas de conexión visuales.
-    Pregunta pendiente: ¿Cómo podemos saber si hay suficientes bandejas para todos los animales sin contar uno por uno?
-    Desarrollo sugerido: Organizamos las porciones
-    Cierre sugerido: La distribución final
-    */
   })();
 </script>
 </body>
