@@ -1,4 +1,4 @@
-
+ 
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -15,7 +15,8 @@
             margin: 0;
             padding: 0;
         }
-        html, body {
+        html,
+        body {
             width: 100%;
             min-height: 100vh;
             font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
@@ -30,7 +31,7 @@
             position: relative;
             width: 100%;
             max-width: 1600px;
-            height: 705px;                /* <--- Altura fija igual que el cartel animado */
+            height: 705px;
             background: #FEFAF2;
             border-radius: 34px;
             box-shadow: 0 24px 48px rgba(0, 0, 0, 0.45);
@@ -157,15 +158,27 @@
             display: inline-block;
             animation: flotar-item 3s ease-in-out infinite alternate;
         }
-        .cover-anim span:nth-child(2) { animation-delay: 0.4s; }
-        .cover-anim span:nth-child(3) { animation-delay: 0.8s; }
+        .cover-anim span:nth-child(2) {
+            animation-delay: 0.4s;
+        }
+        .cover-anim span:nth-child(3) {
+            animation-delay: 0.8s;
+        }
         @keyframes flotar-item {
-            0% { transform: translateY(0px) rotate(-2deg); }
-            100% { transform: translateY(-14px) rotate(2deg); }
+            0% {
+                transform: translateY(0px) rotate(-2deg);
+            }
+            100% {
+                transform: translateY(-14px) rotate(2deg);
+            }
         }
         @keyframes flotar {
-            0% { transform: translateY(0px); }
-            100% { transform: translateY(-6px); }
+            0% {
+                transform: translateY(0px);
+            }
+            100% {
+                transform: translateY(-6px);
+            }
         }
         .cover-btn {
             margin-top: 4px;
@@ -181,8 +194,13 @@
             position: relative;
             z-index: 3;
         }
-        .cover-btn:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(230, 126, 34, 0.5); }
-        .cover-btn:active { transform: translateY(1px); }
+        .cover-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(230, 126, 34, 0.5);
+        }
+        .cover-btn:active {
+            transform: translateY(1px);
+        }
 
         /* ===== ESTACIONES ===== */
         #screen-steps {
@@ -342,6 +360,20 @@
             cursor: not-allowed;
             transform: none;
         }
+        .step-options .opt-btn.pulse {
+            animation: pulse 0.3s ease;
+        }
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.08);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
 
         .step-feedback {
             min-height: 42px;
@@ -447,6 +479,19 @@
             background: #f0ebe0;
             border-radius: 20px;
         }
+        .btn-teclado {
+            background: #a8b5c4;
+            color: #1f2e3a;
+            font-size: 0.7rem;
+            padding: 4px 12px;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+            font-weight: 700;
+        }
+        .btn-teclado:hover {
+            background: #95a3b3;
+        }
 
         /* ===== PANTALLA FINAL ===== */
         #screen-final {
@@ -536,6 +581,24 @@
         }
         .final-actions .nav-btn {
             min-width: 120px;
+        }
+        .resumen-puntuacion {
+            background: rgba(255, 255, 245, 0.1);
+            border-radius: 20px;
+            padding: 10px 18px;
+            color: #f0f5f0;
+            font-size: 0.9rem;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 215, 140, 0.2);
+            margin-top: 4px;
+        }
+        .resumen-puntuacion span {
+            font-weight: 700;
+            color: #FFE6B0;
         }
 
         /* ===== CRÉDITO FIJO ===== */
@@ -781,7 +844,37 @@
             font-size: 2rem;
         }
 
-        /* ===== RESPONSIVE (se mantiene la altura fija) ===== */
+        /* ===== CONFETI ===== */
+        .confeti {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 999;
+            overflow: hidden;
+        }
+        .confeti span {
+            position: absolute;
+            display: block;
+            width: 10px;
+            height: 10px;
+            border-radius: 2px;
+            animation: caer 1.2s ease-out forwards;
+        }
+        @keyframes caer {
+            0% {
+                opacity: 1;
+                transform: translateY(-20px) rotate(0deg) scale(0.5);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(90vh) rotate(720deg) scale(1.2);
+            }
+        }
+
+        /* ===== RESPONSIVE ===== */
         @media (max-width: 1024px) {
             .app {
                 height: auto;
@@ -987,19 +1080,47 @@
             .drag-source {
                 transition: none !important;
             }
+            .confeti span {
+                animation: none !important;
+                display: none;
+            }
         }
 
-        .hidden { display: none !important; }
-        .flex-center { display: flex; align-items: center; justify-content: center; }
-        .gap-8 { gap: 8px; }
-        .gap-12 { gap: 12px; }
-        .mt-4 { margin-top: 4px; }
-        .mb-4 { margin-bottom: 4px; }
-        .text-center { text-align: center; }
-        .w-full { width: 100%; }
-        .flex-wrap { flex-wrap: wrap; }
-        .items-center { align-items: center; }
-        .justify-center { justify-content: center; }
+        .hidden {
+            display: none !important;
+        }
+        .flex-center {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .gap-8 {
+            gap: 8px;
+        }
+        .gap-12 {
+            gap: 12px;
+        }
+        .mt-4 {
+            margin-top: 4px;
+        }
+        .mb-4 {
+            margin-bottom: 4px;
+        }
+        .text-center {
+            text-align: center;
+        }
+        .w-full {
+            width: 100%;
+        }
+        .flex-wrap {
+            flex-wrap: wrap;
+        }
+        .items-center {
+            align-items: center;
+        }
+        .justify-center {
+            justify-content: center;
+        }
     </style>
 </head>
 <body>
@@ -1052,6 +1173,9 @@
                     <div class="step-visual" id="step-visual"></div>
                     <div class="step-options" id="step-options"></div>
                     <div class="step-feedback empty" id="step-feedback"></div>
+                    <div style="display:flex; gap:8px; justify-content:center; margin-top:2px;">
+                        <button class="btn-teclado" id="btn-teclado" type="button">⌨️ Modo teclado</button>
+                    </div>
                 </div>
 
                 <div class="steps-nav">
@@ -1077,6 +1201,11 @@
                 <p class="final-desc">
                     Has contado, emparejado y ordenado. Ya sabes que cada elemento necesita su número.
                 </p>
+                <div class="resumen-puntuacion" id="resumen-puntuacion">
+                    <span>✅ Aciertos: <span id="aciertos-final">0</span></span>
+                    <span>❌ Errores: <span id="errores-final">0</span></span>
+                    <span>⏱️ Tiempo: <span id="tiempo-final">00:00</span></span>
+                </div>
                 <div class="final-pregunta">
                     <span class="label">🔍 Pregunta pendiente</span>
                     <p class="pregunta">
@@ -1085,6 +1214,7 @@
                 </div>
                 <div class="final-actions">
                     <button class="nav-btn secondary" id="btn-final-revisar" type="button">↻ Revisar</button>
+                    <button class="nav-btn restart" id="btn-final-reiniciar" type="button">↻ Reiniciar</button>
                     <button class="nav-btn primary" id="btn-final-continuar" type="button">🚀 Continuar</button>
                     <button class="nav-btn secondary" id="btn-final-index" type="button">🏠 Inicio</button>
                 </div>
@@ -1119,8 +1249,10 @@
             const btnContinuar = document.getElementById('btn-continuar');
             const btnReiniciar = document.getElementById('btn-reiniciar');
             const btnFinalRevisar = document.getElementById('btn-final-revisar');
+            const btnFinalReiniciar = document.getElementById('btn-final-reiniciar');
             const btnFinalContinuar = document.getElementById('btn-final-continuar');
             const btnFinalIndex = document.getElementById('btn-final-index');
+            const btnTeclado = document.getElementById('btn-teclado');
             const progText = document.getElementById('prog-text');
             const progFill = document.getElementById('prog-fill');
             const stepBadge = document.getElementById('step-badge');
@@ -1129,6 +1261,9 @@
             const stepOptions = document.getElementById('step-options');
             const stepFeedback = document.getElementById('step-feedback');
             const attemptsInd = document.getElementById('attempts-indicator');
+            const resumenAciertos = document.getElementById('aciertos-final');
+            const resumenErrores = document.getElementById('errores-final');
+            const resumenTiempo = document.getElementById('tiempo-final');
 
             // ===== ESTADO =====
             const TOTAL_STEPS = 10;
@@ -1138,16 +1273,44 @@
             let stepCompleted = false;
             let stepLocked = false;
             const stepState = [];
+            let totalAciertos = 0;
+            let totalErrores = 0;
+            let modoTeclado = false;
+            let tecladoTargets = [];
+            let tecladoIndex = 0;
+            let tecladoDragActive = false;
+
             for (let i = 0; i < TOTAL_STEPS; i++) {
                 stepState.push({ completed: false, attempts: 0, locked: false });
             }
 
             // ============================================================
-            //  DEFINICIÓN DE LAS 10 INTERACCIONES (mismo contenido que antes)
+            //  CONFETI
+            // ============================================================
+            function lanzarConfeti() {
+                const contenedor = document.createElement('div');
+                contenedor.className = 'confeti';
+                const colores = ['#f9c74f', '#e68a2e', '#2d6a4f', '#c0392b', '#3498db', '#9b59b6', '#f1c40f'];
+                for (let i = 0; i < 30; i++) {
+                    const span = document.createElement('span');
+                    span.style.left = Math.random() * 100 + '%';
+                    span.style.background = colores[Math.floor(Math.random() * colores.length)];
+                    span.style.width = (Math.random() * 8 + 4) + 'px';
+                    span.style.height = (Math.random() * 8 + 4) + 'px';
+                    span.style.animationDuration = (Math.random() * 0.8 + 0.6) + 's';
+                    span.style.animationDelay = (Math.random() * 0.3) + 's';
+                    contenedor.appendChild(span);
+                }
+                document.body.appendChild(contenedor);
+                setTimeout(() => contenedor.remove(), 2000);
+            }
+
+            // ============================================================
+            //  DEFINICIÓN DE LAS 10 INTERACCIONES (MEJORADAS)
             // ============================================================
             const steps = [];
 
-            // --- PASO 0: Reconocimiento global ---
+            // PASO 0: Reconocimiento global
             steps.push({
                 badge: 'Estación 1 · Reconocer',
                 question: '📊 ¿Cuántos libros hay en total?',
@@ -1169,12 +1332,13 @@
                 _correctVal: 12,
                 handleOption: function(val, cb) {
                     const correct = (val === this._correctVal);
-                    cb(correct, correct ? '¡Excelente! Contaste correctamente.' :
-                        'Cuenta uno por uno los libros que ves.');
+                    let mensaje = correct ? '¡Excelente! Contaste correctamente.' :
+                        'Cuenta uno por uno los libros que ves. Recuerda señalar cada libro mientras cuentas.';
+                    cb(correct, mensaje);
                 }
             });
 
-            // --- PASO 1: Arrastre etiqueta 1 ---
+            // PASO 1: Arrastre etiqueta 1
             steps.push({
                 badge: 'Estación 2 · Etiquetar',
                 question: '🔢 Arrastra el número 1 sobre un libro.',
@@ -1183,12 +1347,12 @@
                     const libros = Array(12).fill('📚');
                     container.innerHTML = `
                         <div class="drag-area" id="drag-area-p1">
-                            <div class="drag-source" id="drag-source-p1" draggable="false" style="touch-action:none;cursor:grab;">
+                            <div class="drag-source" id="drag-source-p1" draggable="false" style="touch-action:none;cursor:grab;" tabindex="0" role="button" aria-label="Etiqueta número 1, arrastrar">
                                 <span style="font-size:2.4rem;font-weight:900;color:#1A5F82;">1</span>
                             </div>
                             <div style="font-size:1rem;font-weight:700;color:#c0672c;">→</div>
                             <div class="drag-targets" id="drag-targets-p1">
-                                ${libros.map((_, i) => `<div class="drag-target" data-index="${i}" style="font-size:2.2rem;">📚</div>`).join('')}
+                                ${libros.map((_, i) => `<div class="drag-target" data-index="${i}" style="font-size:2.2rem;" tabindex="0" role="button">📚</div>`).join('')}
                             </div>
                         </div>
                         <div style="font-size:0.75rem;color:#7a8f9e;margin-top:2px;">Coloca sobre cualquier libro</div>
@@ -1198,6 +1362,7 @@
                         const targets = document.querySelectorAll('#drag-targets-p1 .drag-target');
                         let dragActive = false;
 
+                        // Eventos de ratón/touch
                         const onStart = (e) => {
                             e.preventDefault();
                             if (stepCompleted || stepLocked) return;
@@ -1243,6 +1408,8 @@
                                             document.getElementById('btn-continuar').disabled = false;
                                             updateProgress();
                                             updateAttempts();
+                                            totalAciertos++;
+                                            lanzarConfeti();
                                         }
                                     }
                                 }
@@ -1257,7 +1424,7 @@
                                     stepLocked = true;
                                     stepState[currentStep].locked = true;
                                     fb.className = 'step-feedback error';
-                                    fb.innerHTML = '💡 Coloca la etiqueta sobre un libro.';
+                                    fb.innerHTML = '💡 Has agotado los intentos. Observa la solución: coloca la etiqueta sobre cualquier libro.';
                                     const firstTarget = targets[0];
                                     if (firstTarget && !firstTarget.classList.contains('matched')) {
                                         firstTarget.classList.add('matched');
@@ -1267,10 +1434,11 @@
                                         stepCompleted = true;
                                         stepState[currentStep].completed = true;
                                         updateProgress();
+                                        totalAciertos++;
                                     }
                                 } else {
                                     fb.className = 'step-feedback error';
-                                    fb.innerHTML = '⚠️ Coloca sobre un libro, no en el vacío.';
+                                    fb.innerHTML = '⚠️ Coloca sobre un libro, no en el vacío. Intenta de nuevo.';
                                 }
                             }
                         };
@@ -1282,11 +1450,69 @@
                         document.addEventListener('touchmove', onMove, { passive: false });
                         document.addEventListener('touchend', onEnd, { passive: false });
 
+                        // Teclado
+                        let tecladoActivo = false;
+                        const tecladoHandler = (e) => {
+                            if (!modoTeclado || stepCompleted || stepLocked) return;
+                            if (!tecladoActivo) {
+                                // Activar con Enter en source
+                                if (e.key === 'Enter' && document.activeElement === source) {
+                                    tecladoActivo = true;
+                                    tecladoTargets = Array.from(targets);
+                                    tecladoIndex = 0;
+                                    tecladoTargets.forEach(t => t.style.outline = 'none');
+                                    tecladoTargets[tecladoIndex].style.outline = '3px solid #e68a2e';
+                                    e.preventDefault();
+                                }
+                                return;
+                            }
+                            // Navegar con flechas
+                            if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                                e.preventDefault();
+                                tecladoTargets[tecladoIndex].style.outline = 'none';
+                                tecladoIndex = (tecladoIndex + 1) % tecladoTargets.length;
+                                tecladoTargets[tecladoIndex].style.outline = '3px solid #e68a2e';
+                            } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                                e.preventDefault();
+                                tecladoTargets[tecladoIndex].style.outline = 'none';
+                                tecladoIndex = (tecladoIndex - 1 + tecladoTargets.length) % tecladoTargets.length;
+                                tecladoTargets[tecladoIndex].style.outline = '3px solid #e68a2e';
+                            } else if (e.key === 'Enter') {
+                                e.preventDefault();
+                                const target = tecladoTargets[tecladoIndex];
+                                if (target && !target.classList.contains('matched') && !stepCompleted && !stepLocked) {
+                                    target.classList.add('matched');
+                                    target.style.borderColor = '#2e7d32';
+                                    target.style.background = '#d9eedb';
+                                    if (!stepCompleted && !stepLocked) {
+                                        stepCompleted = true;
+                                        stepState[currentStep].completed = true;
+                                        const fb = document.getElementById('step-feedback');
+                                        fb.className = 'step-feedback success';
+                                        fb.innerHTML = '🎉 ¡Muy bien! Asignaste el 1.';
+                                        document.getElementById('btn-continuar').disabled = false;
+                                        updateProgress();
+                                        updateAttempts();
+                                        totalAciertos++;
+                                        lanzarConfeti();
+                                        tecladoActivo = false;
+                                        tecladoTargets.forEach(t => t.style.outline = 'none');
+                                    }
+                                }
+                            } else if (e.key === 'Escape') {
+                                tecladoActivo = false;
+                                tecladoTargets.forEach(t => t.style.outline = 'none');
+                            }
+                        };
+
+                        document.addEventListener('keydown', tecladoHandler);
+
                         this._cleanupDrag = function() {
                             document.removeEventListener('mousemove', onMove);
                             document.removeEventListener('mouseup', onEnd);
                             document.removeEventListener('touchmove', onMove);
                             document.removeEventListener('touchend', onEnd);
+                            document.removeEventListener('keydown', tecladoHandler);
                         };
                     };
                 },
@@ -1303,7 +1529,7 @@
                 }
             });
 
-            // --- PASO 2: Conteo guiado ---
+            // PASO 2: Conteo guiado
             steps.push({
                 badge: 'Estación 3 · Contar',
                 question: '🔢 ¿Cuántos libros hay en esta fila? (1 al 5)',
@@ -1323,11 +1549,13 @@
                 _correctVal: 5,
                 handleOption: function(val, cb) {
                     const correct = (val === this._correctVal);
-                    cb(correct, correct ? '¡Perfecto!' : 'Cuenta en voz alta señalando cada uno.');
+                    let mensaje = correct ? '¡Perfecto! Has contado correctamente.' :
+                        'Cuenta en voz alta señalando cada libro. El último número que digas es la cantidad total.';
+                    cb(correct, mensaje);
                 }
             });
 
-            // --- PASO 3: Emparejar números ---
+            // PASO 3: Emparejar números
             steps.push({
                 badge: 'Estación 4 · Emparejar',
                 question: '🔗 Haz clic en un libro y luego en el estuche con el mismo número.',
@@ -1340,7 +1568,7 @@
                             <div class="match-col" id="match-col-left-p3">
                                 <div class="col-title">📚 Libros</div>
                                 ${bookNums.map((n,i) => `
-                                    <div class="match-item" data-id="b${i}" data-num="${n}" data-side="left" style="font-size:1.8rem;">
+                                    <div class="match-item" data-id="b${i}" data-num="${n}" data-side="left" style="font-size:1.8rem;" tabindex="0" role="button">
                                         📚 <span class="item-num">${n}</span>
                                     </div>
                                 `).join('')}
@@ -1348,7 +1576,7 @@
                             <div class="match-col" id="match-col-right-p3">
                                 <div class="col-title">📦 Estuches</div>
                                 ${caseNums.map((n,i) => `
-                                    <div class="match-item" data-id="c${i}" data-num="${n}" data-side="right" style="font-size:1.8rem;">
+                                    <div class="match-item" data-id="c${i}" data-num="${n}" data-side="right" style="font-size:1.8rem;" tabindex="0" role="button">
                                         📦 <span class="item-num">${n}</span>
                                     </div>
                                 `).join('')}
@@ -1385,6 +1613,8 @@
                                 document.getElementById('btn-continuar').disabled = false;
                                 updateProgress();
                                 updateAttempts();
+                                totalAciertos++;
+                                lanzarConfeti();
                                 leftItems.forEach(el => el.classList.add('disabled'));
                                 rightItems.forEach(el => el.classList.add('disabled'));
                             }
@@ -1404,7 +1634,7 @@
                             if (state.leftSelected === null) {
                                 const fb = document.getElementById('step-feedback');
                                 fb.className = 'step-feedback error';
-                                fb.innerHTML = '👆 Primero selecciona un libro.';
+                                fb.innerHTML = '👆 Primero selecciona un libro (columna izquierda).';
                                 setTimeout(() => {
                                     if (!stepCompleted && !stepLocked) {
                                         fb.className = 'step-feedback empty';
@@ -1445,7 +1675,7 @@
                                     stepLocked = true;
                                     stepState[currentStep].locked = true;
                                     fb.className = 'step-feedback error';
-                                    fb.innerHTML = '💡 Los números deben coincidir.';
+                                    fb.innerHTML = '💡 Los números deben coincidir. Observa la solución: libro 1 con estuche 1, etc.';
                                     leftItems.forEach(li => {
                                         const num = li.dataset.num;
                                         const ri = document.querySelector(
@@ -1459,10 +1689,11 @@
                                     stepState[currentStep].completed = true;
                                     document.getElementById('btn-continuar').disabled = false;
                                     updateProgress();
+                                    totalAciertos++;
                                 } else {
                                     fb.className = 'step-feedback error';
                                     fb.innerHTML =
-                                        `⚠️ No coinciden. Intento ${stepAttempts}/${MAX_ATTEMPTS}`;
+                                        `⚠️ No coinciden. Intento ${stepAttempts}/${MAX_ATTEMPTS}. Busca el número que falta.`;
                                 }
                                 state.leftSelected = null;
                                 leftItems.forEach(el => el.classList.remove('selected'));
@@ -1471,9 +1702,21 @@
 
                         leftItems.forEach(el => {
                             el.addEventListener('click', () => handleLeftClick(el));
+                            el.addEventListener('keydown', (e) => {
+                                if (e.key === 'Enter' || e.key === ' ') {
+                                    e.preventDefault();
+                                    handleLeftClick(el);
+                                }
+                            });
                         });
                         rightItems.forEach(el => {
                             el.addEventListener('click', () => handleRightClick(el));
+                            el.addEventListener('keydown', (e) => {
+                                if (e.key === 'Enter' || e.key === ' ') {
+                                    e.preventDefault();
+                                    handleRightClick(el);
+                                }
+                            });
                         });
 
                         this._cleanupMatch = function() {
@@ -1494,7 +1737,7 @@
                 handleOption: null
             });
 
-            // --- PASO 4: Comparar cantidades ---
+            // PASO 4: Comparar cantidades
             steps.push({
                 badge: 'Estación 5 · Comparar',
                 question: '📊 ¿Tienen los dos grupos la misma cantidad?',
@@ -1520,15 +1763,16 @@
                 _correctVal: 'no',
                 handleOption: function(val, cb) {
                     const correct = (val === this._correctVal);
-                    cb(correct, correct ? '¡Muy bien! Son diferentes.' :
-                        'Cuenta los libros de cada grupo uno por uno.');
+                    let mensaje = correct ? '¡Muy bien! Son diferentes. El grupo A tiene más libros que el B.' :
+                        'Cuenta los libros de cada grupo. Observa que el grupo A tiene 6 y el B tiene 4.';
+                    cb(correct, mensaje);
                 }
             });
 
-            // --- PASO 5: Ordenar libros (arrastre) ---
+            // PASO 5: Ordenar libros (arrastre)
             steps.push({
                 badge: 'Estación 6 · Ordenar',
-                question: '📚 Ordena los libros del 1 al 7.',
+                question: '📚 Ordena los libros del 1 al 7. Puedes colocar cualquier libro en cada casilla, pero debes seguir el orden numérico.',
                 render: function(container, optsContainer, feedback) {
                     optsContainer.innerHTML = '';
                     const emojis = ['📘', '📕', '📗', '📙', '📘', '📕', '📗'];
@@ -1537,7 +1781,7 @@
                         <div class="order-area" id="order-area-p5">
                             <div class="order-pool" id="order-pool-p5">
                                 ${shuffled.map((emoji, i) => `
-                                    <div class="order-item" data-idx="${i}" draggable="false" style="touch-action:none;cursor:grab;">
+                                    <div class="order-item" data-idx="${i}" draggable="false" style="touch-action:none;cursor:grab;" tabindex="0" role="button">
                                         ${emoji}
                                     </div>
                                 `).join('')}
@@ -1625,6 +1869,8 @@
                                                 document.getElementById('btn-continuar').disabled = false;
                                                 updateProgress();
                                                 updateAttempts();
+                                                totalAciertos++;
+                                                lanzarConfeti();
                                             }
                                             dropped = true;
                                         } else {
@@ -1637,7 +1883,7 @@
                                                 stepState[currentStep].locked = true;
                                                 fb.className = 'step-feedback error';
                                                 fb.innerHTML =
-                                                    `💡 Debes colocar en orden, ahora el ${expected}.`;
+                                                    `💡 Debes colocar en orden, ahora el ${expected}. Observa la solución.`;
                                                 const nextSlot = document.querySelector(
                                                     `.slot[data-slot="${expected}"]`);
                                                 if (nextSlot && !nextSlot.classList.contains('filled')) {
@@ -1652,11 +1898,12 @@
                                                     stepState[currentStep].completed = true;
                                                     document.getElementById('btn-continuar').disabled = false;
                                                     updateProgress();
+                                                    totalAciertos++;
                                                 }
                                             } else {
                                                 fb.className = 'step-feedback error';
                                                 fb.innerHTML =
-                                                    `⚠️ Debe ir el ${expected}. Intento ${stepAttempts}/${MAX_ATTEMPTS}`;
+                                                    `⚠️ Debe ir el ${expected}. Intento ${stepAttempts}/${MAX_ATTEMPTS}.`;
                                             }
                                             dropped = true;
                                         }
@@ -1666,7 +1913,7 @@
                             if (!dropped && !stepCompleted && !stepLocked) {
                                 const fb = document.getElementById('step-feedback');
                                 fb.className = 'step-feedback error';
-                                fb.innerHTML = '⚠️ Coloca sobre la casilla.';
+                                fb.innerHTML = '⚠️ Coloca sobre la casilla correspondiente.';
                                 setTimeout(() => {
                                     if (!stepCompleted && !stepLocked) {
                                         fb.className = 'step-feedback empty';
@@ -1677,10 +1924,98 @@
                             dragItem = null;
                         };
 
+                        // Eventos ratón/touch
                         items.forEach((item) => {
                             const handlerStart = (e) => onStart(e, item);
                             item.addEventListener('mousedown', handlerStart);
                             item.addEventListener('touchstart', handlerStart, { passive: false });
+                            // Teclado
+                            item.addEventListener('keydown', (e) => {
+                                if (e.key === 'Enter' && !modoTeclado) {
+                                    // Si no está en modo teclado, activar selección por teclado
+                                    if (!stepCompleted && !stepLocked && !item.classList.contains('placed')) {
+                                        // Buscar el primer slot vacío y colocar
+                                        const slotsArr = document.querySelectorAll('#order-slots-p5 .slot');
+                                        for (let s of slotsArr) {
+                                            if (!s.classList.contains('filled')) {
+                                                const slotNum = parseInt(s.dataset.slot);
+                                                const expected = this._orderState.placed + 1;
+                                                if (slotNum === expected) {
+                                                    s.classList.add('filled');
+                                                    s.innerHTML =
+                                                        `<span class="slot-emoji">${item.textContent}</span>`;
+                                                    item.classList.add('placed');
+                                                    this._orderState.placed++;
+                                                    const fb = document.getElementById('step-feedback');
+                                                    fb.className = 'step-feedback success';
+                                                    fb.innerHTML =
+                                                        `✅ Posición ${slotNum} correcta.`;
+                                                    setTimeout(() => {
+                                                        if (!stepCompleted && !stepLocked) {
+                                                            fb.className =
+                                                                'step-feedback empty';
+                                                            fb.innerHTML = '';
+                                                        }
+                                                    }, 600);
+                                                    if (this._orderState.placed === this._orderState
+                                                        .total) {
+                                                        stepCompleted = true;
+                                                        stepState[currentStep].completed = true;
+                                                        fb.className = 'step-feedback success';
+                                                        fb.innerHTML =
+                                                            '🎉 ¡Excelente! Todos ordenados.';
+                                                        document.getElementById('btn-continuar')
+                                                            .disabled = false;
+                                                        updateProgress();
+                                                        updateAttempts();
+                                                        totalAciertos++;
+                                                        lanzarConfeti();
+                                                    }
+                                                    break;
+                                                } else {
+                                                    stepAttempts++;
+                                                    stepState[currentStep].attempts = stepAttempts;
+                                                    updateAttempts();
+                                                    const fb = document.getElementById(
+                                                    'step-feedback');
+                                                    if (stepAttempts >= MAX_ATTEMPTS) {
+                                                        stepLocked = true;
+                                                        stepState[currentStep].locked = true;
+                                                        fb.className = 'step-feedback error';
+                                                        fb.innerHTML =
+                                                            `💡 Debes colocar en orden, ahora el ${expected}. Observa la solución.`;
+                                                        const nextSlot = document.querySelector(
+                                                            `.slot[data-slot="${expected}"]`);
+                                                        if (nextSlot && !nextSlot.classList
+                                                            .contains('filled')) {
+                                                            nextSlot.classList.add('filled');
+                                                            nextSlot.innerHTML =
+                                                                `<span class="slot-emoji">${item.textContent}</span>`;
+                                                            item.classList.add('placed');
+                                                            this._orderState.placed++;
+                                                        }
+                                                        if (this._orderState.placed === this
+                                                            ._orderState.total) {
+                                                            stepCompleted = true;
+                                                            stepState[currentStep].completed =
+                                                            true;
+                                                            document.getElementById('btn-continuar')
+                                                                .disabled = false;
+                                                            updateProgress();
+                                                            totalAciertos++;
+                                                        }
+                                                    } else {
+                                                        fb.className = 'step-feedback error';
+                                                        fb.innerHTML =
+                                                            `⚠️ Debe ir el ${expected}. Intento ${stepAttempts}/${MAX_ATTEMPTS}.`;
+                                                    }
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            });
                         });
 
                         document.addEventListener('mousemove', onMove);
@@ -1708,7 +2043,7 @@
                 handleOption: null
             });
 
-            // --- PASO 6: Conteo con obstáculos ---
+            // PASO 6: Conteo con obstáculos
             steps.push({
                 badge: 'Estación 7 · Conteo selectivo',
                 question: '🔍 ¿Cuántos libros hay (sin contar lápices ni cuadernos)?',
@@ -1729,11 +2064,13 @@
                 _correctVal: 9,
                 handleOption: function(val, cb) {
                     const correct = (val === this._correctVal);
-                    cb(correct, correct ? '¡Perfecto!' : 'Solo cuenta los libros, ignora los otros.');
+                    let mensaje = correct ? '¡Perfecto! Has contado solo los libros.' :
+                        'Recuerda ignorar lápices y cuadernos. Cuenta solo los libros (📚).';
+                    cb(correct, mensaje);
                 }
             });
 
-            // --- PASO 7: Completar secuencia ---
+            // PASO 7: Completar secuencia
             steps.push({
                 badge: 'Estación 8 · Secuencia',
                 question: '🔢 ¿Qué número falta? 1, 2, 3, __, 5',
@@ -1756,11 +2093,13 @@
                 _correctVal: 4,
                 handleOption: function(val, cb) {
                     const correct = (val === this._correctVal);
-                    cb(correct, correct ? '¡Muy bien!' : 'Revisa la secuencia: 1,2,3,?,5');
+                    let mensaje = correct ? '¡Muy bien! El número que falta es el 4.' :
+                        'Revisa la secuencia: 1, 2, 3, ? , 5. El número que falta está entre el 3 y el 5.';
+                    cb(correct, mensaje);
                 }
             });
 
-            // --- PASO 8: Mochilas y loncheras (clic-clic) ---
+            // PASO 8: Mochilas y loncheras (clic-clic)
             steps.push({
                 badge: 'Estación 9 · Asociar',
                 question: '🎒🧳 Empareja cada mochila con una lonchera.',
@@ -1774,7 +2113,7 @@
                             <div class="match-col" id="match-col-left-p8">
                                 <div class="col-title">🎒 Mochilas</div>
                                 ${mochilas.map((emoji, i) => `
-                                    <div class="match-item" data-id="m${i}" data-side="left" style="font-size:2rem;">
+                                    <div class="match-item" data-id="m${i}" data-side="left" style="font-size:2rem;" tabindex="0" role="button">
                                         ${emoji}
                                     </div>
                                 `).join('')}
@@ -1782,7 +2121,7 @@
                             <div class="match-col" id="match-col-right-p8">
                                 <div class="col-title">🧳 Loncheras</div>
                                 ${shuffledLoncheras.map((emoji, i) => `
-                                    <div class="match-item" data-id="l${i}" data-side="right" style="font-size:2rem;">
+                                    <div class="match-item" data-id="l${i}" data-side="right" style="font-size:2rem;" tabindex="0" role="button">
                                         ${emoji}
                                     </div>
                                 `).join('')}
@@ -1819,6 +2158,8 @@
                                 document.getElementById('btn-continuar').disabled = false;
                                 updateProgress();
                                 updateAttempts();
+                                totalAciertos++;
+                                lanzarConfeti();
                                 leftItems.forEach(el => el.classList.add('disabled'));
                                 rightItems.forEach(el => el.classList.add('disabled'));
                             }
@@ -1838,7 +2179,7 @@
                             if (state.leftSelected === null) {
                                 const fb = document.getElementById('step-feedback');
                                 fb.className = 'step-feedback error';
-                                fb.innerHTML = '👆 Primero selecciona una mochila.';
+                                fb.innerHTML = '👆 Primero selecciona una mochila (columna izquierda).';
                                 setTimeout(() => {
                                     if (!stepCompleted && !stepLocked) {
                                         fb.className = 'step-feedback empty';
@@ -1857,7 +2198,7 @@
                                 state.matchedPairs++;
                                 const fb = document.getElementById('step-feedback');
                                 fb.className = 'step-feedback success';
-                                fb.innerHTML = '✅ ¡Bien!';
+                                fb.innerHTML = '✅ ¡Bien! Emparejaste correctamente.';
                                 setTimeout(() => {
                                     if (!stepCompleted && !stepLocked) {
                                         fb.className = 'step-feedback empty';
@@ -1870,7 +2211,7 @@
                             } else {
                                 const fb = document.getElementById('step-feedback');
                                 fb.className = 'step-feedback error';
-                                fb.innerHTML = '⚠️ Ese elemento ya está emparejado.';
+                                fb.innerHTML = '⚠️ Ese elemento ya está emparejado o no corresponde. Elige otro.';
                                 setTimeout(() => {
                                     if (!stepCompleted && !stepLocked) {
                                         fb.className = 'step-feedback empty';
@@ -1882,9 +2223,21 @@
 
                         leftItems.forEach(el => {
                             el.addEventListener('click', () => handleLeftClick(el));
+                            el.addEventListener('keydown', (e) => {
+                                if (e.key === 'Enter' || e.key === ' ') {
+                                    e.preventDefault();
+                                    handleLeftClick(el);
+                                }
+                            });
                         });
                         rightItems.forEach(el => {
                             el.addEventListener('click', () => handleRightClick(el));
+                            el.addEventListener('keydown', (e) => {
+                                if (e.key === 'Enter' || e.key === ' ') {
+                                    e.preventDefault();
+                                    handleRightClick(el);
+                                }
+                            });
                         });
 
                         this._cleanupMatch2 = function() {
@@ -1905,7 +2258,7 @@
                 handleOption: null
             });
 
-            // --- PASO 9: Verificación final ---
+            // PASO 9: Verificación final
             steps.push({
                 badge: 'Estación 10 · Verificar',
                 question: '🔎 ¿Tienen ambas pilas la misma cantidad?',
@@ -1933,15 +2286,15 @@
                 handleOption: function(val, cb) {
                     const correct = (val === this._correctVal);
                     if (correct) {
-                        cb(true, '🎉 ¡Felicidades! Detectaste el error.');
+                        cb(true, '🎉 ¡Felicidades! Detectaste el error. La pila B tiene un libro repetido y falta otro.');
                     } else {
-                        cb(false, 'Observa si hay algún libro repetido o faltante.');
+                        cb(false, 'Observa si hay algún libro repetido o faltante en la pila B. Compara con la pila A.');
                     }
                 }
             });
 
             // ============================================================
-            //  FUNCIONES DE NAVEGACIÓN (idénticas a la versión anterior)
+            //  FUNCIONES DE NAVEGACIÓN
             // ============================================================
 
             function updateProgress() {
@@ -1952,6 +2305,10 @@
                 const pct = Math.round((done / TOTAL_STEPS) * 100);
                 progText.textContent = `${done}/${TOTAL_STEPS}`;
                 progFill.style.width = pct + '%';
+                if (done === TOTAL_STEPS) {
+                    // Si todas completadas, mostrar final automáticamente
+                    // Pero la navegación lo hará al presionar continuar
+                }
             }
 
             function updateAttempts() {
@@ -1986,10 +2343,10 @@
                     document.getElementById('btn-continuar').disabled = false;
                     if (stepCompleted) {
                         stepFeedback.className = 'step-feedback success';
-                        stepFeedback.innerHTML = '✅ Completado.';
+                        stepFeedback.innerHTML = '✅ Completado. ¡Bien!';
                     } else {
                         stepFeedback.className = 'step-feedback info';
-                        stepFeedback.innerHTML = '🔒 Respuesta mostrada. Continúa.';
+                        stepFeedback.innerHTML = '🔒 Solución mostrada. Continúa.';
                     }
                 } else {
                     document.getElementById('btn-continuar').disabled = true;
@@ -2017,18 +2374,26 @@
                                                 b.classList.add('wrong-highlight');
                                             }
                                         });
+                                        // Pulsación
+                                        this.classList.add('pulse');
+                                        setTimeout(() => this.classList.remove('pulse'), 300);
                                         updateProgress();
                                         updateAttempts();
+                                        totalAciertos++;
+                                        lanzarConfeti();
                                     } else {
                                         stepAttempts++;
                                         stepState[index].attempts = stepAttempts;
                                         updateAttempts();
+                                        // Pulsación de error
+                                        this.classList.add('pulse');
+                                        setTimeout(() => this.classList.remove('pulse'), 300);
                                         if (stepAttempts >= MAX_ATTEMPTS) {
                                             stepLocked = true;
                                             stepState[index].locked = true;
                                             stepFeedback.className = 'step-feedback error';
                                             stepFeedback.innerHTML =
-                                                '💡 ' + message + ' (respuesta mostrada)';
+                                                '💡 ' + message + ' (se ha mostrado la respuesta correcta)';
                                             const btns = stepOptions.querySelectorAll('.opt-btn');
                                             btns.forEach(b => {
                                                 if (b.dataset.val == step._correctVal) {
@@ -2038,6 +2403,7 @@
                                             });
                                             document.getElementById('btn-continuar').disabled = false;
                                             updateProgress();
+                                            // No sumamos aciertos porque se bloqueó
                                         } else {
                                             stepFeedback.className = 'step-feedback error';
                                             stepFeedback.innerHTML = '⚠️ ' + message +
@@ -2073,7 +2439,22 @@
                 if (currentStep < TOTAL_STEPS - 1) {
                     goToStep(currentStep + 1);
                 } else {
-                    showFinalScreen();
+                    // Comprobar si todas completadas
+                    let allDone = true;
+                    for (let i = 0; i < TOTAL_STEPS; i++) {
+                        if (!stepState[i].completed) allDone = false;
+                    }
+                    if (allDone) {
+                        mostrarFinal();
+                    } else {
+                        // Si no todas completadas, ir al siguiente paso no completado
+                        for (let i = 0; i < TOTAL_STEPS; i++) {
+                            if (!stepState[i].completed) {
+                                goToStep(i);
+                                break;
+                            }
+                        }
+                    }
                 }
             }
 
@@ -2087,12 +2468,16 @@
                 for (let i = 0; i < TOTAL_STEPS; i++) {
                     stepState[i] = { completed: false, attempts: 0, locked: false };
                 }
+                totalAciertos = 0;
+                totalErrores = 0;
                 const prevStep = steps[currentStep];
                 if (prevStep && prevStep.cleanup) prevStep.cleanup();
                 currentStep = 0;
                 renderStep(0);
                 cronoStart = Date.now();
                 showScreen('steps');
+                // Resetear cronómetro visual
+                cronoEl.textContent = '00:00';
             }
 
             function showScreen(screenId) {
@@ -2101,10 +2486,20 @@
                 });
             }
 
-            function showFinalScreen() {
+            function mostrarFinal() {
                 showScreen('final');
                 const prevStep = steps[currentStep];
                 if (prevStep && prevStep.cleanup) prevStep.cleanup();
+                // Actualizar resumen
+                resumenAciertos.textContent = totalAciertos;
+                let errores = 0;
+                for (let i = 0; i < TOTAL_STEPS; i++) {
+                    errores += stepState[i].attempts;
+                }
+                totalErrores = errores;
+                resumenErrores.textContent = totalErrores;
+                const tiempo = document.getElementById('cronometro').textContent;
+                resumenTiempo.textContent = tiempo;
             }
 
             // ===== EVENTOS =====
@@ -2114,6 +2509,8 @@
                 for (let i = 0; i < TOTAL_STEPS; i++) {
                     stepState[i] = { completed: false, attempts: 0, locked: false };
                 }
+                totalAciertos = 0;
+                totalErrores = 0;
                 renderStep(0);
                 cronoStart = Date.now();
             });
@@ -2133,12 +2530,31 @@
                 renderStep(0);
             });
 
+            btnFinalReiniciar.addEventListener('click', function() {
+                if (confirm('¿Reiniciar la misión desde el principio?')) {
+                    resetAll();
+                }
+            });
+
             btnFinalContinuar.addEventListener('click', function() {
                 window.location.href = 'desarrollo.html';
             });
 
             btnFinalIndex.addEventListener('click', function() {
                 window.location.href = 'index.html';
+            });
+
+            btnTeclado.addEventListener('click', function() {
+                modoTeclado = !modoTeclado;
+                this.textContent = modoTeclado ? '⌨️ Modo teclado activado' : '⌨️ Modo teclado';
+                this.style.background = modoTeclado ? '#e68a2e' : '#a8b5c4';
+                this.style.color = modoTeclado ? '#fff' : '#1f2e3a';
+                if (!modoTeclado) {
+                    // Limpiar outlines
+                    document.querySelectorAll('.drag-target, .order-item, .match-item').forEach(el => {
+                        el.style.outline = 'none';
+                    });
+                }
             });
 
             // ===== INICIO =====
@@ -2161,7 +2577,7 @@
              *  Identidad: cálida (naranja, azul, dorado, crema)
              *  Nombres: desarrollo.html, cierre.html
              */
-            console.log('Secuencia321® · Inicio cargado.');
+            console.log('Secuencia321® · Inicio cargado con mejoras.');
         })();
     </script>
 
