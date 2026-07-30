@@ -1,1272 +1,2380 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5">
-  <title>Inicio · Alimentamos a cada animal</title>
-  <meta name="description" content="Actividad de inicio de la secuencia Correspondencia Uno a Uno · Secuencia321®">
-  <style>
-    /* Reset y base */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    html, body {
-      width: 100%;
-      min-height: 100vh;
-      font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
-      background: #fcf8f0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    /* Contenedor principal con dimensiones fijas 1600x705 */
-    .app {
-      position: relative;
-      width: 100%;
-      max-width: 1600px;
-      height: 705px;
-      background: #fcf8f0;
-      overflow: hidden;
-      box-shadow: 0 12px 40px rgba(0,0,0,0.15);
-      border-radius: 32px;
-      border: 2px solid #dac8ae;
-      display: flex;
-      flex-direction: column;
-    }
-    /* Zonas funcionales */
-    .header {
-      flex: 0 0 9%; /* ~63px de 705 */
-      min-height: 40px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0 24px;
-      background: rgba(255,252,240,0.7);
-      backdrop-filter: blur(2px);
-      border-bottom: 1px solid #e3d7c4;
-      z-index: 5;
-    }
-    .header .titulo {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: #2d6a4f;
-      letter-spacing: 0.3px;
-    }
-    .header .titulo span {
-      color: #e68a2e;
-    }
-    .header .progreso {
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: #4f5f6b;
-      background: #ede7db;
-      padding: 3px 16px;
-      border-radius: 40px;
-    }
-    .cronometro {
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: #6f7e8a;
-      background: #ede7db;
-      padding: 3px 12px;
-      border-radius: 30px;
-      font-feature-settings: "tnum";
-      letter-spacing: 0.5px;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Misión 1: Preparando la feria · El intercambio justo</title>
+    <meta name="description" content="Actividad de inicio de la secuencia El intercambio justo: correspondencia uno a uno.">
+    <style>
+        /* ===== RESET Y BASE ===== */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: #0a2a32;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 12px;
+            margin: 0;
+            color: #284F61;
+        }
+        /* ===== CONTENEDOR PRINCIPAL 1600×700 ===== */
+        .app {
+            width: min(1600px, 100%);
+            max-width: 1600px;
+            aspect-ratio: 16 / 9;
+            background: #FEFAF2;
+            border-radius: 34px;
+            box-shadow: 0 24px 48px rgba(0, 0, 0, 0.45);
+            border: 1px solid rgba(255, 221, 160, 0.7);
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            /* altura fija controlada por aspect-ratio */;
+        }
+        /* ===== CRONÓMETRO ===== */
+        .cronometro {
+            position: absolute;
+            top: 16px;
+            right: 24px;
+            background: rgba(10, 42, 50, 0.75);
+            color: #ffedc7;
+            font: 700 0.8rem/1 'Courier New', monospace;
+            padding: 5px 14px;
+            border-radius: 30px;
+            letter-spacing: 1px;
+            z-index: 50;
+            pointer-events: none;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 215, 140, 0.25);
+        }
+        /* ===== PANTALLAS ===== */
+        .screen {
+            display: none;
+            width: 100%;
+            height: 100%;
+            flex-direction: column;
+            padding: 28px 36px 18px 36px;
+            position: relative;
+            overflow: hidden;
+        }
+        .screen.active {
+            display: flex;
+        }
+        /* ===== PORTADA ===== */
+        #screen-cover {
+            background: radial-gradient(ellipse at 78% 30%, #1a4f5e, #0a2a32 65%);
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 30px 40px;
+            position: relative;
+            overflow: hidden;
+        }
+        #screen-cover::before {
+            content: "📚 📖 📚 📖 📚 📖 📚 📖";
+            position: absolute;
+            top: -10px;
+            left: -20px;
+            font-size: 3.6rem;
+            opacity: 0.08;
+            white-space: nowrap;
+            transform: rotate(-6deg);
+            pointer-events: none;
+            letter-spacing: 40px;
+        }
+        #screen-cover::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 40%;
+            background: linear-gradient(0deg, rgba(10, 42, 50, 0.5) 0%, transparent 100%);
+            pointer-events: none;
+        }
+        .cover-content {
+            position: relative;
+            z-index: 2;
+            max-width: 780px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+        .cover-badge {
+            background: #0f2f3f;
+            color: #ffe6b3;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font: 700 0.8rem/1 'Segoe UI', sans-serif;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            display: inline-block;
+        }
+        .cover-title {
+            font-size: clamp(2.4rem, 4.8vw, 3.8rem);
+            font-weight: 800;
+            color: #FEFAF2;
+            line-height: 1.05;
+            margin: 4px 0 2px;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+        .cover-title span {
+            background: linear-gradient(135deg, #FFE6B0, #F1C40F);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        .cover-sub {
+            font-size: clamp(1rem, 1.6vw, 1.3rem);
+            color: #e8f0f5;
+            font-weight: 600;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .cover-desc {
+            font-size: 0.95rem;
+            color: #c4dce8;
+            max-width: 620px;
+            line-height: 1.5;
+            margin: 2px 0 6px;
+        }
+        .cover-anim {
+            display: flex;
+            gap: 18px;
+            font-size: 3.2rem;
+            margin: 6px 0 10px;
+            animation: flotar 3.5s ease-in-out infinite alternate;
+        }
+        .cover-anim span {
+            display: inline-block;
+            animation: flotar-item 3s ease-in-out infinite alternate;
+        }
+        .cover-anim span:nth-child(2) {
+            animation-delay: 0.4s;
+        }
+        .cover-anim span:nth-child(3) {
+            animation-delay: 0.8s;
+        }
+        @keyframes flotar-item {
+            0% {
+                transform: translateY(0px) rotate(-2deg);
+            }
+            100% {
+                transform: translateY(-14px) rotate(2deg);
+            }
+        }
+        @keyframes flotar {
+            0% {
+                transform: translateY(0px);
+            }
+            100% {
+                transform: translateY(-6px);
+            }
+        }
+        .cover-btn {
+            margin-top: 8px;
+            background: linear-gradient(135deg, #ffb347, #f39c12);
+            color: #19313a;
+            border: none;
+            padding: 14px 44px;
+            border-radius: 60px;
+            font: 700 1.1rem/1 'Segoe UI', sans-serif;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(230, 126, 34, 0.35);
+            transition: transform 0.15s, box-shadow 0.15s;
+            position: relative;
+            z-index: 3;
+        }
+        .cover-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(230, 126, 34, 0.5);
+        }
+        .cover-btn:active {
+            transform: translateY(1px);
+        }
+        .cover-credito {
+            position: absolute;
+            bottom: 16px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 0.65rem;
+            color: rgba(255, 255, 240, 0.5);
+            z-index: 2;
+            letter-spacing: 0.5px;
+            pointer-events: none;
+        }
+        /* ===== ESTACIONES ===== */
+        #screen-steps {
+            background: #FEFAF2;
+            padding: 0;
+            height: 100%;
+        }
+        .steps-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            width: 100%;
+            padding: 18px 28px 12px 28px;
+            position: relative;
+        }
+        /* Barra superior */
+        .steps-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #ecd9b4;
+            flex-shrink: 0;
+        }
+        .steps-title {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: #1A5F82;
+        }
+        .steps-title small {
+            font-weight: 600;
+            color: #c0672c;
+            font-size: 0.7rem;
+            margin-left: 8px;
+        }
+        .steps-progress {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 0.78rem;
+            color: #284F61;
+        }
+        .progress-bar {
+            width: 160px;
+            height: 7px;
+            background: #e3d7c4;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #F1C40F, #E67E22);
+            border-radius: 10px;
+            transition: width 0.4s ease;
+        }
+        .progress-text {
+            min-width: 52px;
+            text-align: right;
+            font-variant-numeric: tabular-nums;
+        }
 
-    /* Barra de progreso */
-    .progress-bar-container {
-      flex: 0 0 5px;
-      background: #e3d7c4;
-      position: relative;
-      z-index: 5;
-    }
-    .progress-bar-fill {
-      height: 100%;
-      width: 0%;
-      background: #2d6a4f;
-      transition: width 0.4s ease;
-      border-radius: 0 3px 3px 0;
-    }
+        /* Cuerpo de la estación */
+        .step-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 10px 0 8px 0;
+            min-height: 0;
+            gap: 6px;
+        }
+        .step-badge {
+            display: inline-block;
+            background: #0f2f3f;
+            color: #ffe6b3;
+            padding: 4px 16px;
+            border-radius: 30px;
+            font: 700 0.65rem/1 'Segoe UI', sans-serif;
+            letter-spacing: 0.6px;
+            text-transform: uppercase;
+            align-self: flex-start;
+            margin-bottom: 2px;
+        }
+        .step-question {
+            font-size: clamp(1rem, 1.4vw, 1.3rem);
+            font-weight: 700;
+            color: #1A5F82;
+            margin: 2px 0 8px 0;
+            line-height: 1.3;
+        }
+        .step-visual {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px 20px;
+            min-height: 140px;
+            padding: 6px 0;
+            flex: 1 1 auto;
+        }
+        .step-visual .emoji-lg {
+            font-size: 3.6rem;
+            line-height: 1;
+        }
+        .step-visual .emoji-md {
+            font-size: 2.6rem;
+            line-height: 1;
+        }
+        .step-visual .emoji-sm {
+            font-size: 1.8rem;
+            line-height: 1;
+        }
+        .step-options {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px 18px;
+            margin: 4px 0 6px 0;
+            padding: 4px 0;
+        }
+        .step-options .opt-btn {
+            background: #fff4dc;
+            border: 2px solid #dbc79e;
+            border-radius: 40px;
+            padding: 10px 28px;
+            font: 700 0.95rem/1 'Segoe UI', sans-serif;
+            color: #294b5b;
+            cursor: pointer;
+            transition: background 0.15s, transform 0.1s, border-color 0.15s;
+            min-height: 48px;
+            min-width: 80px;
+            touch-action: manipulation;
+            user-select: none;
+        }
+        .step-options .opt-btn:hover {
+            background: #ffe0a3;
+            border-color: #c07d3a;
+        }
+        .step-options .opt-btn:active {
+            transform: scale(0.96);
+        }
+        .step-options .opt-btn.correct-highlight {
+            background: #d9eedb;
+            border-color: #2e7d32;
+            color: #1e4a22;
+        }
+        .step-options .opt-btn.wrong-highlight {
+            background: #fce4e0;
+            border-color: #b8452c;
+            color: #7a2e1e;
+        }
+        .step-options .opt-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
 
-    .main {
-      flex: 1;
-      position: relative;
-      overflow: hidden;
-      min-height: 0;
-    }
-    .pantalla {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 16px 32px;
-      opacity: 0;
-      pointer-events: none;
-      background: #fcf8f0;
-      overflow: hidden;
-      transition: opacity 0.3s ease;
-    }
-    .pantalla.activa {
-      opacity: 1;
-      pointer-events: auto;
-    }
+        /* Área de feedback */
+        .step-feedback {
+            min-height: 44px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-align: center;
+            transition: background 0.2s, color 0.2s;
+            flex-shrink: 0;
+            margin: 2px 0;
+        }
+        .step-feedback.success {
+            background: #d9eedb;
+            color: #1e4a22;
+        }
+        .step-feedback.error {
+            background: #fce4e0;
+            color: #7a2e1e;
+        }
+        .step-feedback.info {
+            background: #e9e2d4;
+            color: #3d4f5a;
+        }
+        .step-feedback.empty {
+            background: transparent;
+            color: transparent;
+        }
 
-    /* Portada */
-    .portada {
-      background: radial-gradient(ellipse at 70% 30%, #f2ece0, #fcf8f0);
-      gap: 4px;
-    }
-    .portada .contenido {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 36px;
-      width: 100%;
-      max-width: 1150px;
-    }
-    .portada .texto {
-      flex: 1;
-      text-align: left;
-    }
-    .portada .texto h1 {
-      font-size: 2.8rem;
-      color: #2d6a4f;
-      line-height: 1.1;
-    }
-    .portada .texto h1 span {
-      color: #e68a2e;
-    }
-    .portada .texto p {
-      font-size: 1.1rem;
-      color: #2d4a3a;
-      margin: 10px 0 18px;
-      max-width: 500px;
-    }
-    .portada .texto .badge {
-      display: inline-block;
-      background: #2d6a4f;
-      color: #fef7e9;
-      padding: 5px 20px;
-      border-radius: 30px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      margin-bottom: 6px;
-    }
-    .btn-primario {
-      background: #e68a2e;
-      border: none;
-      padding: 12px 40px;
-      border-radius: 60px;
-      font-size: 1.15rem;
-      font-weight: 700;
-      color: #fff;
-      cursor: pointer;
-      box-shadow: 0 4px 0 #b86f20;
-      transition: 0.1s ease;
-      touch-action: manipulation;
-    }
-    .btn-primario:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 0 #b86f20;
-    }
-    .btn-primario:active {
-      transform: translateY(2px);
-      box-shadow: 0 2px 0 #b86f20;
-    }
-    .portada .ilustracion {
-      flex: 1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      position: relative;
-      min-height: 160px;
-      background: #f0ece4;
-      border-radius: 24px;
-      overflow: hidden;
-      box-shadow: inset 0 2px 8px rgba(0,0,0,0.05);
-    }
-    .portada .ilustracion img {
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain;
-      display: block;
-      width: auto;
-      height: auto;
-    }
-    .portada .ilustracion .fallback-emojis {
-      display: none;
-      font-size: 4.5rem;
-      gap: 20px;
-      flex-wrap: wrap;
-      justify-content: center;
-      align-items: center;
-    }
-    .portada .ilustracion img:not([src]) + .fallback-emojis,
-    .portada .ilustracion img[src=""] + .fallback-emojis,
-    .portada .ilustracion img.error + .fallback-emojis {
-      display: flex;
-    }
-    .portada .ilustracion .flotante {
-      animation: flotar 4s ease-in-out infinite alternate;
-    }
-    .portada .ilustracion .flotante:nth-child(2) { animation-delay: 0.7s; }
-    .portada .ilustracion .flotante:nth-child(3) { animation-delay: 1.4s; }
-    .portada .ilustracion .flotante:nth-child(4) { animation-delay: 2.1s; }
-    @keyframes flotar {
-      0% { transform: translateY(0px) rotate(0deg); }
-      100% { transform: translateY(-14px) rotate(3deg); }
-    }
+        /* Navegación */
+        .steps-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+            padding-top: 6px;
+            border-top: 1px solid #ecd9b4;
+            margin-top: 2px;
+            flex-wrap: wrap;
+        }
+        .steps-nav .nav-left {
+            display: flex;
+            gap: 10px;
+        }
+        .steps-nav .nav-right {
+            display: flex;
+            gap: 10px;
+        }
+        .nav-btn {
+            border: none;
+            border-radius: 40px;
+            padding: 8px 22px;
+            font: 700 0.85rem/1 'Segoe UI', sans-serif;
+            cursor: pointer;
+            transition: background 0.15s, transform 0.1s;
+            touch-action: manipulation;
+            min-height: 40px;
+        }
+        .nav-btn:active {
+            transform: scale(0.96);
+        }
+        .nav-btn.primary {
+            background: linear-gradient(135deg, #ffb347, #f39c12);
+            color: #19313a;
+        }
+        .nav-btn.primary:hover:not(:disabled) {
+            box-shadow: 0 4px 14px rgba(230, 126, 34, 0.3);
+        }
+        .nav-btn.primary:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .nav-btn.secondary {
+            background: #ded4c1;
+            color: #293b43;
+        }
+        .nav-btn.secondary:hover:not(:disabled) {
+            background: #d0c5ae;
+        }
+        .nav-btn.secondary:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        .nav-btn.restart {
+            background: #d4c5b0;
+            color: #3d3a2e;
+            font-size: 0.75rem;
+            padding: 8px 16px;
+        }
+        .nav-btn.restart:hover:not(:disabled) {
+            background: #c8b89f;
+        }
+        .attempts-indicator {
+            font-size: 0.7rem;
+            color: #7a8f9e;
+            font-weight: 600;
+            padding: 4px 12px;
+            background: #f0ebe0;
+            border-radius: 20px;
+        }
 
-    /* Interacción */
-    .interaccion {
-      gap: 6px;
-      padding: 8px 20px;
-    }
-    .interaccion h2 {
-      font-size: 1.5rem;
-      color: #2d6a4f;
-      text-align: center;
-      margin-bottom: 2px;
-    }
-    .interaccion .escena {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      align-items: center;
-      gap: 24px 48px;
-      background: #f2ece0;
-      border-radius: 30px;
-      padding: 14px 24px;
-      min-height: 150px;
-      width: 100%;
-      max-width: 1020px;
-      position: relative;
-    }
-    .columna {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-    }
-    .fila {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      align-items: center;
-      gap: 12px;
-      position: relative;
-    }
-    .linea-conexion {
-      position: absolute;
-      width: 2px;
-      background: rgba(180, 170, 150, 0.3);
-      pointer-events: none;
-      z-index: 0;
-    }
-    .elemento {
-      font-size: 3.6rem;
-      transition: 0.15s;
-      user-select: none;
-      position: relative;
-      z-index: 1;
-      padding: 4px;
-    }
-    .elemento.bandeja {
-      font-size: 3.4rem;
-      cursor: pointer;
-      padding: 6px 12px;
-      border-radius: 16px;
-      border: 3px solid transparent;
-      transition: 0.1s;
-      min-width: 64px;
-      text-align: center;
-    }
-    .elemento.bandeja:hover {
-      transform: scale(1.05);
-    }
-    .elemento.bandeja.seleccionada {
-      border-color: #e68a2e;
-      background: rgba(230,138,46,0.15);
-      transform: scale(1.08);
-    }
-    .elemento.bandeja.acertada {
-      border-color: #2d6a4f;
-      background: rgba(45,106,79,0.2);
-    }
-    .elemento.bandeja.fallida {
-      border-color: #c0392b;
-      background: rgba(192,57,43,0.15);
-    }
-    .elemento.animal {
-      font-size: 3.6rem;
-      cursor: pointer;
-      padding: 6px 12px;
-      border-radius: 20px;
-      border: 3px solid transparent;
-      transition: 0.1s;
-      min-width: 64px;
-      text-align: center;
-    }
-    .elemento.animal:hover {
-      transform: scale(1.05);
-    }
-    .elemento.animal.seleccionado {
-      border-color: #e68a2e;
-      background: rgba(230,138,46,0.15);
-    }
-    .elemento.animal.correcto {
-      border-color: #2d6a4f;
-      background: rgba(45,106,79,0.15);
-    }
-    .elemento.animal.incorrecto {
-      border-color: #c0392b;
-      background: rgba(192,57,43,0.15);
-    }
-    .elemento.animal.destacado {
-      animation: parpadeoPista 1.2s ease 3;
-    }
-    @keyframes parpadeoPista {
-      0%, 100% { transform: scale(1); border-color: transparent; }
-      50% { transform: scale(1.2); border-color: #f9c74f; background: rgba(249,199,79,0.3); }
-    }
+        /* ===== PANTALLA FINAL (CIERRE DEL INICIO) ===== */
+        #screen-final {
+            background: radial-gradient(ellipse at 70% 30%, #1a4f5e, #0a2a32 70%);
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 30px 40px;
+            position: relative;
+            overflow: hidden;
+        }
+        #screen-final::before {
+            content: "📚 📖 📚 📖";
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 5rem;
+            opacity: 0.06;
+            pointer-events: none;
+            transform: rotate(12deg);
+        }
+        .final-content {
+            position: relative;
+            z-index: 2;
+            max-width: 780px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+        .final-icon {
+            font-size: 3.8rem;
+            animation: flotar 3s ease-in-out infinite alternate;
+        }
+        .final-title {
+            font-size: clamp(1.8rem, 3.2vw, 2.8rem);
+            font-weight: 800;
+            color: #FEFAF2;
+            margin: 2px 0;
+        }
+        .final-title span {
+            background: linear-gradient(135deg, #FFE6B0, #F1C40F);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        .final-desc {
+            font-size: 1rem;
+            color: #c4dce8;
+            max-width: 600px;
+            line-height: 1.5;
+        }
+        .final-pregunta {
+            background: rgba(255, 255, 245, 0.1);
+            backdrop-filter: blur(6px);
+            border: 1px solid rgba(255, 215, 140, 0.3);
+            border-radius: 28px;
+            padding: 16px 28px;
+            max-width: 680px;
+            width: 100%;
+            margin: 4px 0;
+        }
+        .final-pregunta .label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #ffe6b3;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 4px;
+        }
+        .final-pregunta .pregunta {
+            font-size: clamp(1rem, 1.5vw, 1.25rem);
+            font-weight: 700;
+            color: #FFE6B0;
+            line-height: 1.4;
+        }
+        .final-actions {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px 18px;
+            margin-top: 8px;
+        }
+        .final-actions .nav-btn {
+            min-width: 140px;
+        }
 
-    .sin-bandeja {
-      display: inline-flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      width: 3.4rem;
-      height: 3.4rem;
-      border: 3px dashed #e68a2e;
-      border-radius: 50%;
-      background: #f0ece4;
-      font-size: 2rem;
-      color: #b8a690;
-      box-shadow: inset 0 2px 6px rgba(0,0,0,0.05);
-      text-align: center;
-      line-height: 1;
-    }
-    .sin-bandeja .icono {
-      font-size: 2.2rem;
-      font-weight: 300;
-      color: #b8a690;
-    }
-    .sin-bandeja .etiqueta {
-      font-size: 0.6rem;
-      font-weight: 600;
-      color: #8f9aa3;
-      margin-top: 2px;
-    }
+        /* ===== CRÉDITO FIJO (base exterior) ===== */
+        .credito-fijo {
+            position: absolute;
+            bottom: 10px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 0.6rem;
+            color: rgba(40, 79, 97, 0.45);
+            pointer-events: none;
+            letter-spacing: 0.4px;
+            z-index: 5;
+        }
+        #screen-cover .credito-fijo {
+            color: rgba(255, 255, 240, 0.35);
+        }
+        #screen-final .credito-fijo {
+            color: rgba(255, 255, 240, 0.35);
+        }
 
-    .pila-bandejas {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      position: relative;
-      width: 3.4rem;
-      height: 3.4rem;
-    }
-    .pila-bandejas .bandeja-base {
-      font-size: 3.4rem;
-      line-height: 1;
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
-    .pila-bandejas .bandeja-superior {
-      font-size: 3.4rem;
-      line-height: 1;
-      position: absolute;
-      top: 5px;
-      left: 5px;
-      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
-    }
+        /* ===== INTERACCIÓN ESPECIAL: ARRASTRE ===== */
+        .drag-area {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 14px 24px;
+            padding: 6px 0;
+            width: 100%;
+            min-height: 120px;
+        }
+        .drag-source {
+            font-size: 3.2rem;
+            padding: 8px 18px;
+            background: #fff4dc;
+            border-radius: 20px;
+            border: 3px dashed #dbc79e;
+            cursor: grab;
+            user-select: none;
+            touch-action: none;
+            transition: border-color 0.2s, background 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 70px;
+            min-height: 70px;
+        }
+        .drag-source:active {
+            cursor: grabbing;
+        }
+        .drag-source.dragging {
+            opacity: 0.6;
+            border-color: #E67E22;
+        }
+        .drag-targets {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 14px;
+            justify-content: center;
+        }
+        .drag-target {
+            font-size: 2.8rem;
+            padding: 6px 12px;
+            background: #fcf7ee;
+            border-radius: 16px;
+            border: 3px solid #e0cdb0;
+            min-width: 60px;
+            min-height: 60px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: border-color 0.2s, background 0.2s, transform 0.1s;
+            cursor: pointer;
+            touch-action: manipulation;
+        }
+        .drag-target.drag-over {
+            border-color: #E67E22;
+            background: #ffe0a3;
+            transform: scale(1.04);
+        }
+        .drag-target.matched {
+            border-color: #2e7d32;
+            background: #d9eedb;
+            cursor: default;
+            opacity: 0.85;
+        }
+        .drag-target .target-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #294b5b;
+            display: block;
+            text-align: center;
+            margin-top: 2px;
+        }
+        .drag-source-label {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #1A5F82;
+            line-height: 1;
+        }
 
-    .mensaje {
-      font-size: 1rem;
-      font-weight: 600;
-      color: #2d6a4f;
-      text-align: center;
-      min-height: 40px;
-      padding: 4px 16px;
-      border-radius: 30px;
-      background: #f3ede4;
-      max-width: 720px;
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .mensaje.acierto {
-      background: #e2f0e6;
-      color: #1f4f3a;
-    }
-    .mensaje.error {
-      background: #f3d8d8;
-      color: #7a2a1a;
-    }
-    .opciones {
-      display: flex;
-      gap: 14px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-    .opciones button {
-      background: #e8dccc;
-      border: none;
-      padding: 12px 28px;
-      min-height: 48px;
-      min-width: 130px;
-      border-radius: 60px;
-      font-size: 0.95rem;
-      font-weight: 700;
-      color: #2d4a3a;
-      cursor: pointer;
-      transition: 0.15s;
-      touch-action: manipulation;
-      box-shadow: 0 2px 0 #c4b6a0;
-    }
-    .opciones button:hover {
-      background: #d4c4ae;
-      transform: translateY(-2px);
-    }
-    .opciones button:active {
-      transform: translateY(2px);
-      box-shadow: 0 0px 0 #c4b6a0;
-    }
-    .opciones button:disabled {
-      opacity: 0.5;
-      cursor: default;
-      transform: none;
-    }
+        /* ===== MATCHING (clic-clic) ===== */
+        .match-area {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px 40px;
+            padding: 4px 0;
+            width: 100%;
+        }
+        .match-col {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            min-width: 120px;
+        }
+        .match-col .col-title {
+            font-weight: 700;
+            font-size: 0.75rem;
+            color: #c0672c;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .match-item {
+            padding: 8px 14px;
+            background: #fcf7ee;
+            border: 3px solid #e0cdb0;
+            border-radius: 16px;
+            font-size: 1.6rem;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.15s, background 0.15s, transform 0.1s;
+            touch-action: manipulation;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .match-item .match-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #1A5F82;
+        }
+        .match-item:hover:not(.matched):not(.disabled) {
+            background: #ffe0a3;
+        }
+        .match-item.selected {
+            border-color: #E67E22;
+            background: #ffe0a3;
+            transform: scale(1.03);
+        }
+        .match-item.matched {
+            border-color: #2e7d32;
+            background: #d9eedb;
+            cursor: default;
+            opacity: 0.8;
+        }
+        .match-item.disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        .match-item .item-num {
+            font-weight: 800;
+            font-size: 1rem;
+            color: #1A5F82;
+        }
 
-    .navegacion {
-      display: flex;
-      gap: 12px;
-      margin-top: 4px;
-    }
-    .btn-secundario {
-      background: #ded4c1;
-      border: none;
-      padding: 6px 20px;
-      border-radius: 40px;
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: #2d4a3a;
-      cursor: pointer;
-      transition: 0.15s;
-      touch-action: manipulation;
-      min-height: 40px;
-    }
-    .btn-secundario:hover {
-      background: #cfc3ae;
-    }
-    .btn-secundario:disabled {
-      opacity: 0.4;
-      cursor: default;
-    }
+        /* ===== ORDENACIÓN (arrastre a slots) ===== */
+        .order-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            padding: 2px 0;
+        }
+        .order-pool {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px 14px;
+            min-height: 60px;
+            padding: 6px 12px;
+            background: #f6eee0;
+            border-radius: 20px;
+            width: 100%;
+        }
+        .order-pool .order-item {
+            font-size: 2.4rem;
+            padding: 4px 12px;
+            background: #fff4dc;
+            border: 2px solid #dbc79e;
+            border-radius: 14px;
+            cursor: grab;
+            touch-action: none;
+            user-select: none;
+            transition: transform 0.1s, opacity 0.2s, border-color 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 50px;
+            min-height: 50px;
+        }
+        .order-pool .order-item:active {
+            cursor: grabbing;
+        }
+        .order-pool .order-item.dragging {
+            opacity: 0.4;
+            border-color: #E67E22;
+        }
+        .order-pool .order-item.placed {
+            opacity: 0.25;
+            cursor: default;
+            border-color: #b8a889;
+        }
+        .order-slots {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px 12px;
+            min-height: 60px;
+            padding: 6px 12px;
+            background: #e8f1e4;
+            border-radius: 20px;
+            width: 100%;
+            border: 2px dashed #b8c9a8;
+        }
+        .order-slots .slot {
+            width: 58px;
+            height: 58px;
+            background: #fcf7ee;
+            border: 3px dashed #b8a889;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: #b8a889;
+            transition: border-color 0.2s, background 0.2s, transform 0.1s;
+        }
+        .order-slots .slot.drag-over {
+            border-color: #E67E22;
+            background: #ffe0a3;
+            transform: scale(1.06);
+        }
+        .order-slots .slot.filled {
+            border-color: #2e7d32;
+            background: #d9eedb;
+            border-style: solid;
+            color: #1e4a22;
+        }
+        .order-slots .slot .slot-emoji {
+            font-size: 2.2rem;
+        }
+        .order-slots .slot .slot-num {
+            font-size: 0.8rem;
+        }
 
-    /* Pantalla final */
-    .final {
-      background: #fcf8f0;
-      gap: 6px;
-      text-align: center;
-      padding: 24px;
-    }
-    .final .icono {
-      font-size: 3.2rem;
-    }
-    .final h2 {
-      font-size: 1.8rem;
-      color: #2d6a4f;
-    }
-    .final .pregunta-pendiente {
-      background: #e2f0e6;
-      border-radius: 30px;
-      padding: 16px 28px;
-      max-width: 680px;
-      border: 3px solid #e68a2e;
-    }
-    .final .pregunta-pendiente p {
-      font-size: 1.05rem;
-      font-weight: 600;
-      color: #1f4f3a;
-    }
-    .final .acciones {
-      display: flex;
-      gap: 14px;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin-top: 4px;
-    }
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 820px) {
+            .app {
+                aspect-ratio: auto;
+                min-height: 100vh;
+                height: auto;
+                border-radius: 24px;
+            }
+            .screen {
+                padding: 18px 16px 14px 16px;
+                min-height: 100vh;
+            }
+            #screen-cover {
+                min-height: 100vh;
+            }
+            #screen-steps {
+                min-height: 100vh;
+            }
+            #screen-final {
+                min-height: 100vh;
+            }
+            .steps-container {
+                padding: 12px 14px 10px 14px;
+                min-height: 100vh;
+            }
+            .steps-header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 6px;
+            }
+            .steps-progress {
+                justify-content: space-between;
+            }
+            .progress-bar {
+                width: 100%;
+                flex: 1;
+            }
+            .step-body {
+                padding: 6px 0;
+                flex: 1;
+            }
+            .step-visual {
+                min-height: 100px;
+                gap: 8px;
+            }
+            .step-options .opt-btn {
+                padding: 8px 16px;
+                font-size: 0.85rem;
+                min-height: 40px;
+                min-width: 60px;
+            }
+            .steps-nav {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 6px;
+            }
+            .steps-nav .nav-left,
+            .steps-nav .nav-right {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .drag-target {
+                font-size: 2rem;
+                min-width: 48px;
+                min-height: 48px;
+            }
+            .drag-source {
+                font-size: 2.4rem;
+                min-width: 56px;
+                min-height: 56px;
+            }
+            .match-area {
+                gap: 12px 20px;
+            }
+            .match-col {
+                min-width: 80px;
+            }
+            .match-item {
+                font-size: 1.3rem;
+                padding: 6px 10px;
+                min-height: 40px;
+            }
+            .order-pool .order-item {
+                font-size: 1.8rem;
+                min-width: 40px;
+                min-height: 40px;
+                padding: 4px 8px;
+            }
+            .order-slots .slot {
+                width: 48px;
+                height: 48px;
+                font-size: 1rem;
+            }
+            .order-slots .slot .slot-emoji {
+                font-size: 1.6rem;
+            }
+            .cronometro {
+                top: 10px;
+                right: 14px;
+                font-size: 0.65rem;
+                padding: 3px 10px;
+            }
+            .cover-title {
+                font-size: clamp(1.8rem, 7vw, 2.8rem);
+            }
+            .final-pregunta {
+                padding: 12px 16px;
+            }
+            .final-pregunta .pregunta {
+                font-size: 0.95rem;
+            }
+            .credito-fijo {
+                font-size: 0.5rem;
+                bottom: 6px;
+            }
+        }
+        @media (max-width: 480px) {
+            .screen {
+                padding: 12px 10px 10px 10px;
+            }
+            .steps-container {
+                padding: 8px 8px 6px 8px;
+            }
+            .step-question {
+                font-size: 0.95rem;
+            }
+            .step-options .opt-btn {
+                font-size: 0.75rem;
+                padding: 6px 12px;
+                min-height: 34px;
+                min-width: 50px;
+            }
+            .step-visual .emoji-lg {
+                font-size: 2.4rem;
+            }
+            .step-visual .emoji-md {
+                font-size: 1.8rem;
+            }
+            .cover-anim {
+                font-size: 2.2rem;
+                gap: 10px;
+            }
+            .cover-btn {
+                padding: 10px 28px;
+                font-size: 0.9rem;
+            }
+            .final-actions .nav-btn {
+                min-width: 100px;
+                padding: 6px 14px;
+                font-size: 0.75rem;
+            }
+            .nav-btn {
+                padding: 6px 14px;
+                font-size: 0.75rem;
+                min-height: 34px;
+            }
+            .match-item {
+                font-size: 1.1rem;
+                padding: 4px 8px;
+                min-height: 34px;
+            }
+            .order-pool .order-item {
+                font-size: 1.4rem;
+                min-width: 34px;
+                min-height: 34px;
+                padding: 2px 6px;
+            }
+            .order-slots .slot {
+                width: 40px;
+                height: 40px;
+            }
+            .order-slots .slot .slot-emoji {
+                font-size: 1.3rem;
+            }
+            .drag-target {
+                font-size: 1.6rem;
+                min-width: 40px;
+                min-height: 40px;
+                padding: 4px 8px;
+            }
+            .drag-source {
+                font-size: 2rem;
+                min-width: 44px;
+                min-height: 44px;
+                padding: 4px 10px;
+            }
+            .step-feedback {
+                font-size: 0.75rem;
+                min-height: 34px;
+                padding: 4px 8px;
+            }
+        }
 
-    .footer {
-      flex: 0 0 7%; /* ~49px de 705 */
-      min-height: 28px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 0.7rem;
-      color: #8f9aa3;
-      border-top: 1px solid #e3d7c4;
-      background: rgba(255,252,240,0.6);
-    }
-    .footer strong {
-      color: #2d6a4f;
-    }
+        /* ===== PREFERS REDUCED MOTION ===== */
+        @media (prefers-reduced-motion: reduce) {
+            .cover-anim,
+            .cover-anim span,
+            .final-icon {
+                animation: none !important;
+            }
+            .cover-btn {
+                transition: none !important;
+            }
+            .nav-btn,
+            .opt-btn,
+            .match-item,
+            .drag-target,
+            .order-item,
+            .drag-source {
+                transition: none !important;
+            }
+        }
 
-    .confeti {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 999;
-      overflow: hidden;
-    }
-    .confeti span {
-      position: absolute;
-      display: block;
-      width: 10px;
-      height: 10px;
-      border-radius: 2px;
-      animation: caer 1.2s ease-out forwards;
-    }
-    @keyframes caer {
-      0% { opacity: 1; transform: translateY(-20px) rotate(0deg) scale(0.5); }
-      100% { opacity: 0; transform: translateY(90vh) rotate(720deg) scale(1.2); }
-    }
-
-    /* Responsive */
-    @media (max-width: 1024px) {
-      .app { height: auto; min-height: 100vh; border-radius: 0; max-width: 100%; }
-      .portada .contenido { flex-direction: column; text-align: center; gap: 12px; }
-      .portada .texto { text-align: center; }
-      .portada .texto p { max-width: 100%; }
-      .interaccion .escena { flex-direction: column; gap: 12px; }
-      .pantalla { padding: 10px 14px; }
-      .portada .ilustracion { min-height: 100px; }
-      .interaccion h2 { font-size: 1.2rem; }
-      .elemento { font-size: 2.8rem; }
-      .elemento.bandeja { font-size: 2.6rem; }
-      .elemento.animal { font-size: 2.8rem; }
-      .sin-bandeja { width: 2.6rem; height: 2.6rem; font-size: 1.6rem; }
-      .pila-bandejas .bandeja-base,
-      .pila-bandejas .bandeja-superior { font-size: 2.6rem; }
-    }
-    @media (max-width: 600px) {
-      .header { padding: 0 10px; flex-wrap: wrap; gap: 2px; }
-      .header .titulo { font-size: 0.85rem; }
-      .portada .texto h1 { font-size: 1.6rem; }
-      .portada .ilustracion { min-height: 80px; }
-      .opciones button { padding: 8px 14px; font-size: 0.8rem; min-height: 36px; min-width: 70px; }
-      .btn-primario { padding: 8px 18px; font-size: 0.9rem; }
-      .mensaje { font-size: 0.8rem; min-height: 32px; }
-      .elemento { font-size: 2rem; }
-      .elemento.bandeja { font-size: 1.8rem; }
-      .elemento.animal { font-size: 2rem; }
-      .sin-bandeja { width: 1.8rem; height: 1.8rem; font-size: 1rem; }
-      .pila-bandejas .bandeja-base,
-      .pila-bandejas .bandeja-superior { font-size: 1.8rem; }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .portada .ilustracion .flotante,
-      .confeti span,
-      .elemento.animal.destacado {
-        animation: none !important;
-      }
-      .pantalla { transition: none; }
-    }
-  </style>
+        /* ===== UTILITY ===== */
+        .hidden {
+            display: none !important;
+        }
+        .flex-center {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .gap-8 {
+            gap: 8px;
+        }
+        .gap-12 {
+            gap: 12px;
+        }
+        .mt-4 {
+            margin-top: 4px;
+        }
+        .mb-4 {
+            margin-bottom: 4px;
+        }
+        .text-center {
+            text-align: center;
+        }
+        .w-full {
+            width: 100%;
+        }
+        .flex-wrap {
+            flex-wrap: wrap;
+        }
+        .items-center {
+            align-items: center;
+        }
+        .justify-center {
+            justify-content: center;
+        }
+    </style>
 </head>
 <body>
-<div class="app" role="main" aria-label="Actividad de inicio: Alimentamos a cada animal">
-  <!-- Encabezado -->
-  <header class="header">
-    <div class="titulo">🧑‍🌾 <span>El zoológico</span> del cuidador</div>
-    <div class="progreso" id="progreso">Paso 1 de 10</div>
-    <div class="cronometro" id="cronometro">00:00</div>
-  </header>
 
-  <!-- Barra de progreso -->
-  <div class="progress-bar-container">
-    <div class="progress-bar-fill" id="progressBarFill"></div>
-  </div>
+    <div class="app" role="main" aria-label="Actividad de inicio: Misión 1, Preparando la feria">
 
-  <!-- Contenido principal -->
-  <div class="main" id="main">
-    <!-- Pantalla de portada -->
-    <div class="pantalla activa portada" id="pantalla-portada">
-      <div class="contenido">
-        <div class="texto">
-          <div class="badge">Recuperación diagnóstica · Misión 1</div>
-          <h1>Alimentamos a <span>cada animal</span></h1>
-          <p>Los cuidadores del zoológico necesitan tu ayuda. Cada animal debe recibir una bandeja de alimento. Ayúdanos a revisar si hay suficientes bandejas para todos.</p>
-          <button class="btn-primario" id="btn-comenzar">🚀 Comenzar exploración</button>
+        <!-- ===== CRONÓMETRO ===== -->
+        <div class="cronometro" id="cronometro" aria-live="polite">00:00</div>
+
+        <!-- ===== PANTALLA DE PORTADA ===== -->
+        <div class="screen active" id="screen-cover" role="region" aria-label="Portada de la misión">
+            <div class="cover-content">
+                <span class="cover-badge">🧭 Misión 1 · Inicio</span>
+                <h1 class="cover-title">Preparando la <span>feria</span></h1>
+                <p class="cover-sub">📚 El intercambio justo de libros</p>
+                <p class="cover-desc">
+                    En Villa Esperanza organizan una feria de intercambio de libros.
+                    Para que sea justo, cada libro debe tener su número… ¡y todos deben recibir la misma cantidad!
+                </p>
+                <div class="cover-anim">
+                    <span>📚</span>
+                    <span>🔢</span>
+                    <span>🔄</span>
+                    <span>📖</span>
+                </div>
+                <button class="cover-btn" id="btn-iniciar" type="button">🚀 Comenzar exploración</button>
+            </div>
+            <div class="credito-fijo">Secuencia321® · Miguel Ubiera</div>
         </div>
-        <div class="ilustracion">
-          <!-- Imagen principal de la portada -->
-          <img src="img/Inicio.png" alt="Ilustración de la actividad de inicio" id="imgPortada" onerror="this.classList.add('error');">
-          <!-- Fallback: emojis flotantes si la imagen no se carga -->
-          <div class="fallback-emojis">
-            <span class="flotante">🐵</span>
-            <span class="flotante">🐘</span>
-            <span class="flotante">🦒</span>
-            <span class="flotante">🍽️</span>
-            <span class="flotante">🍽️</span>
-            <span class="flotante">🍽️</span>
-          </div>
+
+        <!-- ===== PANTALLA DE ESTACIONES ===== -->
+        <div class="screen" id="screen-steps" role="region" aria-label="Estaciones interactivas">
+            <div class="steps-container" id="steps-container">
+
+                <!-- HEADER -->
+                <div class="steps-header">
+                    <div class="steps-title">
+                        📚 Misión 1: Preparando la feria
+                        <small>Exploración inicial</small>
+                    </div>
+                    <div class="steps-progress">
+                        <span class="progress-text" id="prog-text">0/10</span>
+                        <div class="progress-bar" aria-hidden="true">
+                            <div class="progress-fill" id="prog-fill" style="width:0%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CUERPO DE LA ESTACIÓN -->
+                <div class="step-body" id="step-body">
+                    <!-- Badge y pregunta -->
+                    <div class="step-badge" id="step-badge">Estación 1</div>
+                    <div class="step-question" id="step-question">Cargando...</div>
+
+                    <!-- Visual e interacción -->
+                    <div class="step-visual" id="step-visual">
+                        <!-- Contenido dinámico -->
+                    </div>
+
+                    <!-- Opciones (para selección) -->
+                    <div class="step-options" id="step-options"></div>
+
+                    <!-- Feedback -->
+                    <div class="step-feedback empty" id="step-feedback"></div>
+                </div>
+
+                <!-- NAVEGACIÓN -->
+                <div class="steps-nav">
+                    <div class="nav-left">
+                        <button class="nav-btn secondary" id="btn-anterior" disabled type="button">◀ Anterior</button>
+                        <button class="nav-btn restart" id="btn-reiniciar" type="button">↻ Reiniciar</button>
+                    </div>
+                    <div class="nav-right">
+                        <span class="attempts-indicator" id="attempts-indicator">Intentos: 0/3</span>
+                        <button class="nav-btn primary" id="btn-continuar" disabled type="button">Continuar →</button>
+                    </div>
+                </div>
+
+            </div>
+            <div class="credito-fijo">Secuencia321® · Miguel Ubiera</div>
         </div>
-      </div>
+
+        <!-- ===== PANTALLA FINAL ===== -->
+        <div class="screen" id="screen-final" role="region" aria-label="Cierre de la misión">
+            <div class="final-content">
+                <div class="final-icon">🛰️</div>
+                <h2 class="final-title">Exploración <span>completada</span></h2>
+                <p class="final-desc">
+                    Has observado, contado, emparejado y ordenado libros. Ya reconoces la importancia de
+                    asignar un número a cada elemento y de verificar que las cantidades coinciden.
+                </p>
+                <div class="final-pregunta">
+                    <span class="label">🔍 Pregunta pendiente</span>
+                    <p class="pregunta">
+                        "¿Cómo podemos asegurarnos de que cada libro tiene su propia etiqueta y que la cantidad de libros que entregamos es exactamente la misma que la cantidad que recibimos, sin que sobre ni falte ninguno?"
+                    </p>
+                </div>
+                <div class="final-actions">
+                    <button class="nav-btn secondary" id="btn-final-revisar" type="button">↻ Revisar</button>
+                    <button class="nav-btn primary" id="btn-final-continuar" type="button">🚀 Continuar con el desarrollo guiado →</button>
+                    <button class="nav-btn secondary" id="btn-final-index" type="button">🏠 Volver a la secuencia</button>
+                </div>
+            </div>
+            <div class="credito-fijo">Secuencia321® · Miguel Ubiera</div>
+        </div>
+
     </div>
 
-    <!-- Contenedor de interacciones (se inyecta con JS) -->
-    <div id="contenedor-interacciones"></div>
+    <script>
+        (function() {
+            'use strict';
 
-    <!-- Pantalla final -->
-    <div class="pantalla final" id="pantalla-final">
-      <div class="icono">🌿</div>
-      <h2>¡Buen trabajo!</h2>
-      <p style="font-size:1.05rem; color:#4f5f6b; max-width:600px;">Has ayudado al cuidador a revisar algunas distribuciones.</p>
-      <div class="pregunta-pendiente">
-        <p>❓ Ahora hay un problema más grande:</p>
-        <p style="font-size:1.05rem; font-weight:700;">¿Cómo podemos saber si hay suficientes bandejas para <strong>todos</strong> los animales <strong>sin contar</strong> uno por uno?</p>
-        <p style="font-size:0.85rem; color:#4f5f6b;">Descubriremos la respuesta en el siguiente momento.</p>
-      </div>
-      <div class="acciones">
-        <button class="btn-secundario" id="btn-reiniciar">🔄 Revisar</button>
-        <button class="btn-primario" id="btn-continuar">Continuar con el desarrollo →</button>
-      </div>
-    </div>
-  </div>
+            // ============================================================
+            //  CRONÓMETRO
+            // ============================================================
+            const cronoEl = document.getElementById('cronometro');
+            let cronoStart = Date.now();
+            let cronoInterval = setInterval(() => {
+                const diff = Math.floor((Date.now() - cronoStart) / 1000);
+                const m = String(Math.floor(diff / 60)).padStart(2, '0');
+                const s = String(diff % 60).padStart(2, '0');
+                cronoEl.textContent = m + ':' + s;
+            }, 500);
 
-  <!-- Pie de página -->
-  <footer class="footer">
-    <strong>Secuencia321®</strong> · Miguel Ubiera
-  </footer>
-</div>
+            // ============================================================
+            //  REFERENCIAS DOM
+            // ============================================================
+            const screens = {
+                cover: document.getElementById('screen-cover'),
+                steps: document.getElementById('screen-steps'),
+                final: document.getElementById('screen-final'),
+            };
+            const btnIniciar = document.getElementById('btn-iniciar');
+            const btnAnterior = document.getElementById('btn-anterior');
+            const btnContinuar = document.getElementById('btn-continuar');
+            const btnReiniciar = document.getElementById('btn-reiniciar');
+            const btnFinalRevisar = document.getElementById('btn-final-revisar');
+            const btnFinalContinuar = document.getElementById('btn-final-continuar');
+            const btnFinalIndex = document.getElementById('btn-final-index');
+            const progText = document.getElementById('prog-text');
+            const progFill = document.getElementById('prog-fill');
+            const stepBadge = document.getElementById('step-badge');
+            const stepQuestion = document.getElementById('step-question');
+            const stepVisual = document.getElementById('step-visual');
+            const stepOptions = document.getElementById('step-options');
+            const stepFeedback = document.getElementById('step-feedback');
+            const attemptsInd = document.getElementById('attempts-indicator');
 
-<script>
-  (function() {
-    "use strict";
+            // ============================================================
+            //  ESTADO
+            // ============================================================
+            const TOTAL_STEPS = 10;
+            let currentStep = 0; // 0-based
+            let stepAttempts = 0;
+            const MAX_ATTEMPTS = 3;
+            let stepCompleted = false;
+            let stepLocked = false; // si ya se mostró la respuesta correcta
 
-    // ---- CRONÓMETRO ----
-    let tiempoSegundos = 0;
-    let cronoInterval = null;
-    const cronoEl = document.getElementById('cronometro');
-
-    function formatearTiempo(s) {
-      const m = Math.floor(s / 60);
-      const seg = s % 60;
-      return `${String(m).padStart(2, '0')}:${String(seg).padStart(2, '0')}`;
-    }
-    function iniciarCronometro() {
-      detenerCronometro();
-      tiempoSegundos = 0;
-      cronoEl.textContent = '00:00';
-      cronoInterval = setInterval(() => {
-        tiempoSegundos++;
-        cronoEl.textContent = formatearTiempo(tiempoSegundos);
-      }, 1000);
-    }
-    function detenerCronometro() {
-      if (cronoInterval) {
-        clearInterval(cronoInterval);
-        cronoInterval = null;
-      }
-    }
-    function reiniciarCronometro() {
-      detenerCronometro();
-      tiempoSegundos = 0;
-      cronoEl.textContent = '00:00';
-    }
-
-    // ---- CONFIGURACIÓN DE INTERACCIONES (10 pasos) ----
-    const pasos = [];
-
-    // 0: 3 animales, 3 bandejas correctas
-    pasos.push({
-      tipo: 'seleccion',
-      titulo: 'Observa esta distribución',
-      animales: ['🐵', '🐘', '🦒'],
-      bandejas: ['🍽️', '🍽️', '🍽️'],
-      alineadas: true,
-      pregunta: '¿Qué ocurre aquí?',
-      opciones: [
-        { texto: 'Cada animal tiene su bandeja', correcto: true },
-        { texto: 'Falta o sobra una bandeja', correcto: false }
-      ],
-      mensajeAcierto: '✅ ¡Correcto! Cada animal tiene su bandeja. No sobra ni falta ninguna.',
-      mensajeError: '❌ Cuenta cuántos animales hay. Ahora cuenta cuántas bandejas hay. ¿Son la misma cantidad?'
-    });
-
-    // 1: 4 animales, 4 bandejas correctas
-    pasos.push({
-      tipo: 'seleccion',
-      titulo: 'Observa esta otra distribución',
-      animales: ['🐧', '🐻', '🦁', '🐶'],
-      bandejas: ['🍽️', '🍽️', '🍽️', '🍽️'],
-      alineadas: true,
-      pregunta: '¿Qué ocurre aquí?',
-      opciones: [
-        { texto: 'Cada animal tiene su bandeja', correcto: true },
-        { texto: 'Falta o sobra una bandeja', correcto: false }
-      ],
-      mensajeAcierto: '✅ ¡Muy bien! Cada animal tiene su bandeja. No sobra ni falta ninguna.',
-      mensajeError: '❌ Cuenta los animales y las bandejas. ¿Hay la misma cantidad?'
-    });
-
-    // 2: 2 animales, 3 bandejas (sobra 1)
-    pasos.push({
-      tipo: 'tocar-sobrante',
-      titulo: 'El cuidador ha preparado estas bandejas',
-      animales: ['🐧', '🐻'],
-      bandejas: ['🍽️', '🍽️', '🍽️'],
-      indiceSobrante: 2,
-      mensajeAcierto: '✅ ¡Muy bien! Has señalado la bandeja que sobra. Hay dos animales pero tres bandejas. Sobra una.',
-      mensajeError: '❌ Busca la bandeja que no tiene un animal debajo.'
-    });
-
-    // 3: 3 animales, 4 bandejas (sobra 1)
-    pasos.push({
-      tipo: 'tocar-sobrante',
-      titulo: 'El cuidador ha preparado estas bandejas',
-      animales: ['🐘', '🦒', '🐵'],
-      bandejas: ['🍽️', '🍽️', '🍽️', '🍽️'],
-      indiceSobrante: 3,
-      mensajeAcierto: '✅ ¡Excelente! Has señalado la bandeja que sobra. Hay tres animales pero cuatro bandejas. Sobra una.',
-      mensajeError: '❌ Busca la bandeja que no está emparejada con ningún animal.'
-    });
-
-    // 4: 3 animales, 2 bandejas (falta 1) - tocar animal sin bandeja
-    pasos.push({
-      tipo: 'tocar-faltante',
-      titulo: 'El cuidador ha preparado estas bandejas',
-      animales: ['🐵', '🐘', '🦒'],
-      bandejas: ['🍽️', '🍽️'],
-      indiceFaltante: 2,
-      mensajeAcierto: '✅ ¡Correcto! Has señalado el animal que se queda sin bandeja. Hay tres animales pero dos bandejas. Falta una.',
-      mensajeError: '❌ Busca el animal que no tiene ninguna bandeja.'
-    });
-
-    // 5: 4 animales, 3 bandejas (falta 1)
-    pasos.push({
-      tipo: 'tocar-faltante',
-      titulo: 'El cuidador ha preparado estas bandejas',
-      animales: ['🐧', '🐻', '🦁', '🐶'],
-      bandejas: ['🍽️', '🍽️', '🍽️'],
-      indiceFaltante: 3,
-      mensajeAcierto: '✅ ¡Muy bien! Has señalado el animal que se queda sin bandeja. Hay cuatro animales pero tres bandejas. Falta una.',
-      mensajeError: '❌ Busca el animal que no tiene bandeja.'
-    });
-
-    // 6: doble asignación (3 animales, 3 bandejas)
-    pasos.push({
-      tipo: 'doble-asignacion',
-      titulo: 'El cuidador ha colocado algunas bandejas',
-      animales: ['🐘', '🦒', '🐧'],
-      bandejas: ['🍽️', '🍽️', '🍽️'],
-      doble: 0,
-      faltante: 1,
-      mensajePaso1: '✅ Has señalado al animal que tiene dos bandejas. Ahora encuentra al animal que no tiene ninguna.',
-      mensajePaso2: '✅ ¡Excelente! El elefante tiene dos bandejas y la jirafa no tiene ninguna. No hay correspondencia uno a uno.',
-      mensajeErrorPaso1: '❌ Busca al animal que tiene dos bandejas (están apiladas).',
-      mensajeErrorPaso2: '❌ Busca al animal que no tiene ninguna bandeja (círculo vacío).'
-    });
-
-    // 7: doble asignación (4 animales)
-    pasos.push({
-      tipo: 'doble-asignacion',
-      titulo: 'El cuidador ha colocado algunas bandejas',
-      animales: ['🐵', '🐻', '🦁', '🐶'],
-      bandejas: ['🍽️', '🍽️', '🍽️', '🍽️'],
-      doble: 1,
-      faltante: 3,
-      mensajePaso1: '✅ Has señalado al animal que tiene dos bandejas. Ahora encuentra al animal que no tiene ninguna.',
-      mensajePaso2: '✅ ¡Excelente! El oso tiene dos bandejas y el perro no tiene ninguna. No hay correspondencia uno a uno.',
-      mensajeErrorPaso1: '❌ Busca al animal que tiene dos bandejas (están apiladas).',
-      mensajeErrorPaso2: '❌ Busca al animal que no tiene ninguna bandeja (círculo vacío).'
-    });
-
-    // 8: predicción (4 animales, 4 bandejas desordenadas)
-    pasos.push({
-      tipo: 'prediccion',
-      titulo: 'Imagina el emparejamiento',
-      animales: ['🐵', '🐘', '🦒', '🐧'],
-      bandejas: ['🍽️', '🍽️', '🍽️', '🍽️'],
-      desordenadas: true,
-      pregunta: 'Hay 4 animales y 4 bandejas. ¿Crees que se pueden emparejar para que cada uno tenga su bandeja?',
-      opciones: [
-        { texto: 'Sí, se pueden emparejar', correcto: true },
-        { texto: 'No, no se pueden emparejar', correcto: false }
-      ],
-      mensajeAcierto: '✅ ¡Correcto! Vamos a emparejarlos. Cada animal encontró una bandeja y no quedó ninguna sola.',
-      mensajeError: '❌ Vamos a comprobarlo. Cada animal tiene su bandeja y no sobra ninguna.'
-    });
-
-    // 9: predicción (5 animales, 5 bandejas desordenadas)
-    pasos.push({
-      tipo: 'prediccion',
-      titulo: 'Imagina el emparejamiento',
-      animales: ['🐵', '🐘', '🦒', '🐧', '🐻'],
-      bandejas: ['🍽️', '🍽️', '🍽️', '🍽️', '🍽️'],
-      desordenadas: true,
-      pregunta: 'Hay 5 animales y 5 bandejas. ¿Crees que se pueden emparejar para que cada uno tenga su bandeja?',
-      opciones: [
-        { texto: 'Sí, se pueden emparejar', correcto: true },
-        { texto: 'No, no se pueden emparejar', correcto: false }
-      ],
-      mensajeAcierto: '✅ ¡Excelente! Vamos a emparejarlos. Todos los animales tienen su bandeja y no sobró ninguna.',
-      mensajeError: '❌ Vamos a comprobarlo. Todos los animales tienen su bandeja y no falta ninguna.'
-    });
-
-    // ---- ESTADO ----
-    let pasoActual = 0;
-    let totalPasos = pasos.length;
-    let bloqueado = false;
-    let contadorErrores = 0;
-
-    const contenedor = document.getElementById('contenedor-interacciones');
-    const portada = document.getElementById('pantalla-portada');
-    const pantallaFinal = document.getElementById('pantalla-final');
-    const progresoEl = document.getElementById('progreso');
-    const progressBarFill = document.getElementById('progressBarFill');
-    const btnComenzar = document.getElementById('btn-comenzar');
-    const btnReiniciar = document.getElementById('btn-reiniciar');
-    const btnContinuar = document.getElementById('btn-continuar');
-
-    function actualizarProgreso() {
-      const texto = `Paso ${pasoActual+1} de ${totalPasos}`;
-      progresoEl.textContent = texto;
-      const porcentaje = ((pasoActual) / totalPasos) * 100;
-      progressBarFill.style.width = Math.min(porcentaje, 100) + '%';
-    }
-
-    function mostrarPantalla(id) {
-      document.querySelectorAll('.pantalla').forEach(p => p.classList.remove('activa'));
-      document.getElementById(id).classList.add('activa');
-    }
-
-    // Generar HTML de cada paso
-    function generarHTMLPaso(paso, idx) {
-      let html = `<div class="pantalla interaccion" id="pantalla-paso-${idx}">`;
-      html += `<h2>${paso.titulo}</h2>`;
-      html += `<div class="escena" id="escena-paso-${idx}">`;
-
-      const mostrarLineas = (paso.tipo === 'seleccion' && paso.alineadas);
-
-      if (paso.tipo === 'seleccion' || paso.tipo === 'prediccion') {
-        html += `<div class="columna"><div class="fila" id="fila-animales-${idx}">`;
-        paso.animales.forEach((a, i) => {
-          html += `<span class="elemento animal" data-pos="${i}">${a}</span>`;
-        });
-        html += `</div><span style="font-weight:600; color:#4f5f6b; font-size:0.85rem;">Animales</span></div>`;
-        html += `<div class="columna"><div class="fila" id="fila-bandejas-${idx}">`;
-        paso.bandejas.forEach((b, i) => {
-          html += `<span class="elemento bandeja" data-pos="${i}">${b}</span>`;
-        });
-        html += `</div><span style="font-weight:600; color:#4f5f6b; font-size:0.85rem;">Bandejas</span></div>`;
-      } else if (paso.tipo === 'tocar-sobrante' || paso.tipo === 'tocar-faltante') {
-        html += `<div class="columna"><div class="fila">`;
-        paso.animales.forEach(a => html += `<span class="elemento animal" data-idx="${idx}">${a}</span>`);
-        html += `</div><span style="font-weight:600; color:#4f5f6b; font-size:0.85rem;">Animales</span></div>`;
-        html += `<div class="columna"><div class="fila">`;
-        paso.bandejas.forEach((b, i) => {
-          let extra = (paso.tipo === 'tocar-sobrante') ? ` data-idx="${i}"` : '';
-          html += `<span class="elemento bandeja"${extra}>${b}</span>`;
-        });
-        html += `</div><span style="font-weight:600; color:#4f5f6b; font-size:0.85rem;">Bandejas</span></div>`;
-      } else if (paso.tipo === 'doble-asignacion') {
-        html += `<div class="columna"><div class="fila">`;
-        paso.animales.forEach((a, i) => {
-          html += `<span class="elemento animal" data-idx="${i}">${a}</span>`;
-        });
-        html += `</div><div class="fila" style="gap:24px;">`;
-        paso.animales.forEach((a, i) => {
-          let num = 1;
-          if (i === paso.doble) num = 2;
-          else if (i === paso.faltante) num = 0;
-          let contenido = '';
-          if (num === 0) {
-            contenido = `<div class="sin-bandeja"><span class="icono">?</span><span class="etiqueta">sin bandeja</span></div>`;
-          } else if (num === 1) {
-            contenido = `<span class="elemento bandeja" style="font-size:3.4rem; cursor:default; border:none; background:none; padding:0;">🍽️</span>`;
-          } else if (num === 2) {
-            contenido = `<div class="pila-bandejas">
-              <span class="bandeja-base">🍽️</span>
-              <span class="bandeja-superior">🍽️</span>
-            </div>`;
-          }
-          html += `<div style="display:flex; flex-direction:column; align-items:center; margin:0 8px;">`;
-          html += `<div style="display:flex; gap:4px; flex-wrap:wrap; justify-content:center; min-height:50px; align-items:center;">${contenido}</div>`;
-          html += `<span style="font-size:0.6rem; color:#8f9aa3;">${i+1}</span>`;
-          html += `</div>`;
-        });
-        html += `</div></div>`;
-      }
-
-      html += `</div>`;
-      html += `<div class="mensaje" id="mensaje-paso-${idx}">${paso.pregunta || 'Selecciona una opción.'}</div>`;
-
-      if (paso.tipo === 'seleccion' || paso.tipo === 'prediccion') {
-        html += `<div class="opciones" id="opciones-paso-${idx}">`;
-        paso.opciones.forEach((op, oi) => {
-          html += `<button data-correcto="${op.correcto}" data-idx="${oi}">${op.texto}</button>`;
-        });
-        html += `</div>`;
-      } else {
-        html += `<div class="opciones" style="display:none;"></div>`;
-      }
-
-      html += `<div class="navegacion" id="nav-paso-${idx}" style="display:none;">`;
-      html += `<button class="btn-secundario" data-paso="${idx}" data-accion="siguiente">Siguiente →</button>`;
-      html += `</div>`;
-      html += `</div>`;
-      return html;
-    }
-
-    function generarInteracciones() {
-      let html = '';
-      pasos.forEach((p, i) => html += generarHTMLPaso(p, i));
-      contenedor.innerHTML = html;
-    }
-    generarInteracciones();
-
-    function dibujarLineasConexion(idx) {
-      const paso = pasos[idx];
-      if (!(paso.tipo === 'seleccion' && paso.alineadas)) return;
-      const escena = document.getElementById(`escena-paso-${idx}`);
-      if (!escena) return;
-      const animales = escena.querySelectorAll('#fila-animales-' + idx + ' .elemento.animal');
-      const bandejas = escena.querySelectorAll('#fila-bandejas-' + idx + ' .elemento.bandeja');
-      if (animales.length === 0 || bandejas.length === 0 || animales.length !== bandejas.length) return;
-
-      escena.querySelectorAll('.linea-conexion').forEach(el => el.remove());
-
-      const filaAnimales = document.getElementById('fila-animales-' + idx);
-      const filaBandejas = document.getElementById('fila-bandejas-' + idx);
-      if (!filaAnimales || !filaBandejas) return;
-
-      const escenaRect = escena.getBoundingClientRect();
-
-      const animPos = [];
-      animales.forEach(el => {
-        const r = el.getBoundingClientRect();
-        animPos.push({ left: r.left - escenaRect.left + r.width/2, top: r.bottom - escenaRect.top });
-      });
-      const bandPos = [];
-      bandejas.forEach(el => {
-        const r = el.getBoundingClientRect();
-        bandPos.push({ left: r.left - escenaRect.left + r.width/2, top: r.top - escenaRect.top });
-      });
-
-      for (let i = 0; i < Math.min(animPos.length, bandPos.length); i++) {
-        const line = document.createElement('div');
-        line.className = 'linea-conexion';
-        const left = Math.min(animPos[i].left, bandPos[i].left) + 1;
-        const top = animPos[i].top;
-        const height = bandPos[i].top - animPos[i].top;
-        line.style.left = left + 'px';
-        line.style.top = top + 'px';
-        line.style.height = height + 'px';
-        escena.appendChild(line);
-      }
-    }
-
-    function mostrarPaso(idx) {
-      document.querySelectorAll('.pantalla.interaccion').forEach(p => p.classList.remove('activa'));
-      const pasoEl = document.getElementById(`pantalla-paso-${idx}`);
-      if (pasoEl) {
-        pasoEl.classList.add('activa');
-        const nav = document.getElementById(`nav-paso-${idx}`);
-        if (nav) nav.style.display = 'none';
-        const msj = document.getElementById(`mensaje-paso-${idx}`);
-        if (msj) {
-          msj.textContent = pasos[idx].pregunta || 'Selecciona una opción.';
-          msj.className = 'mensaje';
-        }
-        const elementos = pasoEl.querySelectorAll('.elemento');
-        elementos.forEach(el => {
-          el.classList.remove('seleccionada', 'acertada', 'fallida', 'seleccionado', 'correcto', 'incorrecto', 'destacado');
-        });
-        const opts = pasoEl.querySelectorAll('.opciones button');
-        opts.forEach(b => b.disabled = false);
-        contadorErrores = 0;
-        if (pasos[idx].tipo === 'doble-asignacion') {
-          pasoEl._pasoDoble = { paso1: false, paso2: false };
-        }
-        if (pasos[idx].tipo === 'tocar-sobrante') configurarTocarSobrante(idx);
-        else if (pasos[idx].tipo === 'tocar-faltante') configurarTocarFaltante(idx);
-        else if (pasos[idx].tipo === 'doble-asignacion') configurarDobleAsignacion(idx);
-        else if (pasos[idx].tipo === 'seleccion' || pasos[idx].tipo === 'prediccion') configurarSeleccion(idx);
-        if (pasos[idx].tipo === 'seleccion' && pasos[idx].alineadas) {
-          requestAnimationFrame(() => dibujarLineasConexion(idx));
-        }
-        actualizarProgreso();
-      }
-    }
-
-    function configurarSeleccion(idx) {
-      const paso = pasos[idx];
-      const contenedorOpciones = document.getElementById(`opciones-paso-${idx}`);
-      if (!contenedorOpciones) return;
-      const botones = contenedorOpciones.querySelectorAll('button');
-      const mensajeEl = document.getElementById(`mensaje-paso-${idx}`);
-      const navEl = document.getElementById(`nav-paso-${idx}`);
-      botones.forEach(btn => {
-        btn.disabled = false;
-        btn.onclick = function() {
-          if (bloqueado) return;
-          const correcto = this.dataset.correcto === 'true';
-          botones.forEach(b => b.disabled = true);
-          bloqueado = true;
-          if (correcto) {
-            mensajeEl.textContent = paso.mensajeAcierto;
-            mensajeEl.className = 'mensaje acierto';
-            lanzarConfeti();
-            if (navEl) navEl.style.display = 'flex';
-            this.style.background = '#2d6a4f';
-            this.style.color = '#fff';
-          } else {
-            mensajeEl.textContent = paso.mensajeError;
-            mensajeEl.className = 'mensaje error';
-            contadorErrores++;
-            if (contadorErrores >= 3) {
-              botones.forEach(b => {
-                if (b.dataset.correcto === 'true') {
-                  b.style.animation = 'parpadeoPista 1.2s ease 3';
-                  setTimeout(() => { b.style.animation = ''; }, 1300);
-                }
-              });
-              mensajeEl.textContent += ' Pista: observa el elemento que parpadea.';
-              contadorErrores = 0;
+            // Estado por paso: { completed: bool, attempts: number, locked: bool }
+            const stepState = [];
+            for (let i = 0; i < TOTAL_STEPS; i++) {
+                stepState.push({ completed: false, attempts: 0, locked: false });
             }
-            setTimeout(() => {
-              botones.forEach(b => b.disabled = false);
-              bloqueado = false;
-            }, 800);
-          }
-          if (correcto) setTimeout(() => bloqueado = false, 400);
-        };
-      });
-    }
 
-    function configurarTocarSobrante(idx) {
-      const paso = pasos[idx];
-      const pasoEl = document.getElementById(`pantalla-paso-${idx}`);
-      const bandejas = pasoEl.querySelectorAll('.elemento.bandeja');
-      const mensajeEl = document.getElementById(`mensaje-paso-${idx}`);
-      const navEl = document.getElementById(`nav-paso-${idx}`);
-      bandejas.forEach((bandeja, i) => {
-        bandeja.onclick = function() {
-          if (bloqueado) return;
-          const esSobrante = (i === paso.indiceSobrante);
-          bloqueado = true;
-          bandejas.forEach(b => b.classList.remove('seleccionada', 'acertada', 'fallida'));
-          if (esSobrante) {
-            this.classList.add('acertada');
-            mensajeEl.textContent = paso.mensajeAcierto;
-            mensajeEl.className = 'mensaje acierto';
-            lanzarConfeti();
-            if (navEl) navEl.style.display = 'flex';
-            setTimeout(() => bloqueado = false, 400);
-          } else {
-            this.classList.add('fallida');
-            mensajeEl.textContent = paso.mensajeError;
-            mensajeEl.className = 'mensaje error';
-            contadorErrores++;
-            if (contadorErrores >= 3) {
-              bandejas.forEach((b, bi) => {
-                if (bi === paso.indiceSobrante) {
-                  b.classList.add('destacado');
-                  setTimeout(() => b.classList.remove('destacado'), 1300);
+            // ============================================================
+            //  DEFINICIÓN DE LAS 10 INTERACCIONES
+            // ============================================================
+            // Cada paso: { badge, question, render, getOptions?, handleOption? }
+
+            const steps = [];
+
+            // --- PASO 0: Reconocimiento global (selección) ---
+            steps.push({
+                badge: 'Estación 1 · Reconocimiento',
+                question: '📊 ¿Cuántos libros hay en total sobre la mesa?',
+                render: function(container, optsContainer, feedback) {
+                    container.innerHTML = `
+                        <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:6px 10px;font-size:2.8rem;max-width:100%;padding:4px 0;">
+                            ${'📚'.repeat(12)}
+                        </div>
+                        <div style="font-size:0.85rem;color:#c0672c;font-weight:600;margin-top:2px;">Hay libros de diferentes colores y tamaños</div>
+                    `;
+                    optsContainer.innerHTML = `
+                        <button class="opt-btn" data-val="10">10 libros</button>
+                        <button class="opt-btn" data-val="12">12 libros</button>
+                        <button class="opt-btn" data-val="14">14 libros</button>
+                    `;
+                    // La respuesta correcta es 12
+                    this._correctVal = 12;
+                },
+                _correctVal: 12,
+                handleOption: function(val, cb) {
+                    const correct = (val === this._correctVal);
+                    cb(correct, correct ? '¡Excelente! Has contado correctamente la cantidad total de libros.' :
+                        'Vuelve a observar la mesa con atención. Cuenta uno por uno los libros que ves.');
                 }
-              });
-              mensajeEl.textContent += ' Pista: observa la bandeja que parpadea.';
-              contadorErrores = 0;
-            }
-            setTimeout(() => {
-              this.classList.remove('fallida');
-              bloqueado = false;
-            }, 800);
-          }
-        };
-      });
-    }
+            });
 
-    function configurarTocarFaltante(idx) {
-      const paso = pasos[idx];
-      const pasoEl = document.getElementById(`pantalla-paso-${idx}`);
-      const animales = pasoEl.querySelectorAll('.elemento.animal');
-      const mensajeEl = document.getElementById(`mensaje-paso-${idx}`);
-      const navEl = document.getElementById(`nav-paso-${idx}`);
-      animales.forEach((animal, i) => {
-        animal.onclick = function() {
-          if (bloqueado) return;
-          const esFaltante = (i === paso.indiceFaltante);
-          bloqueado = true;
-          animales.forEach(a => a.classList.remove('seleccionado', 'correcto', 'incorrecto'));
-          if (esFaltante) {
-            this.classList.add('correcto');
-            mensajeEl.textContent = paso.mensajeAcierto;
-            mensajeEl.className = 'mensaje acierto';
-            lanzarConfeti();
-            if (navEl) navEl.style.display = 'flex';
-            setTimeout(() => bloqueado = false, 400);
-          } else {
-            this.classList.add('incorrecto');
-            mensajeEl.textContent = paso.mensajeError;
-            mensajeEl.className = 'mensaje error';
-            contadorErrores++;
-            if (contadorErrores >= 3) {
-              animales.forEach((a, ai) => {
-                if (ai === paso.indiceFaltante) {
-                  a.classList.add('destacado');
-                  setTimeout(() => a.classList.remove('destacado'), 1300);
+            // --- PASO 1: Correspondencia inicial mediante arrastre (label "1" a un libro) ---
+            steps.push({
+                badge: 'Estación 2 · Correspondencia',
+                question: '🔢 Arrastra la etiqueta con el número 1 y colócala sobre un libro.',
+                render: function(container, optsContainer, feedback) {
+                    // Limpiar opciones (no hay botones de selección)
+                    optsContainer.innerHTML = '';
+                    container.innerHTML = `
+                        <div class="drag-area" id="drag-area-p1">
+                            <div class="drag-source" id="drag-source-p1" draggable="false" style="touch-action:none;cursor:grab;">
+                                <span style="font-size:2.6rem;font-weight:900;color:#1A5F82;">1</span>
+                            </div>
+                            <div style="font-size:1.2rem;font-weight:700;color:#c0672c;">→</div>
+                            <div class="drag-targets" id="drag-targets-p1">
+                                ${'<div class="drag-target" data-index="0" style="font-size:2.4rem;">📚</div>'.repeat(8)}
+                            </div>
+                        </div>
+                        <div style="font-size:0.75rem;color:#7a8f9e;margin-top:2px;">Coloca la etiqueta sobre cualquier libro</div>
+                    `;
+                    // Guardar referencia para el manejo de arrastre
+                    this._dragSetup = function() {
+                        const source = document.getElementById('drag-source-p1');
+                        const targets = document.querySelectorAll('#drag-targets-p1 .drag-target');
+                        let dragActive = false;
+                        let dragData = null;
+
+                        const onStart = (e) => {
+                            e.preventDefault();
+                            if (stepCompleted || stepLocked) return;
+                            dragActive = true;
+                            source.classList.add('dragging');
+                            // Guardar datos para el drag
+                            dragData = { source: source };
+                        };
+
+                        const onMove = (e) => {
+                            if (!dragActive) return;
+                            e.preventDefault();
+                            const touch = e.touches ? e.touches[0] : e;
+                            const rect = container.getBoundingClientRect();
+                            // Detectar sobre qué target estamos
+                            targets.forEach(t => {
+                                const r = t.getBoundingClientRect();
+                                const cx = touch.clientX,
+                                    cy = touch.clientY;
+                                const inside = cx >= r.left && cx <= r.right && cy >= r.top && cy <= r.bottom;
+                                t.classList.toggle('drag-over', inside);
+                            });
+                        };
+
+                        const onEnd = (e) => {
+                            if (!dragActive) return;
+                            dragActive = false;
+                            source.classList.remove('dragging');
+                            const touch = e.changedTouches ? e.changedTouches[0] : e;
+                            let dropped = false;
+                            targets.forEach(t => {
+                                const r = t.getBoundingClientRect();
+                                const cx = touch.clientX,
+                                    cy = touch.clientY;
+                                if (cx >= r.left && cx <= r.right && cy >= r.top && cy <= r.bottom) {
+                                    if (!t.classList.contains('matched')) {
+                                        dropped = true;
+                                        // Éxito: se colocó la etiqueta sobre un libro
+                                        t.classList.add('matched');
+                                        t.style.borderColor = '#2e7d32';
+                                        t.style.background = '#d9eedb';
+                                        // Marcar como completado
+                                        if (!stepCompleted && !stepLocked) {
+                                            stepCompleted = true;
+                                            stepState[currentStep].completed = true;
+                                            // Mostrar feedback de éxito
+                                            const fb = document.getElementById('step-feedback');
+                                            fb.className = 'step-feedback success';
+                                            fb.innerHTML = '🎉 ¡Muy bien! Has asignado el número 1 a un libro.';
+                                            // Habilitar continuar
+                                            document.getElementById('btn-continuar').disabled = false;
+                                            updateProgress();
+                                            updateAttempts();
+                                        }
+                                    }
+                                }
+                                t.classList.remove('drag-over');
+                            });
+                            if (!dropped && !stepCompleted && !stepLocked) {
+                                // Falló: no se soltó sobre un libro
+                                stepAttempts++;
+                                stepState[currentStep].attempts = stepAttempts;
+                                updateAttempts();
+                                const fb = document.getElementById('step-feedback');
+                                if (stepAttempts >= MAX_ATTEMPTS) {
+                                    stepLocked = true;
+                                    stepState[currentStep].locked = true;
+                                    fb.className = 'step-feedback error';
+                                    fb.innerHTML = '💡 Las etiquetas deben colocarse sobre los libros. Observa cómo se hace: arrastra el 1 hasta cualquier libro.';
+                                    // Mostrar un ejemplo visual
+                                    const firstTarget = targets[0];
+                                    if (firstTarget && !firstTarget.classList.contains('matched')) {
+                                        firstTarget.classList.add('matched');
+                                        firstTarget.style.borderColor = '#2e7d32';
+                                        firstTarget.style.background = '#d9eedb';
+                                        // Habilitar continuar
+                                        document.getElementById('btn-continuar').disabled = false;
+                                        stepCompleted = true;
+                                        stepState[currentStep].completed = true;
+                                        updateProgress();
+                                    }
+                                } else {
+                                    fb.className = 'step-feedback error';
+                                    fb.innerHTML = '⚠️ Coloca la etiqueta sobre un libro, no en el espacio vacío. Inténtalo de nuevo.';
+                                }
+                            }
+                        };
+
+                        // Mouse events
+                        source.addEventListener('mousedown', onStart);
+                        document.addEventListener('mousemove', onMove);
+                        document.addEventListener('mouseup', onEnd);
+                        // Touch events
+                        source.addEventListener('touchstart', onStart, { passive: false });
+                        document.addEventListener('touchmove', onMove, { passive: false });
+                        document.addEventListener('touchend', onEnd, { passive: false });
+
+                        // Limpiar al reiniciar
+                        this._cleanupDrag = function() {
+                            document.removeEventListener('mousemove', onMove);
+                            document.removeEventListener('mouseup', onEnd);
+                            document.removeEventListener('touchmove', onMove);
+                            document.removeEventListener('touchend', onEnd);
+                        };
+                    };
+                    // Se llamará después de renderizar
+                },
+                _dragSetup: null,
+                _cleanupDrag: null,
+                // No hay opciones de selección, se maneja por drag
+                handleOption: null,
+                // Método para ejecutar setup después de render
+                postRender: function() {
+                    if (this._dragSetup) {
+                        this._dragSetup();
+                    }
+                },
+                // Limpiar eventos al cambiar
+                cleanup: function() {
+                    if (this._cleanupDrag) this._cleanupDrag();
                 }
-              });
-              mensajeEl.textContent += ' Pista: observa el animal que parpadea.';
-              contadorErrores = 0;
-            }
-            setTimeout(() => {
-              this.classList.remove('incorrecto');
-              bloqueado = false;
-            }, 800);
-          }
-        };
-      });
-    }
+            });
 
-    function configurarDobleAsignacion(idx) {
-      const paso = pasos[idx];
-      const pasoEl = document.getElementById(`pantalla-paso-${idx}`);
-      if (!pasoEl._pasoDoble) pasoEl._pasoDoble = { paso1: false, paso2: false };
-      const estado = pasoEl._pasoDoble;
-      const animales = pasoEl.querySelectorAll('.elemento.animal');
-      const mensajeEl = document.getElementById(`mensaje-paso-${idx}`);
-      const navEl = document.getElementById(`nav-paso-${idx}`);
-      estado.paso1 = false; estado.paso2 = false;
-      animales.forEach(a => a.classList.remove('seleccionado', 'correcto', 'incorrecto'));
-      animales.forEach((animal, i) => {
-        animal.onclick = function() {
-          if (bloqueado) return;
-          if (estado.paso2) return;
-          if (!estado.paso1) {
-            if (i === paso.doble) {
-              this.classList.add('seleccionado');
-              mensajeEl.textContent = paso.mensajePaso1;
-              mensajeEl.className = 'mensaje acierto';
-              estado.paso1 = true;
-              animales.forEach(a => a.style.pointerEvents = 'none');
-              setTimeout(() => animales.forEach(a => a.style.pointerEvents = 'auto'), 300);
-            } else {
-              mensajeEl.textContent = paso.mensajeErrorPaso1;
-              mensajeEl.className = 'mensaje error';
-              contadorErrores++;
-              if (contadorErrores >= 3) {
-                animales.forEach((a, ai) => {
-                  if (ai === paso.doble) {
-                    a.classList.add('destacado');
-                    setTimeout(() => a.classList.remove('destacado'), 1300);
-                  }
+            // --- PASO 2: Conteo guiado (selección) ---
+            steps.push({
+                badge: 'Estación 3 · Conteo guiado',
+                question: '🔢 ¿Cuántos libros hay en esta fila? (están numerados del 1 al 5)',
+                render: function(container, optsContainer, feedback) {
+                    container.innerHTML = `
+                        <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:6px 12px;font-size:2.6rem;padding:4px 0;">
+                            <span>📚<sup style="font-size:1rem;font-weight:800;color:#1A5F82;">1</sup></span>
+                            <span>📚<sup style="font-size:1rem;font-weight:800;color:#1A5F82;">2</sup></span>
+                            <span>📚<sup style="font-size:1rem;font-weight:800;color:#1A5F82;">3</sup></span>
+                            <span>📚<sup style="font-size:1rem;font-weight:800;color:#1A5F82;">4</sup></span>
+                            <span>📚<sup style="font-size:1rem;font-weight:800;color:#1A5F82;">5</sup></span>
+                        </div>
+                    `;
+                    optsContainer.innerHTML = `
+                        <button class="opt-btn" data-val="4">4 libros</button>
+                        <button class="opt-btn" data-val="5">5 libros</button>
+                        <button class="opt-btn" data-val="6">6 libros</button>
+                    `;
+                    this._correctVal = 5;
+                },
+                _correctVal: 5,
+                handleOption: function(val, cb) {
+                    const correct = (val === this._correctVal);
+                    cb(correct, correct ? '¡Perfecto! Contaste correctamente uno por uno.' :
+                        'Cuenta en voz alta cada libro mientras señalas con el dedo. El último número que digas es la cantidad total.');
+                }
+            });
+
+            // --- PASO 3: Correspondencia con dos conjuntos (clic-clic) ---
+            steps.push({
+                badge: 'Estación 4 · Emparejar números',
+                question: '🔗 Haz clic en un libro y luego en el estuche que tiene el mismo número.',
+                render: function(container, optsContainer, feedback) {
+                    optsContainer.innerHTML = '';
+                    // Libros (izquierda) con números 1,2,3,4 (desordenados)
+                    // Estuches (derecha) con números 1,2,3,4 (desordenados)
+                    const bookNums = [3, 1, 4, 2];
+                    const caseNums = [2, 4, 1, 3];
+                    container.innerHTML = `
+                        <div class="match-area" id="match-area-p3">
+                            <div class="match-col" id="match-col-left-p3">
+                                <div class="col-title">📚 Libros</div>
+                                ${bookNums.map((n,i) => `
+                                    <div class="match-item" data-id="b${i}" data-num="${n}" data-side="left" style="font-size:2rem;">
+                                        📚 <span class="item-num">${n}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <div class="match-col" id="match-col-right-p3">
+                                <div class="col-title">📦 Estuches</div>
+                                ${caseNums.map((n,i) => `
+                                    <div class="match-item" data-id="c${i}" data-num="${n}" data-side="right" style="font-size:2rem;">
+                                        📦 <span class="item-num">${n}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                        <div style="font-size:0.75rem;color:#7a8f9e;margin-top:2px;">Selecciona un libro y luego un estuche con el mismo número</div>
+                    `;
+                    // Estado de matching
+                    this._matchState = {
+                        leftSelected: null,
+                        matchedPairs: 0,
+                        totalPairs: 4,
+                        leftItems: document.querySelectorAll('#match-col-left-p3 .match-item'),
+                        rightItems: document.querySelectorAll('#match-col-right-p3 .match-item'),
+                        locked: false,
+                    };
+                    // Configurar eventos después del render
+                    this._setupMatch = function() {
+                        const leftItems = document.querySelectorAll('#match-col-left-p3 .match-item');
+                        const rightItems = document.querySelectorAll('#match-col-right-p3 .match-item');
+                        const state = this._matchState;
+                        state.leftItems = leftItems;
+                        state.rightItems = rightItems;
+
+                        const clearSelected = () => {
+                            leftItems.forEach(el => el.classList.remove('selected'));
+                            state.leftSelected = null;
+                        };
+
+                        const checkComplete = () => {
+                            if (state.matchedPairs === state.totalPairs && !stepCompleted && !stepLocked) {
+                                stepCompleted = true;
+                                stepState[currentStep].completed = true;
+                                const fb = document.getElementById('step-feedback');
+                                fb.className = 'step-feedback success';
+                                fb.innerHTML = '🎉 ¡Excelente! Has emparejado todos los libros con sus estuches.';
+                                document.getElementById('btn-continuar').disabled = false;
+                                updateProgress();
+                                updateAttempts();
+                                // Deshabilitar todos los items
+                                leftItems.forEach(el => el.classList.add('disabled'));
+                                rightItems.forEach(el => el.classList.add('disabled'));
+                            }
+                        };
+
+                        const handleLeftClick = (el) => {
+                            if (stepCompleted || stepLocked) return;
+                            if (el.classList.contains('matched') || el.classList.contains('disabled')) return;
+                            clearSelected();
+                            el.classList.add('selected');
+                            state.leftSelected = el.dataset.num;
+                        };
+
+                        const handleRightClick = (el) => {
+                            if (stepCompleted || stepLocked) return;
+                            if (el.classList.contains('matched') || el.classList.contains('disabled')) return;
+                            if (state.leftSelected === null) {
+                                const fb = document.getElementById('step-feedback');
+                                fb.className = 'step-feedback error';
+                                fb.innerHTML = '👆 Primero selecciona un libro (columna izquierda).';
+                                setTimeout(() => { if (!stepCompleted && !stepLocked) { fb.className =
+                                        'step-feedback empty';
+                                        fb.innerHTML = ''; } }, 1200);
+                                return;
+                            }
+                            const leftNum = state.leftSelected;
+                            const rightNum = el.dataset.num;
+                            if (leftNum === rightNum) {
+                                // ¡Emparejamiento correcto!
+                                // Marcar ambos como matched
+                                const leftEl = document.querySelector(`#match-col-left-p3 .match-item[data-num="${leftNum}"]`);
+                                if (leftEl && !leftEl.classList.contains('matched')) {
+                                    leftEl.classList.add('matched');
+                                    leftEl.classList.remove('selected');
+                                }
+                                el.classList.add('matched');
+                                state.matchedPairs++;
+                                const fb = document.getElementById('step-feedback');
+                                fb.className = 'step-feedback success';
+                                fb.innerHTML = '✅ ¡Bien! Has encontrado la pareja correspondiente.';
+                                setTimeout(() => {
+                                    if (!stepCompleted && !stepLocked) {
+                                        fb.className = 'step-feedback empty';
+                                        fb.innerHTML = '';
+                                    }
+                                }, 800);
+                                state.leftSelected = null;
+                                leftItems.forEach(el => el.classList.remove('selected'));
+                                checkComplete();
+                            } else {
+                                // Error
+                                stepAttempts++;
+                                stepState[currentStep].attempts = stepAttempts;
+                                updateAttempts();
+                                const fb = document.getElementById('step-feedback');
+                                if (stepAttempts >= MAX_ATTEMPTS) {
+                                    stepLocked = true;
+                                    stepState[currentStep].locked = true;
+                                    fb.className = 'step-feedback error';
+                                    fb.innerHTML =
+                                        '💡 El número del libro y del estuche deben coincidir. Observa: libro con 1 va con estuche 1, etc.';
+                                    // Revelar todas las parejas correctas
+                                    leftItems.forEach(li => {
+                                        const num = li.dataset.num;
+                                        const ri = document.querySelector(
+                                            `#match-col-right-p3 .match-item[data-num="${num}"]`);
+                                        if (ri && !ri.classList.contains('matched')) {
+                                            li.classList.add('matched');
+                                            ri.classList.add('matched');
+                                        }
+                                    });
+                                    stepCompleted = true;
+                                    stepState[currentStep].completed = true;
+                                    document.getElementById('btn-continuar').disabled = false;
+                                    updateProgress();
+                                } else {
+                                    fb.className = 'step-feedback error';
+                                    fb.innerHTML =
+                                        `⚠️ Ese libro y ese estuche no tienen el mismo número. Observa los números con atención. (Intento ${stepAttempts}/${MAX_ATTEMPTS})`;
+                                }
+                                state.leftSelected = null;
+                                leftItems.forEach(el => el.classList.remove('selected'));
+                            }
+                        };
+
+                        leftItems.forEach(el => {
+                            el.addEventListener('click', () => handleLeftClick(el));
+                        });
+                        rightItems.forEach(el => {
+                            el.addEventListener('click', () => handleRightClick(el));
+                        });
+
+                        this._cleanupMatch = function() {
+                            leftItems.forEach(el => el.replaceWith(el.cloneNode(true)));
+                            rightItems.forEach(el => el.replaceWith(el.cloneNode(true)));
+                        };
+                    };
+                },
+                _matchState: null,
+                _setupMatch: null,
+                _cleanupMatch: null,
+                postRender: function() {
+                    if (this._setupMatch) this._setupMatch();
+                },
+                cleanup: function() {
+                    if (this._cleanupMatch) this._cleanupMatch();
+                },
+                handleOption: null
+            });
+
+            // --- PASO 4: Comparación de conjuntos (selección) ---
+            steps.push({
+                badge: 'Estación 5 · Comparar cantidades',
+                question: '📊 ¿Tienen los dos grupos la misma cantidad de libros?',
+                render: function(container, optsContainer, feedback) {
+                    container.innerHTML = `
+                        <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:20px 40px;padding:4px 0;">
+                            <div style="text-align:center;">
+                                <div style="font-weight:700;color:#1A5F82;">Grupo A</div>
+                                <div style="font-size:2.4rem;">${'📚'.repeat(6)}</div>
+                            </div>
+                            <div style="text-align:center;">
+                                <div style="font-weight:700;color:#c0672c;">Grupo B</div>
+                                <div style="font-size:2.4rem;">${'📚'.repeat(4)}</div>
+                            </div>
+                        </div>
+                    `;
+                    optsContainer.innerHTML = `
+                        <button class="opt-btn" data-val="si">Sí, tienen la misma cantidad</button>
+                        <button class="opt-btn" data-val="no">No, tienen diferente cantidad</button>
+                    `;
+                    this._correctVal = 'no';
+                },
+                _correctVal: 'no',
+                handleOption: function(val, cb) {
+                    const correct = (val === this._correctVal);
+                    cb(correct, correct ? '¡Muy bien! Has identificado que las cantidades son diferentes.' :
+                        'Cuenta los libros de cada grupo uno por uno. ¿Obtienes el mismo número al final?');
+                }
+            });
+
+            // --- PASO 5: Ordenación secuencial (arrastre a slots) ---
+            steps.push({
+                badge: 'Estación 6 · Ordenar libros',
+                question: '📚 Coloca los libros en orden, del 1 al 7, arrastrándolos a las casillas.',
+                render: function(container, optsContainer, feedback) {
+                    optsContainer.innerHTML = '';
+                    const libros = ['📘', '📕', '📗', '📙', '📘', '📕', '📗'];
+                    // Mezclar
+                    const shuffled = [...libros].sort(() => Math.random() - 0.5);
+                    const slots = [1, 2, 3, 4, 5, 6, 7];
+                    container.innerHTML = `
+                        <div class="order-area" id="order-area-p5">
+                            <div class="order-pool" id="order-pool-p5">
+                                ${shuffled.map((emoji, i) => `
+                                    <div class="order-item" data-idx="${i}" draggable="false" style="touch-action:none;cursor:grab;">
+                                        ${emoji}
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <div class="order-slots" id="order-slots-p5">
+                                ${slots.map(n => `
+                                    <div class="slot" data-slot="${n}">
+                                        <span class="slot-num">${n}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                        <div style="font-size:0.75rem;color:#7a8f9e;margin-top:2px;">Arrastra cada libro a la casilla con su número</div>
+                    `;
+                    this._orderState = {
+                        placed: 0,
+                        total: 7,
+                        slotMap: {},
+                        itemMap: {},
+                        locked: false,
+                    };
+                    this._setupOrder = function() {
+                        const items = document.querySelectorAll('#order-pool-p5 .order-item');
+                        const slots = document.querySelectorAll('#order-slots-p5 .slot');
+                        let dragActive = false;
+                        let dragItem = null;
+                        let dragItemIdx = null;
+
+                        const onStart = (e, item, idx) => {
+                            if (stepCompleted || stepLocked) return;
+                            if (item.classList.contains('placed')) return;
+                            e.preventDefault();
+                            dragActive = true;
+                            dragItem = item;
+                            dragItemIdx = idx;
+                            item.classList.add('dragging');
+                        };
+
+                        const onMove = (e) => {
+                            if (!dragActive) return;
+                            e.preventDefault();
+                            const touch = e.touches ? e.touches[0] : e;
+                            slots.forEach(slot => {
+                                const r = slot.getBoundingClientRect();
+                                const cx = touch.clientX,
+                                    cy = touch.clientY;
+                                const inside = cx >= r.left && cx <= r.right && cy >= r.top && cy <= r.bottom;
+                                slot.classList.toggle('drag-over', inside);
+                            });
+                        };
+
+                        const onEnd = (e) => {
+                            if (!dragActive) return;
+                            dragActive = false;
+                            if (dragItem) dragItem.classList.remove('dragging');
+                            const touch = e.changedTouches ? e.changedTouches[0] : e;
+                            let dropped = false;
+                            slots.forEach(slot => {
+                                slot.classList.remove('drag-over');
+                                const r = slot.getBoundingClientRect();
+                                const cx = touch.clientX,
+                                    cy = touch.clientY;
+                                if (cx >= r.left && cx <= r.right && cy >= r.top && cy <= r.bottom) {
+                                    if (!slot.classList.contains('filled') && dragItem && !dragItem.classList
+                                        .contains('placed')) {
+                                        // Colocar
+                                        const slotNum = parseInt(slot.dataset.slot);
+                                        // Verificar que el orden sea secuencial: el primer slot debe ser 1, luego 2, etc.
+                                        const expected = this._orderState.placed + 1;
+                                        if (slotNum === expected) {
+                                            // Correcto
+                                            slot.classList.add('filled');
+                                            slot.innerHTML =
+                                                `<span class="slot-emoji">${dragItem.textContent}</span>`;
+                                            dragItem.classList.add('placed');
+                                            this._orderState.placed++;
+                                            const fb = document.getElementById('step-feedback');
+                                            fb.className = 'step-feedback success';
+                                            fb.innerHTML = `✅ ¡Bien! Has colocado el libro en la posición ${slotNum}.`;
+                                            setTimeout(() => {
+                                                if (!stepCompleted && !stepLocked) {
+                                                    fb.className =
+                                                    'step-feedback empty';
+                                                    fb.innerHTML = '';
+                                                }
+                                            }, 700);
+                                            // Verificar completado
+                                            if (this._orderState.placed === this._orderState.total) {
+                                                stepCompleted = true;
+                                                stepState[currentStep].completed = true;
+                                                fb.className = 'step-feedback success';
+                                                fb.innerHTML =
+                                                    '🎉 ¡Excelente! Has ordenado todos los libros correctamente.';
+                                                document.getElementById('btn-continuar').disabled =
+                                                false;
+                                                updateProgress();
+                                                updateAttempts();
+                                            }
+                                            dropped = true;
+                                        } else {
+                                            // Error: no es el siguiente en orden
+                                            stepAttempts++;
+                                            stepState[currentStep].attempts = stepAttempts;
+                                            updateAttempts();
+                                            const fb = document.getElementById('step-feedback');
+                                            if (stepAttempts >= MAX_ATTEMPTS) {
+                                                stepLocked = true;
+                                                stepState[currentStep].locked = true;
+                                                fb.className = 'step-feedback error';
+                                                fb.innerHTML =
+                                                    `💡 El orden debe ser 1, 2, 3... Primero coloca el libro en la casilla ${expected}.`;
+                                                // Marcar como completado forzadamente
+                                                // Revelar el siguiente esperado
+                                                const nextSlot = document.querySelector(
+                                                    `.slot[data-slot="${expected}"]`);
+                                                if (nextSlot && !nextSlot.classList.contains('filled')) {
+                                                    nextSlot.classList.add('filled');
+                                                    nextSlot.innerHTML =
+                                                        `<span class="slot-emoji">${dragItem.textContent}</span>`;
+                                                    dragItem.classList.add('placed');
+                                                    this._orderState.placed++;
+                                                }
+                                                if (this._orderState.placed === this._orderState.total) {
+                                                    stepCompleted = true;
+                                                    stepState[currentStep].completed = true;
+                                                    document.getElementById('btn-continuar').disabled =
+                                                        false;
+                                                    updateProgress();
+                                                }
+                                            } else {
+                                                fb.className = 'step-feedback error';
+                                                fb.innerHTML =
+                                                    `⚠️ Debes colocar los libros en orden: primero el 1, luego el 2... (Intento ${stepAttempts}/${MAX_ATTEMPTS})`;
+                                            }
+                                            dropped = true;
+                                        }
+                                    }
+                                }
+                            });
+                            if (!dropped && !stepCompleted && !stepLocked) {
+                                // No se soltó en un slot válido
+                                const fb = document.getElementById('step-feedback');
+                                fb.className = 'step-feedback error';
+                                fb.innerHTML = '⚠️ Coloca el libro sobre la casilla correspondiente.';
+                                setTimeout(() => {
+                                    if (!stepCompleted && !stepLocked) {
+                                        fb.className = 'step-feedback empty';
+                                        fb.innerHTML = '';
+                                    }
+                                }, 1000);
+                            }
+                            dragItem = null;
+                            dragItemIdx = null;
+                        };
+
+                        items.forEach((item, idx) => {
+                            const handlerStart = (e) => onStart(e, item, idx);
+                            item.addEventListener('mousedown', handlerStart);
+                            item.addEventListener('touchstart', handlerStart, { passive: false });
+                        });
+
+                        document.addEventListener('mousemove', onMove);
+                        document.addEventListener('mouseup', onEnd);
+                        document.addEventListener('touchmove', onMove, { passive: false });
+                        document.addEventListener('touchend', onEnd, { passive: false });
+
+                        this._cleanupOrder = function() {
+                            document.removeEventListener('mousemove', onMove);
+                            document.removeEventListener('mouseup', onEnd);
+                            document.removeEventListener('touchmove', onMove);
+                            document.removeEventListener('touchend', onEnd);
+                        };
+                    };
+                },
+                _orderState: null,
+                _setupOrder: null,
+                _cleanupOrder: null,
+                postRender: function() {
+                    if (this._setupOrder) this._setupOrder();
+                },
+                cleanup: function() {
+                    if (this._cleanupOrder) this._cleanupOrder();
+                },
+                handleOption: null
+            });
+
+            // --- PASO 6: Conteo con obstáculos (selección) ---
+            steps.push({
+                badge: 'Estación 7 · Conteo con obstáculos',
+                question: '🔍 ¿Cuántos libros hay en total, sin contar los lápices ni los cuadernos?',
+                render: function(container, optsContainer, feedback) {
+                    container.innerHTML = `
+                        <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:4px 8px;font-size:2.8rem;padding:4px 0;max-width:100%;">
+                            ${'📚'.repeat(9)} ${'✏️'.repeat(3)} ${'📓'.repeat(2)} ${'📚'.repeat(0)}
+                        </div>
+                        <div style="font-size:0.85rem;color:#c0672c;font-weight:600;margin-top:2px;">Hay libros, lápices y cuadernos mezclados</div>
+                    `;
+                    optsContainer.innerHTML = `
+                        <button class="opt-btn" data-val="7">7 libros</button>
+                        <button class="opt-btn" data-val="9">9 libros</button>
+                        <button class="opt-btn" data-val="11">11 libros</button>
+                    `;
+                    this._correctVal = 9;
+                },
+                _correctVal: 9,
+                handleOption: function(val, cb) {
+                    const correct = (val === this._correctVal);
+                    cb(correct, correct ? '¡Perfecto! Has distinguido los libros de los otros objetos y contado correctamente.' :
+                        'Recuerda que solo debes contar los libros. Ignora los lápices y los cuadernos.');
+                }
+            });
+
+            // --- PASO 7: Completar la secuencia (selección) ---
+            steps.push({
+                badge: 'Estación 8 · Completar la secuencia',
+                question: '🔢 ¿Qué número falta en la secuencia? 1, 2, 3, __, 5',
+                render: function(container, optsContainer, feedback) {
+                    container.innerHTML = `
+                        <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:8px 16px;font-size:2.6rem;padding:4px 0;">
+                            <span>📚<sup style="font-size:1.2rem;font-weight:800;color:#1A5F82;">1</sup></span>
+                            <span>📚<sup style="font-size:1.2rem;font-weight:800;color:#1A5F82;">2</sup></span>
+                            <span>📚<sup style="font-size:1.2rem;font-weight:800;color:#1A5F82;">3</sup></span>
+                            <span style="font-size:2rem;color:#c0672c;font-weight:900;">❓</span>
+                            <span>📚<sup style="font-size:1.2rem;font-weight:800;color:#1A5F82;">5</sup></span>
+                        </div>
+                    `;
+                    optsContainer.innerHTML = `
+                        <button class="opt-btn" data-val="4">4</button>
+                        <button class="opt-btn" data-val="6">6</button>
+                    `;
+                    this._correctVal = 4;
+                },
+                _correctVal: 4,
+                handleOption: function(val, cb) {
+                    const correct = (val === this._correctVal);
+                    cb(correct, correct ? '¡Muy bien! El número que falta es el 4.' :
+                        'Revisa la secuencia: 1, 2, 3, ... , 5. ¿Qué número va entre el 3 y el 5?');
+                }
+            });
+
+            // --- PASO 8: Correspondencia con objetos cotidianos (clic-clic) ---
+            steps.push({
+                badge: 'Estación 9 · Mochilas y loncheras',
+                question: '🎒🧳 Relaciona cada mochila con una lonchera. Cada estudiante debe tener una de cada.',
+                render: function(container, optsContainer, feedback) {
+                    optsContainer.innerHTML = '';
+                    const mochilas = ['🎒', '🎒', '🎒', '🎒', '🎒'];
+                    const loncheras = ['🧳', '🧳', '🧳', '🧳', '🧳'];
+                    // Mezclar loncheras
+                    const shuffledLoncheras = [...loncheras].sort(() => Math.random() - 0.5);
+                    container.innerHTML = `
+                        <div class="match-area" id="match-area-p8">
+                            <div class="match-col" id="match-col-left-p8">
+                                <div class="col-title">🎒 Mochilas</div>
+                                ${mochilas.map((emoji, i) => `
+                                    <div class="match-item" data-id="m${i}" data-side="left" style="font-size:2.4rem;">
+                                        ${emoji}
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <div class="match-col" id="match-col-right-p8">
+                                <div class="col-title">🧳 Loncheras</div>
+                                ${shuffledLoncheras.map((emoji, i) => `
+                                    <div class="match-item" data-id="l${i}" data-side="right" style="font-size:2.4rem;">
+                                        ${emoji}
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                        <div style="font-size:0.75rem;color:#7a8f9e;margin-top:2px;">Selecciona una mochila y luego una lonchera para emparejarlas (cualquier orden vale)</div>
+                    `;
+                    this._matchState2 = {
+                        leftSelected: null,
+                        matchedPairs: 0,
+                        totalPairs: 5,
+                        leftItems: null,
+                        rightItems: null,
+                        locked: false,
+                    };
+                    this._setupMatch2 = function() {
+                        const leftItems = document.querySelectorAll('#match-col-left-p8 .match-item');
+                        const rightItems = document.querySelectorAll('#match-col-right-p8 .match-item');
+                        const state = this._matchState2;
+                        state.leftItems = leftItems;
+                        state.rightItems = rightItems;
+
+                        const clearSelected = () => {
+                            leftItems.forEach(el => el.classList.remove('selected'));
+                            state.leftSelected = null;
+                        };
+
+                        const checkComplete = () => {
+                            if (state.matchedPairs === state.totalPairs && !stepCompleted && !stepLocked) {
+                                stepCompleted = true;
+                                stepState[currentStep].completed = true;
+                                const fb = document.getElementById('step-feedback');
+                                fb.className = 'step-feedback success';
+                                fb.innerHTML = '🎉 ¡Excelente! Has establecido una correspondencia uno a uno entre mochilas y loncheras.';
+                                document.getElementById('btn-continuar').disabled = false;
+                                updateProgress();
+                                updateAttempts();
+                                leftItems.forEach(el => el.classList.add('disabled'));
+                                rightItems.forEach(el => el.classList.add('disabled'));
+                            }
+                        };
+
+                        const handleLeftClick = (el) => {
+                            if (stepCompleted || stepLocked) return;
+                            if (el.classList.contains('matched') || el.classList.contains('disabled')) return;
+                            clearSelected();
+                            el.classList.add('selected');
+                            state.leftSelected = el.dataset.id;
+                        };
+
+                        const handleRightClick = (el) => {
+                            if (stepCompleted || stepLocked) return;
+                            if (el.classList.contains('matched') || el.classList.contains('disabled')) return;
+                            if (state.leftSelected === null) {
+                                const fb = document.getElementById('step-feedback');
+                                fb.className = 'step-feedback error';
+                                fb.innerHTML = '👆 Primero selecciona una mochila (columna izquierda).';
+                                setTimeout(() => {
+                                    if (!stepCompleted && !stepLocked) {
+                                        fb.className = 'step-feedback empty';
+                                        fb.innerHTML = '';
+                                    }
+                                }, 1200);
+                                return;
+                            }
+                            // Cualquier emparejamiento es válido, siempre que no esté repetido
+                            const leftEl = document.querySelector(
+                                `#match-col-left-p8 .match-item[data-id="${state.leftSelected}"]`);
+                            if (leftEl && !leftEl.classList.contains('matched') && !el.classList.contains(
+                                'matched')) {
+                                leftEl.classList.add('matched');
+                                leftEl.classList.remove('selected');
+                                el.classList.add('matched');
+                                state.matchedPairs++;
+                                const fb = document.getElementById('step-feedback');
+                                fb.className = 'step-feedback success';
+                                fb.innerHTML = '✅ ¡Bien! Has emparejado correctamente.';
+                                setTimeout(() => {
+                                    if (!stepCompleted && !stepLocked) {
+                                        fb.className = 'step-feedback empty';
+                                        fb.innerHTML = '';
+                                    }
+                                }, 700);
+                                state.leftSelected = null;
+                                leftItems.forEach(el => el.classList.remove('selected'));
+                                checkComplete();
+                            } else {
+                                // Error: ya emparejado o inválido
+                                const fb = document.getElementById('step-feedback');
+                                fb.className = 'step-feedback error';
+                                fb.innerHTML = '⚠️ Ese elemento ya está emparejado o no corresponde. Intenta con otro.';
+                                setTimeout(() => {
+                                    if (!stepCompleted && !stepLocked) {
+                                        fb.className = 'step-feedback empty';
+                                        fb.innerHTML = '';
+                                    }
+                                }, 1000);
+                            }
+                        };
+
+                        leftItems.forEach(el => {
+                            el.addEventListener('click', () => handleLeftClick(el));
+                        });
+                        rightItems.forEach(el => {
+                            el.addEventListener('click', () => handleRightClick(el));
+                        });
+
+                        this._cleanupMatch2 = function() {
+                            leftItems.forEach(el => el.replaceWith(el.cloneNode(true)));
+                            rightItems.forEach(el => el.replaceWith(el.cloneNode(true)));
+                        };
+                    };
+                },
+                _matchState2: null,
+                _setupMatch2: null,
+                _cleanupMatch2: null,
+                postRender: function() {
+                    if (this._setupMatch2) this._setupMatch2();
+                },
+                cleanup: function() {
+                    if (this._cleanupMatch2) this._cleanupMatch2();
+                },
+                handleOption: null
+            });
+
+            // --- PASO 9: Verificación final (selección) ---
+            steps.push({
+                badge: 'Estación 10 · Verificación final',
+                question: '🔎 ¿Tienen ambas pilas exactamente la misma cantidad de libros?',
+                render: function(container, optsContainer, feedback) {
+                    container.innerHTML = `
+                        <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:20px 40px;padding:4px 0;">
+                            <div style="text-align:center;">
+                                <div style="font-weight:700;color:#1A5F82;">Pila A</div>
+                                <div style="font-size:2.4rem;">${'📚'.repeat(8)}</div>
+                                <div style="font-size:0.7rem;color:#7a8f9e;">8 libros</div>
+                            </div>
+                            <div style="text-align:center;">
+                                <div style="font-weight:700;color:#c0672c;">Pila B</div>
+                                <div style="font-size:2.4rem;">${'📚'.repeat(7)} <span style="font-size:2rem;color:#b8452c;">🔁</span></div>
+                                <div style="font-size:0.7rem;color:#7a8f9e;">Parece que hay 8... pero uno está repetido y falta otro</div>
+                            </div>
+                        </div>
+                    `;
+                    optsContainer.innerHTML = `
+                        <button class="opt-btn" data-val="si">Sí, ambas tienen 8 libros</button>
+                        <button class="opt-btn" data-val="no">No, hay un error en la imagen</button>
+                    `;
+                    this._correctVal = 'no';
+                },
+                _correctVal: 'no',
+                handleOption: function(val, cb) {
+                    const correct = (val === this._correctVal);
+                    if (correct) {
+                        cb(true,
+                            '🎉 ¡Felicidades! Has detectado que en la pila B hay un libro repetido y falta otro, por lo que no hay una correspondencia uno a uno real.'
+                            );
+                    } else {
+                        cb(false,
+                            'Observa con atención cada libro de la pila B. ¿Hay algún libro repetido? ¿Falta algún libro?'
+                            );
+                    }
+                }
+            });
+
+            // ============================================================
+            //  FUNCIONES DE NAVEGACIÓN Y ESTADO
+            // ============================================================
+
+            function updateProgress() {
+                let done = 0;
+                for (let i = 0; i < TOTAL_STEPS; i++) {
+                    if (stepState[i].completed) done++;
+                }
+                const pct = Math.round((done / TOTAL_STEPS) * 100);
+                progText.textContent = `${done}/${TOTAL_STEPS}`;
+                progFill.style.width = pct + '%';
+            }
+
+            function updateAttempts() {
+                const st = stepState[currentStep];
+                attemptsInd.textContent = `Intentos: ${st.attempts}/${MAX_ATTEMPTS}`;
+                if (st.completed || st.locked) {
+                    attemptsInd.textContent = st.completed ? '✓ Completado' : '🔒 Bloqueado';
+                }
+            }
+
+            function renderStep(index) {
+                // Limpiar eventos previos
+                const prevStep = steps[currentStep];
+                if (prevStep && prevStep.cleanup) prevStep.cleanup();
+
+                const step = steps[index];
+                if (!step) return;
+
+                // Resetear estado local
+                stepCompleted = stepState[index].completed;
+                stepAttempts = stepState[index].attempts;
+                stepLocked = stepState[index].locked;
+
+                // Actualizar UI
+                stepBadge.textContent = step.badge;
+                stepQuestion.textContent = step.question;
+                stepFeedback.className = 'step-feedback empty';
+                stepFeedback.innerHTML = '';
+
+                // Renderizar visual y opciones
+                step.render(stepVisual, stepOptions, stepFeedback);
+
+                // Si ya está completado o bloqueado, deshabilitar opciones y habilitar continuar
+                if (stepCompleted || stepLocked) {
+                    // Deshabilitar todos los botones de opción
+                    const optBtns = stepOptions.querySelectorAll('.opt-btn');
+                    optBtns.forEach(b => b.disabled = true);
+                    // Habilitar continuar
+                    document.getElementById('btn-continuar').disabled = false;
+                    if (stepCompleted) {
+                        stepFeedback.className = 'step-feedback success';
+                        stepFeedback.innerHTML = '✅ Ya has completado esta estación. ¡Bien hecho!';
+                    } else {
+                        stepFeedback.className = 'step-feedback info';
+                        stepFeedback.innerHTML = '🔒 Se ha mostrado la respuesta correcta. Puedes continuar.';
+                    }
+                } else {
+                    document.getElementById('btn-continuar').disabled = true;
+                    // Si hay opciones, configurar manejadores
+                    const optBtns = stepOptions.querySelectorAll('.opt-btn');
+                    optBtns.forEach(btn => {
+                        btn.disabled = false;
+                        btn.onclick = function() {
+                            if (stepCompleted || stepLocked) return;
+                            const val = this.dataset.val;
+                            if (step.handleOption) {
+                                step.handleOption(val, function(correct, message) {
+                                    if (correct) {
+                                        stepCompleted = true;
+                                        stepState[index].completed = true;
+                                        stepFeedback.className = 'step-feedback success';
+                                        stepFeedback.innerHTML = '🎉 ' + message;
+                                        document.getElementById('btn-continuar').disabled = false;
+                                        // Deshabilitar todos los botones
+                                        stepOptions.querySelectorAll('.opt-btn').forEach(b => b
+                                            .disabled = true);
+                                        // Efecto visual en el botón correcto
+                                        const btns = stepOptions.querySelectorAll('.opt-btn');
+                                        btns.forEach(b => {
+                                            if (b.dataset.val == step._correctVal) {
+                                                b.classList.add('correct-highlight');
+                                            } else {
+                                                b.classList.add('wrong-highlight');
+                                            }
+                                        });
+                                        updateProgress();
+                                        updateAttempts();
+                                    } else {
+                                        stepAttempts++;
+                                        stepState[index].attempts = stepAttempts;
+                                        updateAttempts();
+                                        if (stepAttempts >= MAX_ATTEMPTS) {
+                                            stepLocked = true;
+                                            stepState[index].locked = true;
+                                            stepFeedback.className = 'step-feedback error';
+                                            stepFeedback.innerHTML =
+                                                '💡 ' + message +
+                                                ' (Se ha mostrado la respuesta correcta.)';
+                                            // Mostrar la correcta
+                                            const btns = stepOptions.querySelectorAll('.opt-btn');
+                                            btns.forEach(b => {
+                                                if (b.dataset.val == step._correctVal) {
+                                                    b.classList.add('correct-highlight');
+                                                }
+                                                b.disabled = true;
+                                            });
+                                            document.getElementById('btn-continuar').disabled = false;
+                                            updateProgress();
+                                        } else {
+                                            stepFeedback.className = 'step-feedback error';
+                                            stepFeedback.innerHTML = '⚠️ ' + message +
+                                                ` (Intento ${stepAttempts}/${MAX_ATTEMPTS})`;
+                                        }
+                                    }
+                                });
+                            }
+                        };
+                    });
+                }
+
+                // Ejecutar postRender si existe (para drag & drop)
+                if (step.postRender) {
+                    // Necesitamos que el DOM esté actualizado
+                    setTimeout(() => {
+                        step.postRender();
+                    }, 20);
+                }
+
+                // Actualizar botón anterior
+                document.getElementById('btn-anterior').disabled = (index === 0);
+
+                // Actualizar progreso
+                updateProgress();
+                updateAttempts();
+
+                // Guardar referencia al paso actual para cleanup posterior
+                currentStep = index;
+            }
+
+            function goToStep(index) {
+                if (index < 0 || index >= TOTAL_STEPS) return;
+                // Limpiar el paso anterior
+                const prevStep = steps[currentStep];
+                if (prevStep && prevStep.cleanup) prevStep.cleanup();
+                // Renderizar nuevo paso
+                renderStep(index);
+            }
+
+            function goNext() {
+                if (currentStep < TOTAL_STEPS - 1) {
+                    goToStep(currentStep + 1);
+                } else {
+                    // Último paso completado -> ir a final
+                    showFinalScreen();
+                }
+            }
+
+            function goPrev() {
+                if (currentStep > 0) {
+                    goToStep(currentStep - 1);
+                }
+            }
+
+            function resetAll() {
+                // Reiniciar estado
+                for (let i = 0; i < TOTAL_STEPS; i++) {
+                    stepState[i] = { completed: false, attempts: 0, locked: false };
+                }
+                // Limpiar paso actual
+                const prevStep = steps[currentStep];
+                if (prevStep && prevStep.cleanup) prevStep.cleanup();
+                currentStep = 0;
+                renderStep(0);
+                // Resetear cronómetro
+                cronoStart = Date.now();
+                // Mostrar pantalla de steps
+                showScreen('steps');
+            }
+
+            // ============================================================
+            //  CAMBIO DE PANTALLAS
+            // ============================================================
+
+            function showScreen(screenId) {
+                Object.keys(screens).forEach(key => {
+                    screens[key].classList.toggle('active', key === screenId);
                 });
-                mensajeEl.textContent += ' Pista: observa el animal que parpadea.';
-                contadorErrores = 0;
-              }
             }
-          } else {
-            if (i === paso.faltante) {
-              this.classList.add('correcto');
-              animales.forEach((a, ai) => { if (ai === paso.doble) a.classList.add('correcto'); });
-              mensajeEl.textContent = paso.mensajePaso2;
-              mensajeEl.className = 'mensaje acierto';
-              estado.paso2 = true;
-              lanzarConfeti();
-              if (navEl) navEl.style.display = 'flex';
-              bloqueado = false;
-            } else {
-              mensajeEl.textContent = paso.mensajeErrorPaso2;
-              mensajeEl.className = 'mensaje error';
-              contadorErrores++;
-              if (contadorErrores >= 3) {
-                animales.forEach((a, ai) => {
-                  if (ai === paso.faltante) {
-                    a.classList.add('destacado');
-                    setTimeout(() => a.classList.remove('destacado'), 1300);
-                  }
-                });
-                mensajeEl.textContent += ' Pista: observa el animal que parpadea.';
-                contadorErrores = 0;
-              }
+
+            function showFinalScreen() {
+                showScreen('final');
+                // Detener cualquier cleanup pendiente
+                const prevStep = steps[currentStep];
+                if (prevStep && prevStep.cleanup) prevStep.cleanup();
             }
-          }
-        };
-      });
-    }
 
-    function lanzarConfeti() {
-      const contenedor = document.createElement('div');
-      contenedor.className = 'confeti';
-      const colores = ['#f9c74f', '#e68a2e', '#2d6a4f', '#c0392b', '#3498db', '#9b59b6'];
-      for (let i = 0; i < 30; i++) {
-        const span = document.createElement('span');
-        span.style.left = Math.random() * 100 + '%';
-        span.style.background = colores[Math.floor(Math.random() * colores.length)];
-        span.style.width = (Math.random() * 8 + 4) + 'px';
-        span.style.height = (Math.random() * 8 + 4) + 'px';
-        span.style.animationDuration = (Math.random() * 0.8 + 0.6) + 's';
-        span.style.animationDelay = (Math.random() * 0.3) + 's';
-        contenedor.appendChild(span);
-      }
-      document.body.appendChild(contenedor);
-      setTimeout(() => contenedor.remove(), 2000);
-    }
+            // ============================================================
+            //  EVENTOS
+            // ============================================================
 
-    document.addEventListener('click', function(e) {
-      const btn = e.target.closest('[data-accion="siguiente"]');
-      if (btn) {
-        const idx = parseInt(btn.dataset.paso);
-        if (idx < totalPasos - 1) {
-          pasoActual = idx + 1;
-          mostrarPaso(pasoActual);
-        } else {
-          detenerCronometro();
-          mostrarPantalla('pantalla-final');
-          progressBarFill.style.width = '100%';
-        }
-      }
-    });
+            btnIniciar.addEventListener('click', function() {
+                showScreen('steps');
+                // Iniciar en el paso 0
+                currentStep = 0;
+                for (let i = 0; i < TOTAL_STEPS; i++) {
+                    stepState[i] = { completed: false, attempts: 0, locked: false };
+                }
+                renderStep(0);
+                // Resetear cronómetro
+                cronoStart = Date.now();
+            });
 
-    btnComenzar.addEventListener('click', function() {
-      portada.classList.remove('activa');
-      pasoActual = 0;
-      mostrarPaso(0);
-      iniciarCronometro();
-    });
+            btnContinuar.addEventListener('click', goNext);
 
-    btnReiniciar.addEventListener('click', function() {
-      reiniciarCronometro();
-      pantallaFinal.classList.remove('activa');
-      pasoActual = 0;
-      mostrarPaso(0);
-      iniciarCronometro();
-    });
+            btnAnterior.addEventListener('click', goPrev);
 
-    btnContinuar.addEventListener('click', function() {
-      window.location.href = 'desarrollo.html';
-    });
+            btnReiniciar.addEventListener('click', function() {
+                if (confirm('¿Reiniciar toda la misión? Se perderá el progreso actual.')) {
+                    resetAll();
+                }
+            });
 
-    mostrarPantalla('pantalla-portada');
-    progressBarFill.style.width = '0%';
-  })();
-</script>
+            btnFinalRevisar.addEventListener('click', function() {
+                showScreen('steps');
+                currentStep = 0;
+                renderStep(0);
+            });
+
+            btnFinalContinuar.addEventListener('click', function() {
+                // Abrir desarrollo.html
+                window.location.href = 'desarrollo.html';
+            });
+
+            btnFinalIndex.addEventListener('click', function() {
+                window.location.href = 'index.html';
+            });
+
+            // ============================================================
+            //  INICIALIZACIÓN (mostrar portada)
+            // ============================================================
+
+            showScreen('cover');
+
+            // ============================================================
+            //  FICHA DE CONTINUIDAD (comentario HTML)
+            // ============================================================
+            /*
+             *  FICHA DE CONTINUIDAD
+             *  Área: 01_Números_y_Aritmética
+             *  Dominio: 01_Conteo_y_Numeración
+             *  Núcleo: 01_Principios_y_Estrategias_de_Conteo
+             *  Unidad: 01_Correspondencia_Uno_a_Uno
+             *  Título narrativo: El intercambio justo
+             *  Situación: Feria de intercambio de libros en Villa Esperanza
+             *  Propósito: Comprender y aplicar el principio de correspondencia uno a uno
+             *  Conocimientos previos: Conteo oral 1-20, subitización hasta 5, conteo de colecciones
+             *  Mecánicas utilizadas: selección visual, arrastre, correspondencia clic-clic, ordenación, conteo guiado
+             *  Representaciones: emojis de libros, objetos cotidianos, números
+             *  Errores previsibles: contar dos veces, saltar objetos, confundir tamaño con cantidad
+             *  Pregunta pendiente: "¿Cómo podemos asegurarnos de que cada libro tiene su propia etiqueta y que la cantidad de libros que entregamos es exactamente la misma que la cantidad que recibimos, sin que sobre ni falte ninguno?"
+             *  Identidad visual: cálida (naranja #E67E22, azul #1A5F82, dorado #F1C40F, crema #FEFAF2, marrón #D4A373), ambientación de biblioteca/feria, emojis Unicode, tipografía moderna
+             *  Nombres sugeridos: desarrollo.html, cierre.html
+             */
+
+            console.log('Secuencia321® · Inicio cargado correctamente.');
+        })();
+    </script>
+
 </body>
 </html>
