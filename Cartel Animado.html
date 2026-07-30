@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -22,12 +21,12 @@
       align-items: center;
       justify-content: center;
     }
-    /* Contenedor principal con dimensiones fijas 1440x650 */
+    /* Contenedor principal con dimensiones fijas 1600x750 */
     .app {
       position: relative;
       width: 100%;
-      max-width: 1440px;
-      height: 650px;
+      max-width: 1600px;
+      height: 750px;
       background: #fcf8f0;
       overflow: hidden;
       box-shadow: 0 12px 40px rgba(0,0,0,0.15);
@@ -38,19 +37,19 @@
     }
     /* Zonas funcionales */
     .header {
-      flex: 0 0 10%; /* 65px de 650 */
+      flex: 0 0 9%; /* ~67px de 750 */
       min-height: 44px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0 24px;
+      padding: 0 28px;
       background: rgba(255,252,240,0.7);
       backdrop-filter: blur(2px);
       border-bottom: 1px solid #e3d7c4;
       z-index: 5;
     }
     .header .titulo {
-      font-size: 1.2rem;
+      font-size: 1.3rem;
       font-weight: 700;
       color: #2d6a4f;
       letter-spacing: 0.3px;
@@ -59,22 +58,37 @@
       color: #e68a2e;
     }
     .header .progreso {
-      font-size: 0.85rem;
+      font-size: 0.95rem;
       font-weight: 600;
       color: #4f5f6b;
       background: #ede7db;
-      padding: 2px 16px;
+      padding: 4px 18px;
       border-radius: 40px;
     }
     .cronometro {
-      font-size: 0.85rem;
+      font-size: 0.95rem;
       font-weight: 600;
       color: #6f7e8a;
       background: #ede7db;
-      padding: 2px 12px;
+      padding: 4px 14px;
       border-radius: 30px;
       font-feature-settings: "tnum";
       letter-spacing: 0.5px;
+    }
+
+    /* Barra de progreso */
+    .progress-bar-container {
+      flex: 0 0 6px;
+      background: #e3d7c4;
+      position: relative;
+      z-index: 5;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: #2d6a4f;
+      transition: width 0.4s ease;
+      border-radius: 0 3px 3px 0;
     }
 
     .main {
@@ -90,12 +104,12 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 16px 32px;
+      padding: 20px 36px;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.4s ease;
       background: #fcf8f0;
       overflow: hidden;
+      transition: opacity 0.3s ease;
     }
     .pantalla.activa {
       opacity: 1;
@@ -111,16 +125,16 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 32px;
+      gap: 40px;
       width: 100%;
-      max-width: 1100px;
+      max-width: 1200px;
     }
     .portada .texto {
       flex: 1;
       text-align: left;
     }
     .portada .texto h1 {
-      font-size: 2.6rem;
+      font-size: 3rem;
       color: #2d6a4f;
       line-height: 1.1;
     }
@@ -128,28 +142,28 @@
       color: #e68a2e;
     }
     .portada .texto p {
-      font-size: 1.1rem;
-      color: #4f5f6b;
-      margin: 10px 0 18px;
-      max-width: 480px;
+      font-size: 1.2rem;
+      color: #2d4a3a;
+      margin: 12px 0 20px;
+      max-width: 520px;
     }
     .portada .texto .badge {
       display: inline-block;
       background: #2d6a4f;
       color: #fef7e9;
-      padding: 4px 18px;
+      padding: 6px 22px;
       border-radius: 30px;
-      font-size: 0.75rem;
+      font-size: 0.85rem;
       font-weight: 700;
       letter-spacing: 0.5px;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
     }
     .btn-primario {
       background: #e68a2e;
       border: none;
-      padding: 12px 38px;
+      padding: 14px 44px;
       border-radius: 60px;
-      font-size: 1.1rem;
+      font-size: 1.2rem;
       font-weight: 700;
       color: #fff;
       cursor: pointer;
@@ -170,11 +184,11 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      font-size: 4.2rem;
-      gap: 20px;
+      font-size: 5rem;
+      gap: 24px;
       flex-wrap: wrap;
       position: relative;
-      min-height: 150px;
+      min-height: 180px;
     }
     .portada .ilustracion .flotante {
       animation: flotar 4s ease-in-out infinite alternate;
@@ -184,59 +198,72 @@
     .portada .ilustracion .flotante:nth-child(4) { animation-delay: 2.1s; }
     @keyframes flotar {
       0% { transform: translateY(0px) rotate(0deg); }
-      100% { transform: translateY(-14px) rotate(3deg); }
+      100% { transform: translateY(-16px) rotate(3deg); }
     }
 
     /* Interacción */
     .interaccion {
-      gap: 6px;
-      padding: 8px 20px;
+      gap: 8px;
+      padding: 10px 24px;
     }
     .interaccion h2 {
-      font-size: 1.4rem;
+      font-size: 1.6rem;
       color: #2d6a4f;
       text-align: center;
-      margin-bottom: 2px;
+      margin-bottom: 4px;
     }
     .interaccion .escena {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
       align-items: center;
-      gap: 24px 48px;
+      gap: 28px 56px;
       background: #f2ece0;
       border-radius: 30px;
-      padding: 14px 24px;
-      min-height: 150px;
+      padding: 18px 28px;
+      min-height: 170px;
       width: 100%;
-      max-width: 980px;
+      max-width: 1060px;
+      position: relative;
     }
     .columna {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
     }
     .fila {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
       align-items: center;
-      gap: 12px;
+      gap: 14px;
+      position: relative;
+    }
+    .linea-conexion {
+      position: absolute;
+      width: 2px;
+      background: rgba(180, 170, 150, 0.3);
+      pointer-events: none;
+      z-index: 0;
     }
     .elemento {
-      font-size: 2.6rem;
+      font-size: 4rem; /* Aumentado para animales */
       transition: 0.15s;
       user-select: none;
       position: relative;
+      z-index: 1;
+      padding: 6px;
     }
     .elemento.bandeja {
-      font-size: 2.4rem;
+      font-size: 3.8rem; /* Aumentado para bandejas */
       cursor: pointer;
-      padding: 4px 8px;
-      border-radius: 12px;
+      padding: 8px 14px;
+      border-radius: 16px;
       border: 3px solid transparent;
       transition: 0.1s;
+      min-width: 70px;
+      text-align: center;
     }
     .elemento.bandeja:hover {
       transform: scale(1.05);
@@ -255,12 +282,14 @@
       background: rgba(192,57,43,0.15);
     }
     .elemento.animal {
-      font-size: 2.8rem;
+      font-size: 4rem;
       cursor: pointer;
-      padding: 4px;
-      border-radius: 16px;
+      padding: 8px 14px;
+      border-radius: 20px;
       border: 3px solid transparent;
       transition: 0.1s;
+      min-width: 70px;
+      text-align: center;
     }
     .elemento.animal:hover {
       transform: scale(1.05);
@@ -278,23 +307,77 @@
       background: rgba(192,57,43,0.15);
     }
     .elemento.animal.destacado {
-      animation: destello 0.5s ease 2;
+      animation: parpadeoPista 1.2s ease 3;
     }
-    @keyframes destello {
-      0%, 100% { border-color: transparent; }
-      50% { border-color: #f9c74f; background: rgba(249,199,79,0.25); }
+    @keyframes parpadeoPista {
+      0%, 100% { transform: scale(1); border-color: transparent; }
+      50% { transform: scale(1.2); border-color: #f9c74f; background: rgba(249,199,79,0.3); }
+    }
+
+    /* Elemento "sin bandeja" (círculo con ?) */
+    .sin-bandeja {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 3.8rem;
+      height: 3.8rem;
+      border: 3px dashed #e68a2e;
+      border-radius: 50%;
+      background: #f0ece4;
+      font-size: 2.4rem;
+      color: #b8a690;
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.05);
+      text-align: center;
+      line-height: 1;
+    }
+    .sin-bandeja .icono {
+      font-size: 2.6rem;
+      font-weight: 300;
+      color: #b8a690;
+    }
+    .sin-bandeja .etiqueta {
+      font-size: 0.65rem;
+      font-weight: 600;
+      color: #8f9aa3;
+      margin-top: 2px;
+    }
+
+    /* Pila de bandejas (doble asignación) */
+    .pila-bandejas {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      width: 3.8rem;
+      height: 3.8rem;
+    }
+    .pila-bandejas .bandeja-base {
+      font-size: 3.8rem;
+      line-height: 1;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    .pila-bandejas .bandeja-superior {
+      font-size: 3.8rem;
+      line-height: 1;
+      position: absolute;
+      top: 6px;
+      left: 6px;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
     }
 
     .mensaje {
-      font-size: 1rem;
+      font-size: 1.05rem;
       font-weight: 600;
       color: #2d6a4f;
       text-align: center;
-      min-height: 40px;
-      padding: 4px 16px;
+      min-height: 44px;
+      padding: 6px 18px;
       border-radius: 30px;
       background: #f3ede4;
-      max-width: 720px;
+      max-width: 760px;
       width: 100%;
       display: flex;
       align-items: center;
@@ -310,16 +393,18 @@
     }
     .opciones {
       display: flex;
-      gap: 14px;
+      gap: 16px;
       flex-wrap: wrap;
       justify-content: center;
     }
     .opciones button {
       background: #e8dccc;
       border: none;
-      padding: 8px 24px;
+      padding: 14px 32px;
+      min-height: 54px;
+      min-width: 140px;
       border-radius: 60px;
-      font-size: 0.95rem;
+      font-size: 1rem;
       font-weight: 700;
       color: #2d4a3a;
       cursor: pointer;
@@ -343,20 +428,21 @@
 
     .navegacion {
       display: flex;
-      gap: 12px;
-      margin-top: 4px;
+      gap: 14px;
+      margin-top: 6px;
     }
     .btn-secundario {
       background: #ded4c1;
       border: none;
-      padding: 6px 20px;
+      padding: 8px 24px;
       border-radius: 40px;
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       font-weight: 700;
       color: #2d4a3a;
       cursor: pointer;
       transition: 0.15s;
       touch-action: manipulation;
+      min-height: 44px;
     }
     .btn-secundario:hover {
       background: #cfc3ae;
@@ -371,43 +457,43 @@
       background: #fcf8f0;
       gap: 8px;
       text-align: center;
-      padding: 24px;
+      padding: 28px;
     }
     .final .icono {
-      font-size: 3.2rem;
+      font-size: 3.6rem;
     }
     .final h2 {
-      font-size: 1.8rem;
+      font-size: 2rem;
       color: #2d6a4f;
     }
     .final .pregunta-pendiente {
       background: #e2f0e6;
       border-radius: 30px;
-      padding: 16px 28px;
-      max-width: 680px;
+      padding: 18px 32px;
+      max-width: 720px;
       border: 3px solid #e68a2e;
     }
     .final .pregunta-pendiente p {
-      font-size: 1.05rem;
+      font-size: 1.1rem;
       font-weight: 600;
       color: #1f4f3a;
     }
     .final .acciones {
       display: flex;
-      gap: 14px;
+      gap: 16px;
       flex-wrap: wrap;
       justify-content: center;
-      margin-top: 4px;
+      margin-top: 6px;
     }
 
     /* Pie */
     .footer {
-      flex: 0 0 8%; /* ~52px de 650 */
-      min-height: 30px;
+      flex: 0 0 7%; /* ~52px de 750 */
+      min-height: 32px;
       display: flex;
       justify-content: center;
       align-items: center;
-      font-size: 0.7rem;
+      font-size: 0.75rem;
       color: #8f9aa3;
       border-top: 1px solid #e3d7c4;
       background: rgba(255,252,240,0.6);
@@ -449,19 +535,28 @@
       .interaccion .escena { flex-direction: column; gap: 12px; }
       .pantalla { padding: 10px 14px; }
       .portada .ilustracion { font-size: 3rem; min-height: 100px; }
-      .interaccion h2 { font-size: 1.1rem; }
-      .elemento { font-size: 2rem; }
-      .elemento.bandeja { font-size: 1.8rem; }
-      .elemento.animal { font-size: 2.2rem; }
+      .interaccion h2 { font-size: 1.2rem; }
+      .elemento { font-size: 3rem; }
+      .elemento.bandeja { font-size: 2.8rem; }
+      .elemento.animal { font-size: 3rem; }
+      .sin-bandeja { width: 2.8rem; height: 2.8rem; font-size: 1.8rem; }
+      .pila-bandejas .bandeja-base,
+      .pila-bandejas .bandeja-superior { font-size: 2.8rem; }
     }
     @media (max-width: 600px) {
       .header { padding: 0 10px; flex-wrap: wrap; gap: 2px; }
       .header .titulo { font-size: 0.85rem; }
       .portada .texto h1 { font-size: 1.6rem; }
       .portada .ilustracion { font-size: 2.2rem; gap: 8px; }
-      .opciones button { padding: 6px 14px; font-size: 0.8rem; }
+      .opciones button { padding: 8px 16px; font-size: 0.8rem; min-height: 40px; min-width: 80px; }
       .btn-primario { padding: 8px 18px; font-size: 0.9rem; }
       .mensaje { font-size: 0.8rem; min-height: 32px; }
+      .elemento { font-size: 2.2rem; }
+      .elemento.bandeja { font-size: 2rem; }
+      .elemento.animal { font-size: 2.2rem; }
+      .sin-bandeja { width: 2rem; height: 2rem; font-size: 1.2rem; }
+      .pila-bandejas .bandeja-base,
+      .pila-bandejas .bandeja-superior { font-size: 2rem; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -482,6 +577,11 @@
     <div class="progreso" id="progreso">Paso 1 de 10</div>
     <div class="cronometro" id="cronometro">00:00</div>
   </header>
+
+  <!-- Barra de progreso -->
+  <div class="progress-bar-container">
+    <div class="progress-bar-fill" id="progressBarFill"></div>
+  </div>
 
   <!-- Contenido principal -->
   <div class="main" id="main">
@@ -512,11 +612,11 @@
     <div class="pantalla final" id="pantalla-final">
       <div class="icono">🌿</div>
       <h2>¡Buen trabajo!</h2>
-      <p style="font-size:1rem; color:#4f5f6b; max-width:600px;">Has ayudado al cuidador a revisar algunas distribuciones.</p>
+      <p style="font-size:1.1rem; color:#4f5f6b; max-width:620px;">Has ayudado al cuidador a revisar algunas distribuciones.</p>
       <div class="pregunta-pendiente">
         <p>❓ Ahora hay un problema más grande:</p>
-        <p style="font-size:1.05rem; font-weight:700;">¿Cómo podemos saber si hay suficientes bandejas para <strong>todos</strong> los animales <strong>sin contar</strong> uno por uno?</p>
-        <p style="font-size:0.85rem; color:#4f5f6b;">Descubriremos la respuesta en el siguiente momento.</p>
+        <p style="font-size:1.1rem; font-weight:700;">¿Cómo podemos saber si hay suficientes bandejas para <strong>todos</strong> los animales <strong>sin contar</strong> uno por uno?</p>
+        <p style="font-size:0.9rem; color:#4f5f6b;">Descubriremos la respuesta en el siguiente momento.</p>
       </div>
       <div class="acciones">
         <button class="btn-secundario" id="btn-reiniciar">🔄 Revisar</button>
@@ -546,7 +646,9 @@
       return `${String(m).padStart(2, '0')}:${String(seg).padStart(2, '0')}`;
     }
     function iniciarCronometro() {
-      if (cronoInterval) return;
+      detenerCronometro();
+      tiempoSegundos = 0;
+      cronoEl.textContent = '00:00';
       cronoInterval = setInterval(() => {
         tiempoSegundos++;
         cronoEl.textContent = formatearTiempo(tiempoSegundos);
@@ -558,6 +660,11 @@
         cronoInterval = null;
       }
     }
+    function reiniciarCronometro() {
+      detenerCronometro();
+      tiempoSegundos = 0;
+      cronoEl.textContent = '00:00';
+    }
 
     // ---- CONFIGURACIÓN DE INTERACCIONES (10 pasos) ----
     const pasos = [];
@@ -568,13 +675,14 @@
       titulo: 'Observa esta distribución',
       animales: ['🐵', '🐘', '🦒'],
       bandejas: ['🍽️', '🍽️', '🍽️'],
+      alineadas: true,
       pregunta: '¿Qué ocurre aquí?',
       opciones: [
         { texto: 'Cada animal tiene su bandeja', correcto: true },
         { texto: 'Falta o sobra una bandeja', correcto: false }
       ],
       mensajeAcierto: '✅ ¡Correcto! Cada animal tiene su bandeja. No sobra ni falta ninguna.',
-      mensajeError: '❌ Observa con atención. Coloca una bandeja junto a cada animal y comprueba si alguna queda sola.'
+      mensajeError: '❌ Cuenta cuántos animales hay. Ahora cuenta cuántas bandejas hay. ¿Son la misma cantidad?'
     });
 
     // 1: 4 animales, 4 bandejas correctas
@@ -583,13 +691,14 @@
       titulo: 'Observa esta otra distribución',
       animales: ['🐧', '🐻', '🦁', '🐶'],
       bandejas: ['🍽️', '🍽️', '🍽️', '🍽️'],
+      alineadas: true,
       pregunta: '¿Qué ocurre aquí?',
       opciones: [
         { texto: 'Cada animal tiene su bandeja', correcto: true },
         { texto: 'Falta o sobra una bandeja', correcto: false }
       ],
       mensajeAcierto: '✅ ¡Muy bien! Cada animal tiene su bandeja. No sobra ni falta ninguna.',
-      mensajeError: '❌ Revisa con atención. ¿Hay una bandeja para cada animal?'
+      mensajeError: '❌ Cuenta los animales y las bandejas. ¿Hay la misma cantidad?'
     });
 
     // 2: 2 animales, 3 bandejas (sobra 1)
@@ -600,7 +709,7 @@
       bandejas: ['🍽️', '🍽️', '🍽️'],
       indiceSobrante: 2,
       mensajeAcierto: '✅ ¡Muy bien! Has señalado la bandeja que sobra. Hay dos animales pero tres bandejas. Sobra una.',
-      mensajeError: '❌ Esa bandeja sí tiene un animal. Busca la bandeja que no está emparejada con ningún animal.'
+      mensajeError: '❌ Busca la bandeja que no tiene un animal debajo.'
     });
 
     // 3: 3 animales, 4 bandejas (sobra 1)
@@ -611,7 +720,7 @@
       bandejas: ['🍽️', '🍽️', '🍽️', '🍽️'],
       indiceSobrante: 3,
       mensajeAcierto: '✅ ¡Excelente! Has señalado la bandeja que sobra. Hay tres animales pero cuatro bandejas. Sobra una.',
-      mensajeError: '❌ Esa bandeja sí tiene un animal. Busca la bandeja que no está emparejada con ningún animal.'
+      mensajeError: '❌ Busca la bandeja que no está emparejada con ningún animal.'
     });
 
     // 4: 3 animales, 2 bandejas (falta 1) - tocar animal sin bandeja
@@ -622,7 +731,7 @@
       bandejas: ['🍽️', '🍽️'],
       indiceFaltante: 2,
       mensajeAcierto: '✅ ¡Correcto! Has señalado el animal que se queda sin bandeja. Hay tres animales pero dos bandejas. Falta una.',
-      mensajeError: '❌ Ese animal ya tiene su bandeja. Busca el animal que no tiene ninguna.'
+      mensajeError: '❌ Busca el animal que no tiene ninguna bandeja.'
     });
 
     // 5: 4 animales, 3 bandejas (falta 1)
@@ -633,7 +742,7 @@
       bandejas: ['🍽️', '🍽️', '🍽️'],
       indiceFaltante: 3,
       mensajeAcierto: '✅ ¡Muy bien! Has señalado el animal que se queda sin bandeja. Hay cuatro animales pero tres bandejas. Falta una.',
-      mensajeError: '❌ Ese animal ya tiene su bandeja. Busca el animal que no tiene ninguna.'
+      mensajeError: '❌ Busca el animal que no tiene bandeja.'
     });
 
     // 6: doble asignación (3 animales, 3 bandejas)
@@ -646,8 +755,8 @@
       faltante: 1,
       mensajePaso1: '✅ Has señalado al animal que tiene dos bandejas. Ahora encuentra al animal que no tiene ninguna.',
       mensajePaso2: '✅ ¡Excelente! El elefante tiene dos bandejas y la jirafa no tiene ninguna. No hay correspondencia uno a uno.',
-      mensajeErrorPaso1: '❌ Este animal tiene una bandeja. Busca al que tiene dos bandejas.',
-      mensajeErrorPaso2: '❌ Ese animal tiene una bandeja. Busca al que no tiene ninguna.'
+      mensajeErrorPaso1: '❌ Busca al animal que tiene dos bandejas (están apiladas).',
+      mensajeErrorPaso2: '❌ Busca al animal que no tiene ninguna bandeja (círculo vacío).'
     });
 
     // 7: doble asignación (4 animales)
@@ -660,8 +769,8 @@
       faltante: 3,
       mensajePaso1: '✅ Has señalado al animal que tiene dos bandejas. Ahora encuentra al animal que no tiene ninguna.',
       mensajePaso2: '✅ ¡Excelente! El oso tiene dos bandejas y el perro no tiene ninguna. No hay correspondencia uno a uno.',
-      mensajeErrorPaso1: '❌ Este animal tiene una bandeja. Busca al que tiene dos bandejas.',
-      mensajeErrorPaso2: '❌ Ese animal tiene una bandeja. Busca al que no tiene ninguna.'
+      mensajeErrorPaso1: '❌ Busca al animal que tiene dos bandejas (están apiladas).',
+      mensajeErrorPaso2: '❌ Busca al animal que no tiene ninguna bandeja (círculo vacío).'
     });
 
     // 8: predicción (4 animales, 4 bandejas desordenadas)
@@ -670,6 +779,7 @@
       titulo: 'Imagina el emparejamiento',
       animales: ['🐵', '🐘', '🦒', '🐧'],
       bandejas: ['🍽️', '🍽️', '🍽️', '🍽️'],
+      desordenadas: true,
       pregunta: 'Hay 4 animales y 4 bandejas. ¿Crees que se pueden emparejar para que cada uno tenga su bandeja?',
       opciones: [
         { texto: 'Sí, se pueden emparejar', correcto: true },
@@ -685,6 +795,7 @@
       titulo: 'Imagina el emparejamiento',
       animales: ['🐵', '🐘', '🦒', '🐧', '🐻'],
       bandejas: ['🍽️', '🍽️', '🍽️', '🍽️', '🍽️'],
+      desordenadas: true,
       pregunta: 'Hay 5 animales y 5 bandejas. ¿Crees que se pueden emparejar para que cada uno tenga su bandeja?',
       opciones: [
         { texto: 'Sí, se pueden emparejar', correcto: true },
@@ -704,12 +815,16 @@
     const portada = document.getElementById('pantalla-portada');
     const pantallaFinal = document.getElementById('pantalla-final');
     const progresoEl = document.getElementById('progreso');
+    const progressBarFill = document.getElementById('progressBarFill');
     const btnComenzar = document.getElementById('btn-comenzar');
     const btnReiniciar = document.getElementById('btn-reiniciar');
     const btnContinuar = document.getElementById('btn-continuar');
 
     function actualizarProgreso() {
-      progresoEl.textContent = `Paso ${pasoActual+1} de ${totalPasos}`;
+      const texto = `Paso ${pasoActual+1} de ${totalPasos}`;
+      progresoEl.textContent = texto;
+      const porcentaje = ((pasoActual) / totalPasos) * 100;
+      progressBarFill.style.width = Math.min(porcentaje, 100) + '%';
     }
 
     function mostrarPantalla(id) {
@@ -721,45 +836,55 @@
     function generarHTMLPaso(paso, idx) {
       let html = `<div class="pantalla interaccion" id="pantalla-paso-${idx}">`;
       html += `<h2>${paso.titulo}</h2>`;
-      html += `<div class="escena">`;
+      html += `<div class="escena" id="escena-paso-${idx}">`;
+
+      const mostrarLineas = (paso.tipo === 'seleccion' && paso.alineadas);
 
       if (paso.tipo === 'seleccion' || paso.tipo === 'prediccion') {
-        html += `<div class="columna"><div class="fila">`;
-        paso.animales.forEach(a => html += `<span class="elemento animal">${a}</span>`);
-        html += `</div><span style="font-weight:600; color:#4f5f6b; font-size:0.8rem;">Animales</span></div>`;
-        html += `<div class="columna"><div class="fila">`;
-        paso.bandejas.forEach(b => html += `<span class="elemento bandeja">${b}</span>`);
-        html += `</div><span style="font-weight:600; color:#4f5f6b; font-size:0.8rem;">Bandejas</span></div>`;
+        html += `<div class="columna"><div class="fila" id="fila-animales-${idx}">`;
+        paso.animales.forEach((a, i) => {
+          html += `<span class="elemento animal" data-pos="${i}">${a}</span>`;
+        });
+        html += `</div><span style="font-weight:600; color:#4f5f6b; font-size:0.85rem;">Animales</span></div>`;
+        html += `<div class="columna"><div class="fila" id="fila-bandejas-${idx}">`;
+        paso.bandejas.forEach((b, i) => {
+          html += `<span class="elemento bandeja" data-pos="${i}">${b}</span>`;
+        });
+        html += `</div><span style="font-weight:600; color:#4f5f6b; font-size:0.85rem;">Bandejas</span></div>`;
       } else if (paso.tipo === 'tocar-sobrante' || paso.tipo === 'tocar-faltante') {
         html += `<div class="columna"><div class="fila">`;
         paso.animales.forEach(a => html += `<span class="elemento animal" data-idx="${idx}">${a}</span>`);
-        html += `</div><span style="font-weight:600; color:#4f5f6b; font-size:0.8rem;">Animales</span></div>`;
+        html += `</div><span style="font-weight:600; color:#4f5f6b; font-size:0.85rem;">Animales</span></div>`;
         html += `<div class="columna"><div class="fila">`;
         paso.bandejas.forEach((b, i) => {
           let extra = (paso.tipo === 'tocar-sobrante') ? ` data-idx="${i}"` : '';
           html += `<span class="elemento bandeja"${extra}>${b}</span>`;
         });
-        html += `</div><span style="font-weight:600; color:#4f5f6b; font-size:0.8rem;">Bandejas</span></div>`;
+        html += `</div><span style="font-weight:600; color:#4f5f6b; font-size:0.85rem;">Bandejas</span></div>`;
       } else if (paso.tipo === 'doble-asignacion') {
         html += `<div class="columna"><div class="fila">`;
         paso.animales.forEach((a, i) => {
           html += `<span class="elemento animal" data-idx="${i}">${a}</span>`;
         });
-        html += `</div><div class="fila">`;
+        html += `</div><div class="fila" style="gap:24px;">`;
         paso.animales.forEach((a, i) => {
           let num = 1;
           if (i === paso.doble) num = 2;
           else if (i === paso.faltante) num = 0;
-          let bandejasHtml = '';
-          for (let j = 0; j < num; j++) {
-            bandejasHtml += `<span class="elemento bandeja" style="font-size:1.8rem;">🍽️</span>`;
-          }
+          let contenido = '';
           if (num === 0) {
-            bandejasHtml = `<span style="font-size:1.2rem; color:#b8a690; border:2px dashed #b8a690; border-radius:12px; padding:2px 8px;">vacío</span>`;
+            contenido = `<div class="sin-bandeja"><span class="icono">?</span><span class="etiqueta">sin bandeja</span></div>`;
+          } else if (num === 1) {
+            contenido = `<span class="elemento bandeja" style="font-size:3.8rem; cursor:default; border:none; background:none; padding:0;">🍽️</span>`;
+          } else if (num === 2) {
+            contenido = `<div class="pila-bandejas">
+              <span class="bandeja-base">🍽️</span>
+              <span class="bandeja-superior">🍽️</span>
+            </div>`;
           }
-          html += `<div style="display:flex; flex-direction:column; align-items:center; margin:0 6px;">`;
-          html += `<div style="display:flex; gap:3px; flex-wrap:wrap; justify-content:center; min-height:40px; align-items:center;">${bandejasHtml}</div>`;
-          html += `<span style="font-size:0.6rem; color:#8f9aa3;">${i+1}</span>`;
+          html += `<div style="display:flex; flex-direction:column; align-items:center; margin:0 8px;">`;
+          html += `<div style="display:flex; gap:4px; flex-wrap:wrap; justify-content:center; min-height:56px; align-items:center;">${contenido}</div>`;
+          html += `<span style="font-size:0.65rem; color:#8f9aa3;">${i+1}</span>`;
           html += `</div>`;
         });
         html += `</div></div>`;
@@ -792,6 +917,47 @@
     }
     generarInteracciones();
 
+    function dibujarLineasConexion(idx) {
+      const paso = pasos[idx];
+      if (!(paso.tipo === 'seleccion' && paso.alineadas)) return;
+      const escena = document.getElementById(`escena-paso-${idx}`);
+      if (!escena) return;
+      const animales = escena.querySelectorAll('#fila-animales-' + idx + ' .elemento.animal');
+      const bandejas = escena.querySelectorAll('#fila-bandejas-' + idx + ' .elemento.bandeja');
+      if (animales.length === 0 || bandejas.length === 0 || animales.length !== bandejas.length) return;
+
+      escena.querySelectorAll('.linea-conexion').forEach(el => el.remove());
+
+      const filaAnimales = document.getElementById('fila-animales-' + idx);
+      const filaBandejas = document.getElementById('fila-bandejas-' + idx);
+      if (!filaAnimales || !filaBandejas) return;
+
+      const escenaRect = escena.getBoundingClientRect();
+
+      const animPos = [];
+      animales.forEach(el => {
+        const r = el.getBoundingClientRect();
+        animPos.push({ left: r.left - escenaRect.left + r.width/2, top: r.bottom - escenaRect.top });
+      });
+      const bandPos = [];
+      bandejas.forEach(el => {
+        const r = el.getBoundingClientRect();
+        bandPos.push({ left: r.left - escenaRect.left + r.width/2, top: r.top - escenaRect.top });
+      });
+
+      for (let i = 0; i < Math.min(animPos.length, bandPos.length); i++) {
+        const line = document.createElement('div');
+        line.className = 'linea-conexion';
+        const left = Math.min(animPos[i].left, bandPos[i].left) + 1;
+        const top = animPos[i].top;
+        const height = bandPos[i].top - animPos[i].top;
+        line.style.left = left + 'px';
+        line.style.top = top + 'px';
+        line.style.height = height + 'px';
+        escena.appendChild(line);
+      }
+    }
+
     function mostrarPaso(idx) {
       document.querySelectorAll('.pantalla.interaccion').forEach(p => p.classList.remove('activa'));
       const pasoEl = document.getElementById(`pantalla-paso-${idx}`);
@@ -818,6 +984,9 @@
         else if (pasos[idx].tipo === 'tocar-faltante') configurarTocarFaltante(idx);
         else if (pasos[idx].tipo === 'doble-asignacion') configurarDobleAsignacion(idx);
         else if (pasos[idx].tipo === 'seleccion' || pasos[idx].tipo === 'prediccion') configurarSeleccion(idx);
+        if (pasos[idx].tipo === 'seleccion' && pasos[idx].alineadas) {
+          requestAnimationFrame(() => dibujarLineasConexion(idx));
+        }
         actualizarProgreso();
       }
     }
@@ -850,10 +1019,11 @@
             if (contadorErrores >= 3) {
               botones.forEach(b => {
                 if (b.dataset.correcto === 'true') {
-                  b.style.animation = 'destello 0.6s ease 2';
-                  setTimeout(() => b.style.animation = '', 1300);
+                  b.style.animation = 'parpadeoPista 1.2s ease 3';
+                  setTimeout(() => { b.style.animation = ''; }, 1300);
                 }
               });
+              mensajeEl.textContent += ' Pista: observa el elemento que parpadea.';
               contadorErrores = 0;
             }
             setTimeout(() => {
@@ -894,9 +1064,10 @@
               bandejas.forEach((b, bi) => {
                 if (bi === paso.indiceSobrante) {
                   b.classList.add('destacado');
-                  setTimeout(() => b.classList.remove('destacado'), 1200);
+                  setTimeout(() => b.classList.remove('destacado'), 1300);
                 }
               });
+              mensajeEl.textContent += ' Pista: observa la bandeja que parpadea.';
               contadorErrores = 0;
             }
             setTimeout(() => {
@@ -936,9 +1107,10 @@
               animales.forEach((a, ai) => {
                 if (ai === paso.indiceFaltante) {
                   a.classList.add('destacado');
-                  setTimeout(() => a.classList.remove('destacado'), 1200);
+                  setTimeout(() => a.classList.remove('destacado'), 1300);
                 }
               });
+              mensajeEl.textContent += ' Pista: observa el animal que parpadea.';
               contadorErrores = 0;
             }
             setTimeout(() => {
@@ -980,9 +1152,10 @@
                 animales.forEach((a, ai) => {
                   if (ai === paso.doble) {
                     a.classList.add('destacado');
-                    setTimeout(() => a.classList.remove('destacado'), 1200);
+                    setTimeout(() => a.classList.remove('destacado'), 1300);
                   }
                 });
+                mensajeEl.textContent += ' Pista: observa el animal que parpadea.';
                 contadorErrores = 0;
               }
             }
@@ -1004,9 +1177,10 @@
                 animales.forEach((a, ai) => {
                   if (ai === paso.faltante) {
                     a.classList.add('destacado');
-                    setTimeout(() => a.classList.remove('destacado'), 1200);
+                    setTimeout(() => a.classList.remove('destacado'), 1300);
                   }
                 });
+                mensajeEl.textContent += ' Pista: observa el animal que parpadea.';
                 contadorErrores = 0;
               }
             }
@@ -1033,7 +1207,6 @@
       setTimeout(() => contenedor.remove(), 2000);
     }
 
-    // Eventos de navegación (delegación)
     document.addEventListener('click', function(e) {
       const btn = e.target.closest('[data-accion="siguiente"]');
       if (btn) {
@@ -1044,6 +1217,7 @@
         } else {
           detenerCronometro();
           mostrarPantalla('pantalla-final');
+          progressBarFill.style.width = '100%';
         }
       }
     });
@@ -1056,9 +1230,7 @@
     });
 
     btnReiniciar.addEventListener('click', function() {
-      detenerCronometro();
-      tiempoSegundos = 0;
-      cronoEl.textContent = '00:00';
+      reiniciarCronometro();
       pantallaFinal.classList.remove('activa');
       pasoActual = 0;
       mostrarPaso(0);
@@ -1069,10 +1241,9 @@
       window.location.href = 'desarrollo.html';
     });
 
-    // Inicio: portada
     mostrarPantalla('pantalla-portada');
+    progressBarFill.style.width = '0%';
 
-    // Ficha de continuidad (comentario)
     /*
     FICHA DE CONTINUIDAD DE LA SECUENCIA
     Área: Números y Aritmética
@@ -1084,10 +1255,10 @@
     Propósito inferido: Establecer y verificar relaciones de correspondencia uno a uno entre dos colecciones de objetos.
     Conocimientos previos: Reconocimiento de animales. Comprensión de la idea de dar una cosa a cada uno.
     Mecánica: Selección, toque de sobrante, toque de faltante, doble asignación (dos toques), predicción.
-    Representaciones: Colecciones de objetos (animales y bandejas), columnas alineadas, emojis.
+    Representaciones: Colecciones de objetos (animales y bandejas), columnas alineadas, emojis, pila de bandejas, círculo con "?" para ausencia.
     Errores previsibles: Confundir la correspondencia con la simple presencia de elementos sin emparejar. No detectar sobrantes o faltantes.
     Identidad visual: Verde bosque (#2d6a4f), naranja cálido (#e68a2e), blanco crema (#fcf8f0). Ambientación de zoológico infantil. Emojis como iconografía.
-    Elementos dinámicos: Portada con flotantes, confeti en aciertos, animaciones de selección.
+    Elementos dinámicos: Portada con flotantes, confeti en aciertos, animaciones de selección, barra de progreso, líneas de conexión visuales.
     Pregunta pendiente: ¿Cómo podemos saber si hay suficientes bandejas para todos los animales sin contar uno por uno?
     Desarrollo sugerido: Organizamos las porciones
     Cierre sugerido: La distribución final
