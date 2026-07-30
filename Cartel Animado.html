@@ -22,12 +22,12 @@
       align-items: center;
       justify-content: center;
     }
-    /* Contenedor principal con dimensiones fijas 1400x640 */
+    /* Contenedor principal con relación 16:9 */
     .app {
       position: relative;
       width: 100%;
-      max-width: 1400px;
-      height: 640px; /* Altura fija para evitar scroll en pantallas grandes */
+      max-width: 1300px;
+      aspect-ratio: 16 / 9;
       background: #fcf8f0;
       overflow: hidden;
       box-shadow: 0 12px 40px rgba(0,0,0,0.15);
@@ -38,12 +38,11 @@
     }
     /* Zonas funcionales */
     .header {
-      flex: 0 0 10%; /* 64px de 640 */
-      min-height: 44px;
+      flex: 0 0 10%;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0 24px;
+      padding: 0 28px;
       background: rgba(255,252,240,0.7);
       backdrop-filter: blur(2px);
       border-bottom: 1px solid #e3d7c4;
@@ -59,11 +58,11 @@
       color: #e68a2e;
     }
     .header .progreso {
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       font-weight: 600;
       color: #4f5f6b;
       background: #ede7db;
-      padding: 2px 16px;
+      padding: 4px 16px;
       border-radius: 40px;
     }
     .cronometro {
@@ -71,7 +70,7 @@
       font-weight: 600;
       color: #6f7e8a;
       background: #ede7db;
-      padding: 2px 12px;
+      padding: 4px 12px;
       border-radius: 30px;
       font-feature-settings: "tnum";
       letter-spacing: 0.5px;
@@ -81,7 +80,6 @@
       flex: 1;
       position: relative;
       overflow: hidden;
-      min-height: 0;
     }
     .pantalla {
       position: absolute;
@@ -90,12 +88,11 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 16px 32px;
+      padding: 20px 40px;
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.4s ease;
       background: #fcf8f0;
-      overflow: hidden;
     }
     .pantalla.activa {
       opacity: 1;
@@ -105,22 +102,22 @@
     /* Portada */
     .portada {
       background: radial-gradient(ellipse at 70% 30%, #f2ece0, #fcf8f0);
-      gap: 4px;
+      gap: 8px;
     }
     .portada .contenido {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 32px;
+      gap: 40px;
       width: 100%;
-      max-width: 1100px;
+      max-width: 1000px;
     }
     .portada .texto {
       flex: 1;
       text-align: left;
     }
     .portada .texto h1 {
-      font-size: 2.6rem;
+      font-size: 2.8rem;
       color: #2d6a4f;
       line-height: 1.1;
     }
@@ -128,10 +125,10 @@
       color: #e68a2e;
     }
     .portada .texto p {
-      font-size: 1.1rem;
+      font-size: 1.2rem;
       color: #4f5f6b;
-      margin: 10px 0 18px;
-      max-width: 480px;
+      margin: 12px 0 20px;
+      max-width: 500px;
     }
     .portada .texto .badge {
       display: inline-block;
@@ -139,30 +136,30 @@
       color: #fef7e9;
       padding: 4px 18px;
       border-radius: 30px;
-      font-size: 0.75rem;
+      font-size: 0.8rem;
       font-weight: 700;
       letter-spacing: 0.5px;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
     }
     .btn-primario {
       background: #e68a2e;
       border: none;
-      padding: 12px 38px;
+      padding: 14px 40px;
       border-radius: 60px;
-      font-size: 1.1rem;
+      font-size: 1.2rem;
       font-weight: 700;
       color: #fff;
       cursor: pointer;
-      box-shadow: 0 4px 0 #b86f20;
+      box-shadow: 0 6px 0 #b86f20;
       transition: 0.1s ease;
       touch-action: manipulation;
     }
     .btn-primario:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 0 #b86f20;
+      box-shadow: 0 8px 0 #b86f20;
     }
     .btn-primario:active {
-      transform: translateY(2px);
+      transform: translateY(4px);
       box-shadow: 0 2px 0 #b86f20;
     }
     .portada .ilustracion {
@@ -170,11 +167,11 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      font-size: 4.2rem;
+      font-size: 5rem;
       gap: 20px;
       flex-wrap: wrap;
       position: relative;
-      min-height: 150px;
+      min-height: 200px;
     }
     .portada .ilustracion .flotante {
       animation: flotar 4s ease-in-out infinite alternate;
@@ -184,57 +181,51 @@
     .portada .ilustracion .flotante:nth-child(4) { animation-delay: 2.1s; }
     @keyframes flotar {
       0% { transform: translateY(0px) rotate(0deg); }
-      100% { transform: translateY(-14px) rotate(3deg); }
+      100% { transform: translateY(-16px) rotate(3deg); }
     }
 
     /* Interacción */
     .interaccion {
-      gap: 6px;
-      padding: 8px 20px;
-    }
-    .interaccion h2 {
-      font-size: 1.4rem;
-      color: #2d6a4f;
-      text-align: center;
-      margin-bottom: 2px;
+      gap: 12px;
+      padding: 10px 30px;
     }
     .interaccion .escena {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
       align-items: center;
-      gap: 24px 48px;
+      gap: 30px 60px;
       background: #f2ece0;
-      border-radius: 30px;
-      padding: 14px 24px;
-      min-height: 150px;
+      border-radius: 40px;
+      padding: 20px 30px;
+      min-height: 200px;
       width: 100%;
-      max-width: 960px;
+      max-width: 900px;
     }
     .columna {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 6px;
+      gap: 10px;
     }
     .fila {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
       align-items: center;
-      gap: 12px;
+      gap: 14px;
     }
     .elemento {
-      font-size: 2.6rem;
+      font-size: 2.8rem;
       transition: 0.15s;
       user-select: none;
       position: relative;
     }
     .elemento.bandeja {
-      font-size: 2.4rem;
+      font-size: 2.6rem;
       cursor: pointer;
-      padding: 4px 8px;
-      border-radius: 12px;
+      padding: 8px;
+      border-radius: 16px;
       border: 3px solid transparent;
       transition: 0.1s;
     }
@@ -255,10 +246,10 @@
       background: rgba(192,57,43,0.15);
     }
     .elemento.animal {
-      font-size: 2.8rem;
+      font-size: 3rem;
       cursor: pointer;
-      padding: 4px;
-      border-radius: 16px;
+      padding: 6px;
+      border-radius: 20px;
       border: 3px solid transparent;
       transition: 0.1s;
     }
@@ -286,19 +277,16 @@
     }
 
     .mensaje {
-      font-size: 1rem;
+      font-size: 1.1rem;
       font-weight: 600;
       color: #2d6a4f;
       text-align: center;
-      min-height: 40px;
-      padding: 4px 16px;
+      min-height: 50px;
+      padding: 6px 14px;
       border-radius: 30px;
       background: #f3ede4;
-      max-width: 720px;
+      max-width: 700px;
       width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
     .mensaje.acierto {
       background: #e2f0e6;
@@ -310,16 +298,16 @@
     }
     .opciones {
       display: flex;
-      gap: 14px;
+      gap: 16px;
       flex-wrap: wrap;
       justify-content: center;
     }
     .opciones button {
       background: #e8dccc;
       border: none;
-      padding: 8px 24px;
+      padding: 10px 28px;
       border-radius: 60px;
-      font-size: 0.95rem;
+      font-size: 1rem;
       font-weight: 700;
       color: #2d4a3a;
       cursor: pointer;
@@ -343,15 +331,15 @@
 
     .navegacion {
       display: flex;
-      gap: 12px;
-      margin-top: 4px;
+      gap: 16px;
+      margin-top: 6px;
     }
     .btn-secundario {
       background: #ded4c1;
       border: none;
-      padding: 6px 20px;
+      padding: 8px 24px;
       border-radius: 40px;
-      font-size: 0.85rem;
+      font-size: 0.95rem;
       font-weight: 700;
       color: #2d4a3a;
       cursor: pointer;
@@ -369,41 +357,40 @@
     /* Pantalla final */
     .final {
       background: #fcf8f0;
-      gap: 8px;
+      gap: 12px;
       text-align: center;
-      padding: 24px;
+      padding: 30px;
     }
     .final .icono {
-      font-size: 3.2rem;
+      font-size: 4rem;
     }
     .final h2 {
-      font-size: 1.8rem;
+      font-size: 2rem;
       color: #2d6a4f;
     }
     .final .pregunta-pendiente {
       background: #e2f0e6;
-      border-radius: 30px;
-      padding: 16px 28px;
-      max-width: 680px;
+      border-radius: 40px;
+      padding: 20px 30px;
+      max-width: 700px;
       border: 3px solid #e68a2e;
     }
     .final .pregunta-pendiente p {
-      font-size: 1.05rem;
+      font-size: 1.2rem;
       font-weight: 600;
       color: #1f4f3a;
     }
     .final .acciones {
       display: flex;
-      gap: 14px;
+      gap: 16px;
       flex-wrap: wrap;
       justify-content: center;
-      margin-top: 4px;
+      margin-top: 8px;
     }
 
     /* Pie */
     .footer {
-      flex: 0 0 8%; /* ~51px de 640 */
-      min-height: 30px;
+      flex: 0 0 6%;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -416,7 +403,7 @@
       color: #2d6a4f;
     }
 
-    /* Confeti */
+    /* Animación confeti */
     .confeti {
       position: fixed;
       top: 0;
@@ -442,28 +429,25 @@
 
     /* Responsive */
     @media (max-width: 1024px) {
-      .app { height: auto; min-height: 100vh; border-radius: 0; max-width: 100%; }
-      .portada .contenido { flex-direction: column; text-align: center; gap: 12px; }
+      .app { aspect-ratio: auto; min-height: 100vh; border-radius: 0; }
+      .portada .contenido { flex-direction: column; text-align: center; gap: 20px; }
       .portada .texto { text-align: center; }
       .portada .texto p { max-width: 100%; }
-      .interaccion .escena { flex-direction: column; gap: 12px; }
-      .pantalla { padding: 10px 14px; }
-      .portada .ilustracion { font-size: 3rem; min-height: 100px; }
-      .interaccion h2 { font-size: 1.1rem; }
-      .elemento { font-size: 2rem; }
-      .elemento.bandeja { font-size: 1.8rem; }
-      .elemento.animal { font-size: 2.2rem; }
+      .interaccion .escena { flex-direction: column; gap: 20px; }
+      .pantalla { padding: 12px 16px; }
     }
     @media (max-width: 600px) {
-      .header { padding: 0 10px; flex-wrap: wrap; gap: 2px; }
-      .header .titulo { font-size: 0.85rem; }
-      .portada .texto h1 { font-size: 1.6rem; }
-      .portada .ilustracion { font-size: 2.2rem; gap: 8px; }
-      .opciones button { padding: 6px 14px; font-size: 0.8rem; }
-      .btn-primario { padding: 8px 18px; font-size: 0.9rem; }
-      .mensaje { font-size: 0.8rem; min-height: 32px; }
+      .header { padding: 0 12px; flex-wrap: wrap; gap: 4px; }
+      .header .titulo { font-size: 0.9rem; }
+      .portada .texto h1 { font-size: 1.8rem; }
+      .elemento { font-size: 2.2rem; }
+      .elemento.bandeja { font-size: 2rem; }
+      .elemento.animal { font-size: 2.4rem; }
+      .opciones button { padding: 8px 16px; font-size: 0.85rem; }
+      .btn-primario { padding: 10px 24px; font-size: 1rem; }
     }
 
+    /* Preferencia de movimiento reducido */
     @media (prefers-reduced-motion: reduce) {
       .portada .ilustracion .flotante,
       .confeti span,
@@ -505,18 +489,18 @@
       </div>
     </div>
 
-    <!-- Contenedor de interacciones (se inyecta con JS) -->
+    <!-- Aquí se inyectarán las pantallas de interacción dinámicamente -->
     <div id="contenedor-interacciones"></div>
 
-    <!-- Pantalla final -->
+    <!-- Pantalla final (inicialmente oculta) -->
     <div class="pantalla final" id="pantalla-final">
       <div class="icono">🌿</div>
       <h2>¡Buen trabajo!</h2>
-      <p style="font-size:1rem; color:#4f5f6b; max-width:600px;">Has ayudado al cuidador a revisar algunas distribuciones.</p>
+      <p style="font-size:1.1rem; color:#4f5f6b; max-width:600px;">Has ayudado al cuidador a revisar algunas distribuciones.</p>
       <div class="pregunta-pendiente">
         <p>❓ Ahora hay un problema más grande:</p>
-        <p style="font-size:1.05rem; font-weight:700;">¿Cómo podemos saber si hay suficientes bandejas para <strong>todos</strong> los animales <strong>sin contar</strong> uno por uno?</p>
-        <p style="font-size:0.85rem; color:#4f5f6b;">Descubriremos la respuesta en el siguiente momento.</p>
+        <p style="font-size:1.1rem; font-weight:700;">¿Cómo podemos saber si hay suficientes bandejas para <strong>todos</strong> los animales <strong>sin contar</strong> uno por uno?</p>
+        <p style="font-size:0.9rem; color:#4f5f6b;">Descubriremos la respuesta en el siguiente momento.</p>
       </div>
       <div class="acciones">
         <button class="btn-secundario" id="btn-reiniciar">🔄 Revisar</button>
@@ -559,15 +543,17 @@
       }
     }
 
-    // ---- CONFIGURACIÓN DE INTERACCIONES (10 pasos) ----
+    // ---- CONFIGURACIÓN DE INTERACCIONES ----
+    // 10 pasos
     const pasos = [];
 
-    // 0: 3 animales, 3 bandejas correctas
+    // Paso 0: 3 animales, 3 bandejas correctas
     pasos.push({
       tipo: 'seleccion',
       titulo: 'Observa esta distribución',
       animales: ['🐵', '🐘', '🦒'],
       bandejas: ['🍽️', '🍽️', '🍽️'],
+      alineadas: true,
       pregunta: '¿Qué ocurre aquí?',
       opciones: [
         { texto: 'Cada animal tiene su bandeja', correcto: true },
@@ -577,12 +563,13 @@
       mensajeError: '❌ Observa con atención. Coloca una bandeja junto a cada animal y comprueba si alguna queda sola.'
     });
 
-    // 1: 4 animales, 4 bandejas correctas
+    // Paso 1: 4 animales, 4 bandejas correctas
     pasos.push({
       tipo: 'seleccion',
       titulo: 'Observa esta otra distribución',
       animales: ['🐧', '🐻', '🦁', '🐶'],
       bandejas: ['🍽️', '🍽️', '🍽️', '🍽️'],
+      alineadas: true,
       pregunta: '¿Qué ocurre aquí?',
       opciones: [
         { texto: 'Cada animal tiene su bandeja', correcto: true },
@@ -592,7 +579,7 @@
       mensajeError: '❌ Revisa con atención. ¿Hay una bandeja para cada animal?'
     });
 
-    // 2: 2 animales, 3 bandejas (sobra 1)
+    // Paso 2: 2 animales, 3 bandejas (sobra 1)
     pasos.push({
       tipo: 'tocar-sobrante',
       titulo: 'El cuidador ha preparado estas bandejas',
@@ -603,7 +590,7 @@
       mensajeError: '❌ Esa bandeja sí tiene un animal. Busca la bandeja que no está emparejada con ningún animal.'
     });
 
-    // 3: 3 animales, 4 bandejas (sobra 1)
+    // Paso 3: 3 animales, 4 bandejas (sobra 1)
     pasos.push({
       tipo: 'tocar-sobrante',
       titulo: 'El cuidador ha preparado estas bandejas',
@@ -614,18 +601,18 @@
       mensajeError: '❌ Esa bandeja sí tiene un animal. Busca la bandeja que no está emparejada con ningún animal.'
     });
 
-    // 4: 3 animales, 2 bandejas (falta 1) - tocar animal sin bandeja
+    // Paso 4: 3 animales, 2 bandejas (falta 1) - tocar animal sin bandeja
     pasos.push({
       tipo: 'tocar-faltante',
       titulo: 'El cuidador ha preparado estas bandejas',
       animales: ['🐵', '🐘', '🦒'],
       bandejas: ['🍽️', '🍽️'],
-      indiceFaltante: 2,
+      indiceFaltante: 2, // índice del animal que no tiene bandeja
       mensajeAcierto: '✅ ¡Correcto! Has señalado el animal que se queda sin bandeja. Hay tres animales pero dos bandejas. Falta una.',
       mensajeError: '❌ Ese animal ya tiene su bandeja. Busca el animal que no tiene ninguna.'
     });
 
-    // 5: 4 animales, 3 bandejas (falta 1)
+    // Paso 5: 4 animales, 3 bandejas (falta 1)
     pasos.push({
       tipo: 'tocar-faltante',
       titulo: 'El cuidador ha preparado estas bandejas',
@@ -636,21 +623,21 @@
       mensajeError: '❌ Ese animal ya tiene su bandeja. Busca el animal que no tiene ninguna.'
     });
 
-    // 6: doble asignación (3 animales, 3 bandejas)
+    // Paso 6: doble asignación (3 animales, 3 bandejas, uno tiene 2, otro 0)
     pasos.push({
       tipo: 'doble-asignacion',
       titulo: 'El cuidador ha colocado algunas bandejas',
       animales: ['🐘', '🦒', '🐧'],
       bandejas: ['🍽️', '🍽️', '🍽️'],
-      doble: 0,
-      faltante: 1,
+      doble: 0,      // índice del animal con 2 bandejas
+      faltante: 1,   // índice del animal sin bandeja
       mensajePaso1: '✅ Has señalado al animal que tiene dos bandejas. Ahora encuentra al animal que no tiene ninguna.',
       mensajePaso2: '✅ ¡Excelente! El elefante tiene dos bandejas y la jirafa no tiene ninguna. No hay correspondencia uno a uno.',
       mensajeErrorPaso1: '❌ Este animal tiene una bandeja. Busca al que tiene dos bandejas.',
       mensajeErrorPaso2: '❌ Ese animal tiene una bandeja. Busca al que no tiene ninguna.'
     });
 
-    // 7: doble asignación (4 animales)
+    // Paso 7: doble asignación (4 animales)
     pasos.push({
       tipo: 'doble-asignacion',
       titulo: 'El cuidador ha colocado algunas bandejas',
@@ -664,12 +651,13 @@
       mensajeErrorPaso2: '❌ Ese animal tiene una bandeja. Busca al que no tiene ninguna.'
     });
 
-    // 8: predicción (4 animales, 4 bandejas desordenadas)
+    // Paso 8: predicción (4 animales, 4 bandejas desordenadas)
     pasos.push({
       tipo: 'prediccion',
       titulo: 'Imagina el emparejamiento',
       animales: ['🐵', '🐘', '🦒', '🐧'],
       bandejas: ['🍽️', '🍽️', '🍽️', '🍽️'],
+      desordenadas: true,
       pregunta: 'Hay 4 animales y 4 bandejas. ¿Crees que se pueden emparejar para que cada uno tenga su bandeja?',
       opciones: [
         { texto: 'Sí, se pueden emparejar', correcto: true },
@@ -679,27 +667,29 @@
       mensajeError: '❌ Vamos a comprobarlo. Cada animal tiene su bandeja y no sobra ninguna.'
     });
 
-    // 9: predicción (5 animales, 5 bandejas desordenadas)
+    // Paso 9: predicción (5 animales, 5 bandejas desordenadas)
     pasos.push({
       tipo: 'prediccion',
       titulo: 'Imagina el emparejamiento',
       animales: ['🐵', '🐘', '🦒', '🐧', '🐻'],
       bandejas: ['🍽️', '🍽️', '🍽️', '🍽️', '🍽️'],
+      desordenadas: true,
       pregunta: 'Hay 5 animales y 5 bandejas. ¿Crees que se pueden emparejar para que cada uno tenga su bandeja?',
       opciones: [
         { texto: 'Sí, se pueden emparejar', correcto: true },
         { texto: 'No, no se pueden emparejar', correcto: false }
       ],
-      mensajeAcierto: '✅ ¡Excelente! Vamos a emparejarlos. Todos los animales tienen su bandeja y no sobró ninguna.',
+      mensajeAcierto: '✅ ¡Excelente! Vamos a emparejarlos. Cada animal encontró su bandeja y no sobró ninguna.',
       mensajeError: '❌ Vamos a comprobarlo. Todos los animales tienen su bandeja y no falta ninguna.'
     });
 
-    // ---- ESTADO ----
+    // ---- ESTADO DE LA SESIÓN ----
     let pasoActual = 0;
     let totalPasos = pasos.length;
-    let bloqueado = false;
-    let contadorErrores = 0;
+    let bloqueado = false; // para evitar múltiples clics durante animaciones
+    let contadorErrores = 0; // por paso, se reinicia al cambiar
 
+    // ---- REFERENCIAS DOM ----
     const contenedor = document.getElementById('contenedor-interacciones');
     const portada = document.getElementById('pantalla-portada');
     const pantallaFinal = document.getElementById('pantalla-final');
@@ -708,6 +698,7 @@
     const btnReiniciar = document.getElementById('btn-reiniciar');
     const btnContinuar = document.getElementById('btn-continuar');
 
+    // ---- FUNCIONES AUXILIARES ----
     function actualizarProgreso() {
       progresoEl.textContent = `Paso ${pasoActual+1} de ${totalPasos}`;
     }
@@ -717,55 +708,73 @@
       document.getElementById(id).classList.add('activa');
     }
 
-    // Generar HTML de cada paso
     function generarHTMLPaso(paso, idx) {
       let html = `<div class="pantalla interaccion" id="pantalla-paso-${idx}">`;
-      html += `<h2>${paso.titulo}</h2>`;
+      html += `<h2 style="color:#2d6a4f; font-size:1.6rem;">${paso.titulo}</h2>`;
       html += `<div class="escena">`;
 
+      // Mostrar animales y bandejas
       if (paso.tipo === 'seleccion' || paso.tipo === 'prediccion') {
-        html += `<div class="columna"><div class="fila">`;
-        paso.animales.forEach(a => html += `<span class="elemento animal">${a}</span>`);
-        html += `</div><span style="font-weight:600; color:#4f5f6b; font-size:0.8rem;">Animales</span></div>`;
-        html += `<div class="columna"><div class="fila">`;
-        paso.bandejas.forEach(b => html += `<span class="elemento bandeja">${b}</span>`);
-        html += `</div><span style="font-weight:600; color:#4f5f6b; font-size:0.8rem;">Bandejas</span></div>`;
-      } else if (paso.tipo === 'tocar-sobrante' || paso.tipo === 'tocar-faltante') {
-        html += `<div class="columna"><div class="fila">`;
-        paso.animales.forEach(a => html += `<span class="elemento animal" data-idx="${idx}">${a}</span>`);
-        html += `</div><span style="font-weight:600; color:#4f5f6b; font-size:0.8rem;">Animales</span></div>`;
-        html += `<div class="columna"><div class="fila">`;
-        paso.bandejas.forEach((b, i) => {
-          let extra = (paso.tipo === 'tocar-sobrante') ? ` data-idx="${i}"` : '';
-          html += `<span class="elemento bandeja"${extra}>${b}</span>`;
-        });
-        html += `</div><span style="font-weight:600; color:#4f5f6b; font-size:0.8rem;">Bandejas</span></div>`;
-      } else if (paso.tipo === 'doble-asignacion') {
+        // Dos columnas: animales y bandejas
         html += `<div class="columna"><div class="fila">`;
         paso.animales.forEach((a, i) => {
           html += `<span class="elemento animal" data-idx="${i}">${a}</span>`;
         });
-        html += `</div><div class="fila">`;
+        html += `</div><span style="font-weight:600; color:#4f5f6b;">Animales</span></div>`;
+
+        html += `<div class="columna"><div class="fila">`;
+        paso.bandejas.forEach((b, i) => {
+          html += `<span class="elemento bandeja" data-idx="${i}">${b}</span>`;
+        });
+        html += `</div><span style="font-weight:600; color:#4f5f6b;">Bandejas</span></div>`;
+      } else if (paso.tipo === 'tocar-sobrante' || paso.tipo === 'tocar-faltante') {
+        // Mostrar animales en una fila, bandejas en otra
+        html += `<div class="columna"><div class="fila">`;
+        paso.animales.forEach((a, i) => {
+          html += `<span class="elemento animal" data-idx="${i}">${a}</span>`;
+        });
+        html += `</div><span style="font-weight:600; color:#4f5f6b;">Animales</span></div>`;
+
+        html += `<div class="columna"><div class="fila">`;
+        paso.bandejas.forEach((b, i) => {
+          let extra = '';
+          if (paso.tipo === 'tocar-sobrante') {
+            extra = ` data-idx="${i}"`;
+          }
+          html += `<span class="elemento bandeja"${extra}>${b}</span>`;
+        });
+        html += `</div><span style="font-weight:600; color:#4f5f6b;">Bandejas</span></div>`;
+      } else if (paso.tipo === 'doble-asignacion') {
+        // Mostrar animales con sus bandejas debajo (algunas con doble)
+        html += `<div class="columna"><div class="fila">`;
+        paso.animales.forEach((a, i) => {
+          html += `<span class="elemento animal" data-idx="${i}">${a}</span>`;
+        });
+        html += `</div>`;
+        // Ahora mostrar bandejas debajo de cada animal (agrupadas)
+        html += `<div class="fila">`;
         paso.animales.forEach((a, i) => {
           let num = 1;
           if (i === paso.doble) num = 2;
           else if (i === paso.faltante) num = 0;
           let bandejasHtml = '';
           for (let j = 0; j < num; j++) {
-            bandejasHtml += `<span class="elemento bandeja" style="font-size:1.8rem;">🍽️</span>`;
+            bandejasHtml += `<span class="elemento bandeja" style="font-size:2.2rem;">🍽️</span>`;
           }
           if (num === 0) {
-            bandejasHtml = `<span style="font-size:1.2rem; color:#b8a690; border:2px dashed #b8a690; border-radius:12px; padding:2px 8px;">vacío</span>`;
+            bandejasHtml = `<span style="font-size:1.4rem; color:#b8a690; border:2px dashed #b8a690; border-radius:12px; padding:4px 10px;">vacío</span>`;
           }
-          html += `<div style="display:flex; flex-direction:column; align-items:center; margin:0 6px;">`;
-          html += `<div style="display:flex; gap:3px; flex-wrap:wrap; justify-content:center; min-height:40px; align-items:center;">${bandejasHtml}</div>`;
-          html += `<span style="font-size:0.6rem; color:#8f9aa3;">${i+1}</span>`;
+          html += `<div style="display:flex; flex-direction:column; align-items:center; margin:0 8px;">`;
+          html += `<div style="display:flex; gap:4px; flex-wrap:wrap; justify-content:center; min-height:50px; align-items:center;">${bandejasHtml}</div>`;
+          html += `<span style="font-size:0.7rem; color:#8f9aa3;">animal ${i+1}</span>`;
           html += `</div>`;
         });
         html += `</div></div>`;
       }
 
-      html += `</div>`;
+      html += `</div>`; // cierra escena
+
+      // Mensaje y opciones
       html += `<div class="mensaje" id="mensaje-paso-${idx}">${paso.pregunta || 'Selecciona una opción.'}</div>`;
 
       if (paso.tipo === 'seleccion' || paso.tipo === 'prediccion') {
@@ -774,54 +783,80 @@
           html += `<button data-correcto="${op.correcto}" data-idx="${oi}">${op.texto}</button>`;
         });
         html += `</div>`;
-      } else {
+      } else if (paso.tipo === 'tocar-sobrante') {
+        html += `<div class="opciones" style="display:none;"></div>`;
+      } else if (paso.tipo === 'tocar-faltante') {
+        html += `<div class="opciones" style="display:none;"></div>`;
+      } else if (paso.tipo === 'doble-asignacion') {
         html += `<div class="opciones" style="display:none;"></div>`;
       }
 
+      // Navegación (solo visible cuando se complete el paso)
       html += `<div class="navegacion" id="nav-paso-${idx}" style="display:none;">`;
       html += `<button class="btn-secundario" data-paso="${idx}" data-accion="siguiente">Siguiente →</button>`;
       html += `</div>`;
+
       html += `</div>`;
       return html;
     }
 
+    // ---- GENERAR TODAS LAS PANTALLAS DE INTERACCIÓN ----
     function generarInteracciones() {
       let html = '';
-      pasos.forEach((p, i) => html += generarHTMLPaso(p, i));
+      pasos.forEach((p, i) => {
+        html += generarHTMLPaso(p, i);
+      });
       contenedor.innerHTML = html;
     }
     generarInteracciones();
 
+    // ---- FUNCIÓN PARA MOSTRAR UN PASO ----
     function mostrarPaso(idx) {
+      // Ocultar todas las pantallas de interacción
       document.querySelectorAll('.pantalla.interaccion').forEach(p => p.classList.remove('activa'));
       const pasoEl = document.getElementById(`pantalla-paso-${idx}`);
       if (pasoEl) {
         pasoEl.classList.add('activa');
+        // Ocultar navegación
         const nav = document.getElementById(`nav-paso-${idx}`);
         if (nav) nav.style.display = 'none';
+        // Restaurar mensaje
         const msj = document.getElementById(`mensaje-paso-${idx}`);
         if (msj) {
           msj.textContent = pasos[idx].pregunta || 'Selecciona una opción.';
           msj.className = 'mensaje';
         }
+        // Resetear estado de elementos visuales
         const elementos = pasoEl.querySelectorAll('.elemento');
         elementos.forEach(el => {
           el.classList.remove('seleccionada', 'acertada', 'fallida', 'seleccionado', 'correcto', 'incorrecto', 'destacado');
         });
+        // Resetear opciones
         const opts = pasoEl.querySelectorAll('.opciones button');
         opts.forEach(b => b.disabled = false);
+        // Resetear contador de errores
         contadorErrores = 0;
+        // Si es doble-asignacion, reiniciar estado interno
         if (pasos[idx].tipo === 'doble-asignacion') {
           pasoEl._pasoDoble = { paso1: false, paso2: false };
         }
-        if (pasos[idx].tipo === 'tocar-sobrante') configurarTocarSobrante(idx);
-        else if (pasos[idx].tipo === 'tocar-faltante') configurarTocarFaltante(idx);
-        else if (pasos[idx].tipo === 'doble-asignacion') configurarDobleAsignacion(idx);
-        else if (pasos[idx].tipo === 'seleccion' || pasos[idx].tipo === 'prediccion') configurarSeleccion(idx);
+        // Si es tocar-sobrante o faltante, agregar eventos
+        if (pasos[idx].tipo === 'tocar-sobrante') {
+          configurarTocarSobrante(idx);
+        } else if (pasos[idx].tipo === 'tocar-faltante') {
+          configurarTocarFaltante(idx);
+        } else if (pasos[idx].tipo === 'doble-asignacion') {
+          configurarDobleAsignacion(idx);
+        } else if (pasos[idx].tipo === 'seleccion' || pasos[idx].tipo === 'prediccion') {
+          configurarSeleccion(idx);
+        }
         actualizarProgreso();
       }
     }
 
+    // ---- CONFIGURAR INTERACCIONES ----
+
+    // Selección (botones)
     function configurarSeleccion(idx) {
       const paso = pasos[idx];
       const contenedorOpciones = document.getElementById(`opciones-paso-${idx}`);
@@ -829,68 +864,86 @@
       const botones = contenedorOpciones.querySelectorAll('button');
       const mensajeEl = document.getElementById(`mensaje-paso-${idx}`);
       const navEl = document.getElementById(`nav-paso-${idx}`);
+
       botones.forEach(btn => {
         btn.disabled = false;
         btn.onclick = function() {
           if (bloqueado) return;
           const correcto = this.dataset.correcto === 'true';
+          // Deshabilitar todos los botones temporalmente
           botones.forEach(b => b.disabled = true);
           bloqueado = true;
+
           if (correcto) {
             mensajeEl.textContent = paso.mensajeAcierto;
             mensajeEl.className = 'mensaje acierto';
+            // Animación de éxito
             lanzarConfeti();
+            // Mostrar navegación
             if (navEl) navEl.style.display = 'flex';
+            // Resaltar visualmente
             this.style.background = '#2d6a4f';
             this.style.color = '#fff';
           } else {
             mensajeEl.textContent = paso.mensajeError;
             mensajeEl.className = 'mensaje error';
             contadorErrores++;
+            // Si 3 fallos, dar pista visual destacando la correcta
             if (contadorErrores >= 3) {
               botones.forEach(b => {
                 if (b.dataset.correcto === 'true') {
                   b.style.animation = 'destello 0.6s ease 2';
-                  setTimeout(() => b.style.animation = '', 1300);
+                  setTimeout(() => { b.style.animation = ''; }, 1300);
                 }
               });
               contadorErrores = 0;
             }
+            // Rehabilitar después de 1s
             setTimeout(() => {
               botones.forEach(b => b.disabled = false);
               bloqueado = false;
             }, 800);
           }
-          if (correcto) setTimeout(() => bloqueado = false, 400);
+          // Si fue correcto, desbloquear después de un momento
+          if (correcto) {
+            setTimeout(() => {
+              bloqueado = false;
+            }, 400);
+          }
         };
       });
     }
 
+    // Tocar la bandeja sobrante
     function configurarTocarSobrante(idx) {
       const paso = pasos[idx];
       const pasoEl = document.getElementById(`pantalla-paso-${idx}`);
       const bandejas = pasoEl.querySelectorAll('.elemento.bandeja');
       const mensajeEl = document.getElementById(`mensaje-paso-${idx}`);
       const navEl = document.getElementById(`nav-paso-${idx}`);
+
       bandejas.forEach((bandeja, i) => {
         bandeja.onclick = function() {
           if (bloqueado) return;
           const esSobrante = (i === paso.indiceSobrante);
           bloqueado = true;
+          // Desmarcar otras
           bandejas.forEach(b => b.classList.remove('seleccionada', 'acertada', 'fallida'));
+
           if (esSobrante) {
             this.classList.add('acertada');
             mensajeEl.textContent = paso.mensajeAcierto;
             mensajeEl.className = 'mensaje acierto';
             lanzarConfeti();
             if (navEl) navEl.style.display = 'flex';
-            setTimeout(() => bloqueado = false, 400);
+            setTimeout(() => { bloqueado = false; }, 400);
           } else {
             this.classList.add('fallida');
             mensajeEl.textContent = paso.mensajeError;
             mensajeEl.className = 'mensaje error';
             contadorErrores++;
             if (contadorErrores >= 3) {
+              // Destacar la correcta
               bandejas.forEach((b, bi) => {
                 if (bi === paso.indiceSobrante) {
                   b.classList.add('destacado');
@@ -908,25 +961,28 @@
       });
     }
 
+    // Tocar el animal faltante
     function configurarTocarFaltante(idx) {
       const paso = pasos[idx];
       const pasoEl = document.getElementById(`pantalla-paso-${idx}`);
       const animales = pasoEl.querySelectorAll('.elemento.animal');
       const mensajeEl = document.getElementById(`mensaje-paso-${idx}`);
       const navEl = document.getElementById(`nav-paso-${idx}`);
+
       animales.forEach((animal, i) => {
         animal.onclick = function() {
           if (bloqueado) return;
           const esFaltante = (i === paso.indiceFaltante);
           bloqueado = true;
           animales.forEach(a => a.classList.remove('seleccionado', 'correcto', 'incorrecto'));
+
           if (esFaltante) {
             this.classList.add('correcto');
             mensajeEl.textContent = paso.mensajeAcierto;
             mensajeEl.className = 'mensaje acierto';
             lanzarConfeti();
             if (navEl) navEl.style.display = 'flex';
-            setTimeout(() => bloqueado = false, 400);
+            setTimeout(() => { bloqueado = false; }, 400);
           } else {
             this.classList.add('incorrecto');
             mensajeEl.textContent = paso.mensajeError;
@@ -950,6 +1006,7 @@
       });
     }
 
+    // Doble asignación (dos toques)
     function configurarDobleAsignacion(idx) {
       const paso = pasos[idx];
       const pasoEl = document.getElementById(`pantalla-paso-${idx}`);
@@ -958,20 +1015,29 @@
       const animales = pasoEl.querySelectorAll('.elemento.animal');
       const mensajeEl = document.getElementById(`mensaje-paso-${idx}`);
       const navEl = document.getElementById(`nav-paso-${idx}`);
-      estado.paso1 = false; estado.paso2 = false;
+
+      // Resetear estado
+      estado.paso1 = false;
+      estado.paso2 = false;
       animales.forEach(a => a.classList.remove('seleccionado', 'correcto', 'incorrecto'));
+
       animales.forEach((animal, i) => {
         animal.onclick = function() {
           if (bloqueado) return;
-          if (estado.paso2) return;
+          if (estado.paso2) return; // ya completado
+
           if (!estado.paso1) {
+            // Primer toque: buscar el que tiene doble
             if (i === paso.doble) {
               this.classList.add('seleccionado');
               mensajeEl.textContent = paso.mensajePaso1;
               mensajeEl.className = 'mensaje acierto';
               estado.paso1 = true;
+              // Deshabilitar otros clics momentáneamente
               animales.forEach(a => a.style.pointerEvents = 'none');
-              setTimeout(() => animales.forEach(a => a.style.pointerEvents = 'auto'), 300);
+              setTimeout(() => {
+                animales.forEach(a => a.style.pointerEvents = 'auto');
+              }, 300);
             } else {
               mensajeEl.textContent = paso.mensajeErrorPaso1;
               mensajeEl.className = 'mensaje error';
@@ -987,9 +1053,13 @@
               }
             }
           } else {
+            // Segundo toque: buscar el que no tiene
             if (i === paso.faltante) {
               this.classList.add('correcto');
-              animales.forEach((a, ai) => { if (ai === paso.doble) a.classList.add('correcto'); });
+              // También marcar el primero como correcto
+              animales.forEach((a, ai) => {
+                if (ai === paso.doble) a.classList.add('correcto');
+              });
               mensajeEl.textContent = paso.mensajePaso2;
               mensajeEl.className = 'mensaje acierto';
               estado.paso2 = true;
@@ -1015,6 +1085,22 @@
       });
     }
 
+    // ---- NAVEGACIÓN ENTRE PASOS ----
+    document.querySelectorAll('[data-accion="siguiente"]').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const idx = parseInt(this.dataset.paso);
+        if (idx < totalPasos - 1) {
+          pasoActual = idx + 1;
+          mostrarPaso(pasoActual);
+        } else {
+          // Último paso: mostrar pantalla final
+          detenerCronometro();
+          mostrarPantalla('pantalla-final');
+        }
+      });
+    });
+
+    // ---- LANZAR CONFETI ----
     function lanzarConfeti() {
       const contenedor = document.createElement('div');
       contenedor.className = 'confeti';
@@ -1033,21 +1119,7 @@
       setTimeout(() => contenedor.remove(), 2000);
     }
 
-    // Eventos de navegación (delegación)
-    document.addEventListener('click', function(e) {
-      const btn = e.target.closest('[data-accion="siguiente"]');
-      if (btn) {
-        const idx = parseInt(btn.dataset.paso);
-        if (idx < totalPasos - 1) {
-          pasoActual = idx + 1;
-          mostrarPaso(pasoActual);
-        } else {
-          detenerCronometro();
-          mostrarPantalla('pantalla-final');
-        }
-      }
-    });
-
+    // ---- INICIAR ACTIVIDAD ----
     btnComenzar.addEventListener('click', function() {
       portada.classList.remove('activa');
       pasoActual = 0;
@@ -1056,6 +1128,7 @@
     });
 
     btnReiniciar.addEventListener('click', function() {
+      // Reiniciar desde el paso 0
       detenerCronometro();
       tiempoSegundos = 0;
       cronoEl.textContent = '00:00';
@@ -1066,31 +1139,33 @@
     });
 
     btnContinuar.addEventListener('click', function() {
+      // Redirigir a desarrollo.html (o simular)
       window.location.href = 'desarrollo.html';
     });
 
-    // Inicio: portada
+    // ---- INICIO ----
+    // Mostrar portada al cargar
     mostrarPantalla('pantalla-portada');
 
-    // Ficha de continuidad (comentario)
+    // ---- FICHA DE CONTINUIDAD (comentario oculto) ----
     /*
     FICHA DE CONTINUIDAD DE LA SECUENCIA
-    Área: Números y Aritmética
-    Dominio: Conteo y Numeración
-    Núcleo: Principios y Estrategias de Conteo
-    Unidad: Correspondencia Uno a Uno
-    Título: El zoológico del cuidador
-    Situación: Los cuidadores de un zoológico infantil deben distribuir porciones de alimento a los animales. Cada animal recibe una bandeja idéntica. Necesitan saber si hay suficientes bandejas para todos los animales.
-    Propósito inferido: Establecer y verificar relaciones de correspondencia uno a uno entre dos colecciones de objetos.
-    Conocimientos previos: Reconocimiento de animales. Comprensión de la idea de dar una cosa a cada uno.
-    Mecánica: Selección, toque de sobrante, toque de faltante, doble asignación (dos toques), predicción.
-    Representaciones: Colecciones de objetos (animales y bandejas), columnas alineadas, emojis.
-    Errores previsibles: Confundir la correspondencia con la simple presencia de elementos sin emparejar. No detectar sobrantes o faltantes.
-    Identidad visual: Verde bosque (#2d6a4f), naranja cálido (#e68a2e), blanco crema (#fcf8f0). Ambientación de zoológico infantil. Emojis como iconografía.
-    Elementos dinámicos: Portada con flotantes, confeti en aciertos, animaciones de selección.
-    Pregunta pendiente: ¿Cómo podemos saber si hay suficientes bandejas para todos los animales sin contar uno por uno?
-    Desarrollo sugerido: Organizamos las porciones
-    Cierre sugerido: La distribución final
+    Área matemática: Números y Aritmética
+    Dominio matemático: Conteo y Numeración
+    Núcleo conceptual: Principios y Estrategias de Conteo
+    Unidad de aprendizaje: Correspondencia Uno a Uno
+    Título narrativo: El zoológico del cuidador
+    Situación o fenómeno: Los cuidadores de un zoológico infantil deben distribuir porciones de alimento a los animales. Cada animal recibe una bandeja idéntica. Necesitan saber si hay suficientes bandejas para todos los animales.
+    Propósito de aprendizaje inferido: Establecer y verificar relaciones de correspondencia uno a uno entre dos colecciones de objetos, reconociendo cuándo existe una correspondencia exacta y cuándo no.
+    Conocimientos previos recuperados: Reconocimiento de animales. Comprensión de la idea de dar una cosa a cada uno.
+    Mecánica utilizada: Selección, toque de elemento sobrante, toque de elemento faltante, doble asignación (dos toques sucesivos), predicción.
+    Representaciones matemáticas utilizadas: Colecciones de objetos (animales y bandejas), columnas alineadas, emojis.
+    Errores previsibles detectados: Confundir la correspondencia uno a uno con la simple presencia de elementos sin emparejar. No detectar cuando un elemento sobra o falta.
+    Identidad visual: Paleta verde bosque (#2d6a4f), naranja cálido (#e68a2e), blanco crema (#fcf8f0). Ambientación de zoológico infantil con formas suaves. Emojis como iconografía. Vocabulario narrativo basado en distribución de porciones.
+    Elementos dinámicos: Portada con elementos flotantes, confeti en aciertos, animaciones de selección.
+    Pregunta o desafío pendiente: ¿Cómo podemos saber si hay suficientes bandejas para todos los animales sin contar uno por uno?
+    Nombre narrativo sugerido para el desarrollo: Organizamos las porciones
+    Nombre narrativo sugerido para el cierre: La distribución final
     */
   })();
 </script>
