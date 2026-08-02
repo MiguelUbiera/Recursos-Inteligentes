@@ -2,2584 +2,1280 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Misión 1: Preparando la feria</title>
-    <meta name="description" content="Actividad de inicio: correspondencia uno a uno.">
-    <style>
-        /* ===== RESET Y BASE ===== */
-        *,
-        *::before,
-        *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-        html,
-        body {
-            width: 100%;
-            min-height: 100vh;
-            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-            background: #0a2a32;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 12px;
-        }
-        /* ===== CONTENEDOR PRINCIPAL CON DIMENSIONES FIJAS ===== */
-        .app {
-            position: relative;
-            width: 100%;
-            max-width: 1600px;
-            height: 705px;
-            background: #FEFAF2;
-            border-radius: 34px;
-            box-shadow: 0 24px 48px rgba(0, 0, 0, 0.45);
-            border: 1px solid rgba(255, 221, 160, 0.7);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-        }
-        /* ===== CRONÓMETRO ===== */
-        .cronometro {
-            position: absolute;
-            top: 16px;
-            right: 24px;
-            background: rgba(10, 42, 50, 0.75);
-            color: #ffedc7;
-            font: 700 0.8rem/1 'Courier New', monospace;
-            padding: 5px 14px;
-            border-radius: 30px;
-            letter-spacing: 1px;
-            z-index: 50;
-            pointer-events: none;
-            backdrop-filter: blur(4px);
-            border: 1px solid rgba(255, 215, 140, 0.25);
-        }
-        /* ===== ZONAS FUNCIONALES (igual que cartel animado) ===== */
-        .screen {
-            display: none;
-            width: 100%;
-            height: 100%;
-            flex-direction: column;
-            position: relative;
-            overflow: hidden;
-        }
-        .screen.active {
-            display: flex;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Exploradores del inventario · Orden estable</title>
+  <style>
+    /* === RESET Y BASE === */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-        /* ===== PORTADA ===== */
-        #screen-cover {
-            background: radial-gradient(ellipse at 78% 30%, #1a4f5e, #0a2a32 65%);
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 30px 40px;
-            position: relative;
-            overflow: hidden;
-            height: 100%;
-        }
-        #screen-cover::before {
-            content: "📚 📖 📚 📖 📚 📖 📚 📖";
-            position: absolute;
-            top: -10px;
-            left: -20px;
-            font-size: 3.6rem;
-            opacity: 0.08;
-            white-space: nowrap;
-            transform: rotate(-6deg);
-            pointer-events: none;
-            letter-spacing: 40px;
-        }
-        #screen-cover::after {
-            content: "";
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 40%;
-            background: linear-gradient(0deg, rgba(10, 42, 50, 0.5) 0%, transparent 100%);
-            pointer-events: none;
-        }
-        .cover-content {
-            position: relative;
-            z-index: 2;
-            max-width: 780px;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-        }
-        .cover-badge {
-            background: #0f2f3f;
-            color: #ffe6b3;
-            padding: 6px 18px;
-            border-radius: 40px;
-            font: 700 0.75rem/1 'Segoe UI', sans-serif;
-            letter-spacing: 0.8px;
-            text-transform: uppercase;
-        }
-        .cover-title {
-            font-size: clamp(2.4rem, 4.8vw, 3.8rem);
-            font-weight: 800;
-            color: #FEFAF2;
-            line-height: 1.05;
-            margin: 2px 0;
-            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-        }
-        .cover-title span {
-            background: linear-gradient(135deg, #FFE6B0, #F1C40F);
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent;
-        }
-        .cover-sub {
-            font-size: clamp(1rem, 1.4vw, 1.2rem);
-            color: #e8f0f5;
-            font-weight: 600;
-        }
-        .cover-desc {
-            font-size: 0.9rem;
-            color: #c4dce8;
-            max-width: 550px;
-            line-height: 1.4;
-            margin: 0 0 4px;
-        }
-        .cover-anim {
-            display: flex;
-            gap: 18px;
-            font-size: 3rem;
-            margin: 4px 0 8px;
-            animation: flotar 3.5s ease-in-out infinite alternate;
-        }
-        .cover-anim span {
-            display: inline-block;
-            animation: flotar-item 3s ease-in-out infinite alternate;
-        }
-        .cover-anim span:nth-child(2) {
-            animation-delay: 0.4s;
-        }
-        .cover-anim span:nth-child(3) {
-            animation-delay: 0.8s;
-        }
-        @keyframes flotar-item {
-            0% {
-                transform: translateY(0px) rotate(-2deg);
-            }
-            100% {
-                transform: translateY(-14px) rotate(2deg);
-            }
-        }
-        @keyframes flotar {
-            0% {
-                transform: translateY(0px);
-            }
-            100% {
-                transform: translateY(-6px);
-            }
-        }
-        .cover-btn {
-            margin-top: 4px;
-            background: linear-gradient(135deg, #ffb347, #f39c12);
-            color: #19313a;
-            border: none;
-            padding: 12px 40px;
-            border-radius: 60px;
-            font: 700 1rem/1 'Segoe UI', sans-serif;
-            cursor: pointer;
-            box-shadow: 0 8px 24px rgba(230, 126, 34, 0.35);
-            transition: transform 0.15s, box-shadow 0.15s;
-            position: relative;
-            z-index: 3;
-        }
-        .cover-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 32px rgba(230, 126, 34, 0.5);
-        }
-        .cover-btn:active {
-            transform: translateY(1px);
-        }
+    body {
+      font-family: 'Nunito', 'Roboto', system-ui, -apple-system, sans-serif;
+      background: #F9F6F0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0;
+      padding: 20px;
+    }
 
-        /* ===== ESTACIONES ===== */
-        #screen-steps {
-            background: #FEFAF2;
-            height: 100%;
-            padding: 0;
-        }
-        .steps-container {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            width: 100%;
-            padding: 12px 20px 8px 20px;
-            position: relative;
-        }
-        .steps-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 6px 12px;
-            padding-bottom: 6px;
-            border-bottom: 2px solid #ecd9b4;
-            flex-shrink: 0;
-            min-height: 40px;
-        }
-        .steps-title {
-            font-size: 1rem;
-            font-weight: 800;
-            color: #1A5F82;
-        }
-        .steps-title small {
-            font-weight: 600;
-            color: #c0672c;
-            font-size: 0.65rem;
-            margin-left: 6px;
-        }
-        .steps-progress {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 700;
-            font-size: 0.75rem;
-            color: #284F61;
-        }
-        .progress-bar {
-            width: 140px;
-            height: 6px;
-            background: #e3d7c4;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-        .progress-fill {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(90deg, #F1C40F, #E67E22);
-            border-radius: 10px;
-            transition: width 0.4s ease;
-        }
-        .progress-text {
-            min-width: 44px;
-            text-align: right;
-            font-variant-numeric: tabular-nums;
-        }
+    .app {
+      max-width: 1600px;       /* Nueva dimensión */
+      width: 100%;
+      min-height: 650px;       /* Nueva dimensión */
+      background: #FFFFFF;
+      border-radius: 40px 40px 32px 32px;
+      box-shadow: 0 20px 60px rgba(26, 42, 74, 0.15);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: box-shadow 0.3s ease;
+    }
 
-        .step-body {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 4px 0 2px 0;
-            min-height: 0;
-            gap: 2px;
-        }
-        .step-badge {
-            display: inline-block;
-            background: #0f2f3f;
-            color: #ffe6b3;
-            padding: 4px 14px;
-            border-radius: 30px;
-            font: 700 0.65rem/1 'Segoe UI', sans-serif;
-            letter-spacing: 0.6px;
-            text-transform: uppercase;
-            align-self: flex-start;
-            margin-bottom: 2px;
-        }
-        .step-question {
-            font-size: clamp(1rem, 1.4vw, 1.3rem);
-            font-weight: 700;
-            color: #1A5F82;
-            margin: 0 0 4px 0;
-            line-height: 1.3;
-        }
-        .step-visual {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 6px 12px;
-            min-height: 110px;
-            padding: 2px 0;
-            flex: 1 1 auto;
-        }
-        .step-visual .emoji-lg {
-            font-size: 3rem;
-            line-height: 1.2;
-        }
-        .step-visual .emoji-md {
-            font-size: 2.2rem;
-            line-height: 1.2;
-        }
-        .step-visual .emoji-sm {
-            font-size: 1.6rem;
-            line-height: 1.2;
-        }
-        .step-options {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px 16px;
-            margin: 2px 0 4px 0;
-            padding: 2px 0;
-        }
-        .step-options .opt-btn {
-            background: #fff4dc;
-            border: 2px solid #dbc79e;
-            border-radius: 40px;
-            padding: 8px 24px;
-            font: 700 0.95rem/1 'Segoe UI', sans-serif;
-            color: #294b5b;
-            cursor: pointer;
-            transition: background 0.15s, transform 0.1s, border-color 0.15s;
-            min-height: 44px;
-            min-width: 72px;
-            touch-action: manipulation;
-            user-select: none;
-        }
-        .step-options .opt-btn:hover {
-            background: #ffe0a3;
-            border-color: #c07d3a;
-        }
-        .step-options .opt-btn:active {
-            transform: scale(0.96);
-        }
-        .step-options .opt-btn.correct-highlight {
-            background: #d9eedb;
-            border-color: #2e7d32;
-            color: #1e4a22;
-        }
-        .step-options .opt-btn.wrong-highlight {
-            background: #fce4e0;
-            border-color: #b8452c;
-            color: #7a2e1e;
-        }
-        .step-options .opt-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-        .step-options .opt-btn.pulse {
-            animation: pulse 0.3s ease;
-        }
-        @keyframes pulse {
-            0% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.08);
-            }
-            100% {
-                transform: scale(1);
-            }
-        }
+    /* === HEADER === */
+    .app-header {
+      background: #1A2A4A;
+      padding: 20px 32px 16px 32px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px 16px;
+    }
+    .app-header .titulo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .app-header .titulo span {
+      background: #F1C40F;
+      color: #1A2A4A;
+      font-size: 0.8rem;
+      font-weight: 800;
+      padding: 4px 14px;
+      border-radius: 30px;
+      letter-spacing: 0.3px;
+    }
+    .step-indicator {
+      font-size: 1rem;
+      background: rgba(255, 255, 255, 0.12);
+      padding: 6px 18px;
+      border-radius: 30px;
+      font-weight: 600;
+      color: #F1C40F;
+    }
 
-        .step-feedback {
-            min-height: 42px;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-weight: 700;
-            font-size: 0.85rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            text-align: center;
-            transition: background 0.2s, color 0.2s;
-            flex-shrink: 0;
-            margin: 0;
-        }
-        .step-feedback.success {
-            background: #d9eedb;
-            color: #1e4a22;
-        }
-        .step-feedback.error {
-            background: #fce4e0;
-            color: #7a2e1e;
-        }
-        .step-feedback.info {
-            background: #e9e2d4;
-            color: #3d4f5a;
-        }
-        .step-feedback.empty {
-            background: transparent;
-            color: transparent;
-        }
+    /* === MAIN CONTENT === */
+    .main-content {
+      padding: 32px 40px 28px 40px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 480px;
+    }
 
-        .steps-nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 8px;
-            flex-shrink: 0;
-            padding-top: 4px;
-            border-top: 1px solid #ecd9b4;
-            margin-top: 2px;
-            flex-wrap: wrap;
-            min-height: 44px;
-        }
-        .steps-nav .nav-left,
-        .steps-nav .nav-right {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-        .nav-btn {
-            border: none;
-            border-radius: 40px;
-            padding: 6px 18px;
-            font: 700 0.8rem/1 'Segoe UI', sans-serif;
-            cursor: pointer;
-            transition: background 0.15s, transform 0.1s;
-            touch-action: manipulation;
-            min-height: 36px;
-        }
-        .nav-btn:active {
-            transform: scale(0.96);
-        }
-        .nav-btn.primary {
-            background: linear-gradient(135deg, #ffb347, #f39c12);
-            color: #19313a;
-        }
-        .nav-btn.primary:hover:not(:disabled) {
-            box-shadow: 0 4px 14px rgba(230, 126, 34, 0.3);
-        }
-        .nav-btn.primary:disabled {
-            opacity: 0.45;
-            cursor: not-allowed;
-            transform: none;
-        }
-        .nav-btn.secondary {
-            background: #ded4c1;
-            color: #293b43;
-        }
-        .nav-btn.secondary:hover:not(:disabled) {
-            background: #d0c5ae;
-        }
-        .nav-btn.secondary:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-        }
-        .nav-btn.restart {
-            background: #d4c5b0;
-            color: #3d3a2e;
-            font-size: 0.7rem;
-            padding: 6px 14px;
-        }
-        .nav-btn.restart:hover:not(:disabled) {
-            background: #c8b89f;
-        }
-        .attempts-indicator {
-            font-size: 0.7rem;
-            color: #7a8f9e;
-            font-weight: 600;
-            padding: 4px 12px;
-            background: #f0ebe0;
-            border-radius: 20px;
-        }
-        .btn-teclado {
-            background: #a8b5c4;
-            color: #1f2e3a;
-            font-size: 0.7rem;
-            padding: 4px 12px;
-            border-radius: 30px;
-            border: none;
-            cursor: pointer;
-            font-weight: 700;
-        }
-        .btn-teclado:hover {
-            background: #95a3b3;
-        }
+    /* === STEP === */
+    .step {
+      display: none;
+      flex-direction: column;
+      gap: 20px;
+      animation: fadeSlide 0.4s ease;
+    }
+    .step.active {
+      display: flex;
+    }
 
-        /* ===== PANTALLA FINAL ===== */
-        #screen-final {
-            background: radial-gradient(ellipse at 70% 30%, #1a4f5e, #0a2a32 70%);
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 30px 40px;
-            position: relative;
-            overflow: hidden;
-            height: 100%;
-        }
-        #screen-final::before {
-            content: "📚 📖 📚 📖";
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
-            font-size: 5rem;
-            opacity: 0.06;
-            pointer-events: none;
-            transform: rotate(12deg);
-        }
-        .final-content {
-            position: relative;
-            z-index: 2;
-            max-width: 720px;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-        }
-        .final-icon {
-            font-size: 3.2rem;
-            animation: flotar 3s ease-in-out infinite alternate;
-        }
-        .final-title {
-            font-size: clamp(1.6rem, 3vw, 2.4rem);
-            font-weight: 800;
-            color: #FEFAF2;
-            margin: 0;
-        }
-        .final-title span {
-            background: linear-gradient(135deg, #FFE6B0, #F1C40F);
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent;
-        }
-        .final-desc {
-            font-size: 0.9rem;
-            color: #c4dce8;
-            max-width: 500px;
-            line-height: 1.4;
-            margin: 0;
-        }
-        .final-pregunta {
-            background: rgba(255, 255, 245, 0.1);
-            backdrop-filter: blur(6px);
-            border: 1px solid rgba(255, 215, 140, 0.3);
-            border-radius: 24px;
-            padding: 12px 20px;
-            max-width: 620px;
-            width: 100%;
-            margin: 2px 0;
-        }
-        .final-pregunta .label {
-            font-size: 0.65rem;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            color: #ffe6b3;
-            font-weight: 700;
-            display: block;
-            margin-bottom: 2px;
-        }
-        .final-pregunta .pregunta {
-            font-size: clamp(0.95rem, 1.3vw, 1.1rem);
-            font-weight: 700;
-            color: #FFE6B0;
-            line-height: 1.3;
-        }
-        .final-actions {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px 14px;
-            margin-top: 4px;
-        }
-        .final-actions .nav-btn {
-            min-width: 120px;
-        }
-        .resumen-puntuacion {
-            background: rgba(255, 255, 245, 0.1);
-            border-radius: 20px;
-            padding: 10px 18px;
-            color: #f0f5f0;
-            font-size: 0.9rem;
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-            justify-content: center;
-            backdrop-filter: blur(4px);
-            border: 1px solid rgba(255, 215, 140, 0.2);
-            margin-top: 4px;
-        }
-        .resumen-puntuacion span {
-            font-weight: 700;
-            color: #FFE6B0;
-        }
+    @keyframes fadeSlide {
+      0% {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
 
-        /* ===== CRÉDITO FIJO ===== */
-        .credito-fijo {
-            position: absolute;
-            bottom: 10px;
-            left: 0;
-            right: 0;
-            text-align: center;
-            font-size: 0.6rem;
-            color: rgba(40, 79, 97, 0.45);
-            pointer-events: none;
-            letter-spacing: 0.4px;
-            z-index: 5;
-        }
-        #screen-cover .credito-fijo {
-            color: rgba(255, 255, 240, 0.35);
-        }
-        #screen-final .credito-fijo {
-            color: rgba(255, 255, 240, 0.35);
-        }
+    .step-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #1A2A4A;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 4px;
+    }
+    .step-desc {
+      font-size: 1.1rem;
+      color: #2c3e50;
+      line-height: 1.6;
+      margin-bottom: 4px;
+    }
+    .step-desc strong {
+      color: #1A2A4A;
+    }
 
-        /* ===== INTERACCIONES ESPECIALES ===== */
-        .drag-area {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: center;
-            gap: 12px 20px;
-            padding: 4px 0;
-            width: 100%;
-            min-height: 100px;
-        }
-        .drag-source {
-            font-size: 2.8rem;
-            padding: 6px 16px;
-            background: #fff4dc;
-            border-radius: 20px;
-            border: 3px dashed #dbc79e;
-            cursor: grab;
-            user-select: none;
-            touch-action: none;
-            transition: border-color 0.2s, background 0.2s;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 60px;
-            min-height: 60px;
-        }
-        .drag-source:active {
-            cursor: grabbing;
-        }
-        .drag-source.dragging {
-            opacity: 0.6;
-            border-color: #E67E22;
-        }
-        .drag-targets {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px 8px;
-            justify-content: center;
-            max-width: 100%;
-        }
-        .drag-target {
-            font-size: 2.4rem;
-            padding: 4px 8px;
-            background: #fcf7ee;
-            border-radius: 16px;
-            border: 3px solid #e0cdb0;
-            min-width: 48px;
-            min-height: 48px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            transition: border-color 0.2s, background 0.2s, transform 0.1s;
-            cursor: pointer;
-            touch-action: manipulation;
-        }
-        .drag-target.drag-over {
-            border-color: #E67E22;
-            background: #ffe0a3;
-            transform: scale(1.04);
-        }
-        .drag-target.matched {
-            border-color: #2e7d32;
-            background: #d9eedb;
-            cursor: default;
-            opacity: 0.85;
-        }
+    /* === OPCIONES === */
+    .options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin: 12px 0 8px 0;
+    }
+    .options .opt {
+      background: #F0EDE8;
+      padding: 14px 32px;
+      border-radius: 60px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #1A2A4A;
+      border: 3px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      user-select: none;
+      min-width: 80px;
+      text-align: center;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+    }
+    .options .opt:hover {
+      background: #e5e0d9;
+      transform: scale(1.03);
+    }
+    .options .opt.correct {
+      background: #2ECC71;
+      border-color: #1fa85a;
+      color: #fff;
+      transform: scale(1.04);
+    }
+    .options .opt.wrong {
+      background: #e74c3c;
+      border-color: #c0392b;
+      color: #fff;
+      animation: shake 0.4s ease;
+    }
+    .options .opt.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
 
-        .match-area {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 16px 30px;
-            padding: 2px 0;
-            width: 100%;
-        }
-        .match-col {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            min-width: 100px;
-        }
-        .match-col .col-title {
-            font-weight: 700;
-            font-size: 0.75rem;
-            color: #c0672c;
-            text-align: center;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .match-item {
-            padding: 6px 12px;
-            background: #fcf7ee;
-            border: 3px solid #e0cdb0;
-            border-radius: 16px;
-            font-size: 1.4rem;
-            text-align: center;
-            cursor: pointer;
-            transition: border-color 0.15s, background 0.15s, transform 0.1s;
-            touch-action: manipulation;
-            min-height: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 4px;
-        }
-        .match-item .match-label {
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: #1A5F82;
-        }
-        .match-item:hover:not(.matched):not(.disabled) {
-            background: #ffe0a3;
-        }
-        .match-item.selected {
-            border-color: #E67E22;
-            background: #ffe0a3;
-            transform: scale(1.03);
-        }
-        .match-item.matched {
-            border-color: #2e7d32;
-            background: #d9eedb;
-            cursor: default;
-            opacity: 0.8;
-        }
-        .match-item.disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-        }
-        .match-item .item-num {
-            font-weight: 800;
-            font-size: 0.9rem;
-            color: #1A5F82;
-        }
+    @keyframes shake {
+      0%,
+      100% {
+        transform: translateX(0);
+      }
+      25% {
+        transform: translateX(-10px);
+      }
+      75% {
+        transform: translateX(10px);
+      }
+    }
 
-        .order-area {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            width: 100%;
-            padding: 2px 0;
-        }
-        .order-pool {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 8px 12px;
-            min-height: 50px;
-            padding: 4px 10px;
-            background: #f6eee0;
-            border-radius: 20px;
-            width: 100%;
-        }
-        .order-pool .order-item {
-            font-size: 2.2rem;
-            padding: 4px 10px;
-            background: #fff4dc;
-            border: 2px solid #dbc79e;
-            border-radius: 14px;
-            cursor: grab;
-            touch-action: none;
-            user-select: none;
-            transition: transform 0.1s, opacity 0.2s, border-color 0.2s;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 44px;
-            min-height: 44px;
-        }
-        .order-pool .order-item:active {
-            cursor: grabbing;
-        }
-        .order-pool .order-item.dragging {
-            opacity: 0.4;
-            border-color: #E67E22;
-        }
-        .order-pool .order-item.placed {
-            opacity: 0.25;
-            cursor: default;
-            border-color: #b8a889;
-        }
-        .order-slots {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 6px 10px;
-            min-height: 50px;
-            padding: 4px 10px;
-            background: #e8f1e4;
-            border-radius: 20px;
-            width: 100%;
-            border: 2px dashed #b8c9a8;
-        }
-        .order-slots .slot {
-            width: 50px;
-            height: 50px;
-            background: #fcf7ee;
-            border: 3px dashed #b8a889;
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1rem;
-            font-weight: 800;
-            color: #b8a889;
-            transition: border-color 0.2s, background 0.2s, transform 0.1s;
-        }
-        .order-slots .slot.drag-over {
-            border-color: #E67E22;
-            background: #ffe0a3;
-            transform: scale(1.06);
-        }
-        .order-slots .slot.filled {
-            border-color: #2e7d32;
-            background: #d9eedb;
-            border-style: solid;
-            color: #1e4a22;
-        }
-        .order-slots .slot .slot-emoji {
-            font-size: 2rem;
-        }
+    /* === FEEDBACK === */
+    .feedback {
+      padding: 16px 24px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 1rem;
+      display: none;
+      align-items: center;
+      gap: 14px;
+      margin-top: 8px;
+      background: #f0f0f0;
+      color: #1A2A4A;
+    }
+    .feedback.show {
+      display: flex;
+    }
+    .feedback.success {
+      background: #d5f5e3;
+      color: #1a6e3a;
+      border-left: 6px solid #2ECC71;
+    }
+    .feedback.error {
+      background: #fadbd8;
+      color: #922b21;
+      border-left: 6px solid #e74c3c;
+    }
+    .feedback .fb-icon {
+      font-size: 1.8rem;
+    }
 
-        /* ===== CONFETI ===== */
-        .confeti {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 999;
-            overflow: hidden;
-        }
-        .confeti span {
-            position: absolute;
-            display: block;
-            width: 10px;
-            height: 10px;
-            border-radius: 2px;
-            animation: caer 1.2s ease-out forwards;
-        }
-        @keyframes caer {
-            0% {
-                opacity: 1;
-                transform: translateY(-20px) rotate(0deg) scale(0.5);
-            }
-            100% {
-                opacity: 0;
-                transform: translateY(90vh) rotate(720deg) scale(1.2);
-            }
-        }
+    /* === INPUT === */
+    .input-group {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin: 12px 0;
+    }
+    .input-group input[type="number"] {
+      padding: 14px 22px;
+      border-radius: 60px;
+      border: 2px solid #d5d0c8;
+      font-size: 1.2rem;
+      width: 120px;
+      text-align: center;
+      font-weight: 600;
+      background: #fcfaf7;
+      transition: border 0.2s;
+      font-family: inherit;
+    }
+    .input-group input:focus {
+      border-color: #E67E22;
+      outline: none;
+      box-shadow: 0 0 0 4px rgba(230, 126, 34, 0.2);
+    }
+    .input-group button {
+      background: #E67E22;
+      border: none;
+      color: #fff;
+      font-weight: 700;
+      padding: 14px 32px;
+      border-radius: 60px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      font-family: inherit;
+      box-shadow: 0 4px 10px rgba(230, 126, 34, 0.3);
+    }
+    .input-group button:hover {
+      background: #cf6d17;
+      transform: scale(1.03);
+    }
+    .input-group button:active {
+      transform: scale(0.96);
+    }
 
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 1024px) {
-            .app {
-                height: auto;
-                min-height: 100vh;
-                border-radius: 0;
-                max-width: 100%;
-                aspect-ratio: auto;
-            }
-            .screen {
-                height: auto;
-                min-height: 100vh;
-            }
-            .steps-container {
-                min-height: 100vh;
-            }
-            .cover-content {
-                padding: 20px 0;
-            }
-        }
-        @media (max-width: 820px) {
-            .steps-header {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 4px;
-            }
-            .steps-progress {
-                justify-content: space-between;
-            }
-            .progress-bar {
-                width: 100%;
-                flex: 1;
-            }
-            .step-body {
-                padding: 4px 0;
-                flex: 1;
-            }
-            .step-visual {
-                min-height: 80px;
-                gap: 6px;
-            }
-            .step-options .opt-btn {
-                padding: 6px 14px;
-                font-size: 0.8rem;
-                min-height: 36px;
-                min-width: 54px;
-            }
-            .steps-nav {
-                flex-wrap: wrap;
-                justify-content: center;
-                gap: 4px;
-            }
-            .steps-nav .nav-left,
-            .steps-nav .nav-right {
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-            .drag-target {
-                font-size: 1.8rem;
-                min-width: 40px;
-                min-height: 40px;
-            }
-            .drag-source {
-                font-size: 2rem;
-                min-width: 48px;
-                min-height: 48px;
-            }
-            .match-area {
-                gap: 10px 16px;
-            }
-            .match-col {
-                min-width: 70px;
-            }
-            .match-item {
-                font-size: 1.2rem;
-                padding: 4px 8px;
-                min-height: 36px;
-            }
-            .order-pool .order-item {
-                font-size: 1.6rem;
-                min-width: 36px;
-                min-height: 36px;
-                padding: 2px 6px;
-            }
-            .order-slots .slot {
-                width: 42px;
-                height: 42px;
-                font-size: 0.8rem;
-            }
-            .order-slots .slot .slot-emoji {
-                font-size: 1.4rem;
-            }
-            .cronometro {
-                top: 10px;
-                right: 14px;
-                font-size: 0.6rem;
-                padding: 3px 10px;
-            }
-            .cover-title {
-                font-size: clamp(1.8rem, 7vw, 2.8rem);
-            }
-            .final-pregunta {
-                padding: 10px 14px;
-            }
-            .final-pregunta .pregunta {
-                font-size: 0.9rem;
-            }
-            .credito-fijo {
-                font-size: 0.5rem;
-                bottom: 6px;
-            }
-        }
-        @media (max-width: 480px) {
-            .screen {
-                padding: 10px 8px 8px 8px;
-            }
-            .steps-container {
-                padding: 6px 6px 4px 6px;
-            }
-            .step-question {
-                font-size: 0.9rem;
-            }
-            .step-options .opt-btn {
-                font-size: 0.7rem;
-                padding: 4px 10px;
-                min-height: 30px;
-                min-width: 44px;
-            }
-            .step-visual .emoji-lg {
-                font-size: 2rem;
-            }
-            .step-visual .emoji-md {
-                font-size: 1.6rem;
-            }
-            .cover-anim {
-                font-size: 2rem;
-                gap: 8px;
-            }
-            .cover-btn {
-                padding: 8px 20px;
-                font-size: 0.8rem;
-            }
-            .final-actions .nav-btn {
-                min-width: 80px;
-                padding: 4px 12px;
-                font-size: 0.7rem;
-            }
-            .nav-btn {
-                padding: 4px 12px;
-                font-size: 0.7rem;
-                min-height: 30px;
-            }
-            .match-item {
-                font-size: 1rem;
-                padding: 4px 6px;
-                min-height: 30px;
-            }
-            .order-pool .order-item {
-                font-size: 1.2rem;
-                min-width: 30px;
-                min-height: 30px;
-                padding: 2px 4px;
-            }
-            .order-slots .slot {
-                width: 34px;
-                height: 34px;
-            }
-            .order-slots .slot .slot-emoji {
-                font-size: 1.1rem;
-            }
-            .drag-target {
-                font-size: 1.4rem;
-                min-width: 34px;
-                min-height: 34px;
-                padding: 2px 4px;
-            }
-            .drag-source {
-                font-size: 1.6rem;
-                min-width: 38px;
-                min-height: 38px;
-                padding: 4px 8px;
-            }
-            .step-feedback {
-                font-size: 0.7rem;
-                min-height: 30px;
-                padding: 4px 8px;
-            }
-        }
+    /* === SECUENCIA (CLICK EN ORDEN) === */
+    .seq-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      justify-content: center;
+      margin: 16px 0;
+    }
+    .seq-item {
+      width: 72px;
+      height: 72px;
+      border-radius: 24px;
+      background: #ECEAE5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #1A2A4A;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.04);
+      border: 3px solid transparent;
+      user-select: none;
+    }
+    .seq-item:hover {
+      transform: scale(1.06);
+      background: #ddd8cf;
+    }
+    .seq-item.done {
+      background: #2ECC71;
+      color: #fff;
+      border-color: #1fa85a;
+      cursor: default;
+      transform: scale(0.96);
+    }
+    .seq-item.wrong-flash {
+      animation: wrongFlash 0.5s ease;
+      border-color: #e74c3c;
+    }
+    @keyframes wrongFlash {
+      0%,
+      100% {
+        background: #ECEAE5;
+      }
+      50% {
+        background: #f5c6cb;
+        border-color: #e74c3c;
+      }
+    }
+    .seq-item.disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
 
-        @media (prefers-reduced-motion: reduce) {
-            .cover-anim,
-            .cover-anim span,
-            .final-icon {
-                animation: none !important;
-            }
-            .cover-btn {
-                transition: none !important;
-            }
-            .nav-btn,
-            .opt-btn,
-            .match-item,
-            .drag-target,
-            .order-item,
-            .drag-source {
-                transition: none !important;
-            }
-            .confeti span {
-                animation: none !important;
-                display: none;
-            }
-        }
+    /* === MATCHING === */
+    .match-container {
+      display: flex;
+      gap: 50px;
+      justify-content: center;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      margin: 16px 0;
+    }
+    .match-col {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      min-width: 120px;
+    }
+    .match-col .col-label {
+      font-weight: 700;
+      color: #1A2A4A;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      opacity: 0.7;
+      text-align: center;
+    }
+    .match-item {
+      padding: 14px 22px;
+      border-radius: 18px;
+      background: #F0EDE8;
+      text-align: center;
+      font-weight: 600;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 3px solid transparent;
+      user-select: none;
+      min-width: 90px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+    }
+    .match-item:hover {
+      background: #e5e0d9;
+      transform: scale(1.04);
+    }
+    .match-item.selected {
+      border-color: #E67E22;
+      background: #fdf0e6;
+      transform: scale(1.06);
+    }
+    .match-item.matched {
+      background: #2ECC71;
+      color: #fff;
+      border-color: #1fa85a;
+      cursor: default;
+      opacity: 0.7;
+      pointer-events: none;
+      transform: scale(0.96);
+    }
+    .match-item.wrong-pair {
+      animation: shake 0.4s ease;
+      border-color: #e74c3c;
+    }
 
-        .hidden {
-            display: none !important;
-        }
-        .flex-center {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .gap-8 {
-            gap: 8px;
-        }
-        .gap-12 {
-            gap: 12px;
-        }
-        .mt-4 {
-            margin-top: 4px;
-        }
-        .mb-4 {
-            margin-bottom: 4px;
-        }
-        .text-center {
-            text-align: center;
-        }
-        .w-full {
-            width: 100%;
-        }
-        .flex-wrap {
-            flex-wrap: wrap;
-        }
-        .items-center {
-            align-items: center;
-        }
-        .justify-center {
-            justify-content: center;
-        }
-    </style>
+    /* === RECTA NUMÉRICA (fillline) === */
+    .numline {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      align-items: center;
+      padding: 16px 0;
+      margin: 8px 0;
+    }
+    .numline .nl-item {
+      width: 64px;
+      height: 64px;
+      border-radius: 18px;
+      background: #ECEAE5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #1A2A4A;
+    }
+    .numline .nl-item.blank {
+      background: #fcfaf7;
+      border: 3px dashed #c5bdb2;
+      padding: 0;
+    }
+    .numline .nl-item.blank input {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: transparent;
+      text-align: center;
+      font-size: 1.6rem;
+      font-weight: 700;
+      font-family: inherit;
+      color: #1A2A4A;
+      outline: none;
+      border-radius: 18px;
+    }
+    .numline .nl-item.blank input:focus {
+      background: #fff9f0;
+      box-shadow: 0 0 0 4px rgba(230, 126, 34, 0.2);
+    }
+    .numline .nl-item.blank.filled {
+      background: #d5f5e3;
+      border-color: #2ECC71;
+    }
+
+    /* === FINAL === */
+    .final-box {
+      background: #f0f4f9;
+      border-radius: 28px;
+      padding: 28px 32px;
+      border-left: 8px solid #E67E22;
+      margin: 16px 0;
+    }
+    .final-box .pregunta {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #1A2A4A;
+      line-height: 1.7;
+    }
+
+    /* === BOTONES PRINCIPALES === */
+    .btn-primary {
+      background: #E67E22;
+      border: none;
+      color: #fff;
+      font-weight: 700;
+      padding: 16px 44px;
+      border-radius: 60px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+      box-shadow: 0 4px 14px rgba(230, 126, 34, 0.35);
+      align-self: flex-start;
+      margin-top: 8px;
+    }
+    .btn-primary:hover {
+      background: #cf6d17;
+      transform: scale(1.03);
+    }
+    .btn-primary:active {
+      transform: scale(0.96);
+    }
+    .btn-primary.centered {
+      align-self: center;
+    }
+
+    /* === CONFETTI === */
+    .confetti-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 999;
+      overflow: hidden;
+    }
+    .confetti {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      animation: confettiFall linear forwards;
+    }
+    @keyframes confettiFall {
+      0% {
+        opacity: 1;
+        transform: translateY(-20px) rotate(0deg) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(110vh) rotate(720deg) scale(0.4);
+      }
+    }
+
+    /* === RESPONSIVE === */
+    @media (max-width: 768px) {
+      .app-header {
+        padding: 16px 20px 12px 20px;
+      }
+      .app-header .titulo {
+        font-size: 1.2rem;
+      }
+      .step-indicator {
+        font-size: 0.85rem;
+        padding: 4px 12px;
+      }
+      .main-content {
+        padding: 20px 16px 16px 16px;
+        min-height: 400px;
+      }
+      .step-title {
+        font-size: 1.2rem;
+      }
+      .step-desc {
+        font-size: 1rem;
+      }
+      .options .opt {
+        padding: 10px 20px;
+        font-size: 1rem;
+        min-width: 60px;
+      }
+      .seq-item {
+        width: 56px;
+        height: 56px;
+        font-size: 1.4rem;
+      }
+      .match-item {
+        padding: 10px 16px;
+        font-size: 1rem;
+        min-width: 70px;
+      }
+      .numline .nl-item {
+        width: 48px;
+        height: 48px;
+        font-size: 1.2rem;
+      }
+      .numline .nl-item.blank input {
+        font-size: 1.2rem;
+      }
+      .final-box {
+        padding: 18px 16px;
+      }
+      .btn-primary {
+        padding: 12px 28px;
+        font-size: 1rem;
+        width: 100%;
+        text-align: center;
+      }
+      .input-group {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .input-group input[type="number"] {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .app-header .titulo {
+        font-size: 1rem;
+      }
+      .step-indicator {
+        font-size: 0.7rem;
+      }
+      .seq-item {
+        width: 44px;
+        height: 44px;
+        font-size: 1.1rem;
+      }
+      .numline .nl-item {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+      }
+      .numline .nl-item.blank input {
+        font-size: 1rem;
+      }
+    }
+  </style>
 </head>
 <body>
-
-    <div class="app" role="main" aria-label="Actividad de inicio: Misión 1, Preparando la feria">
-
-        <!-- ===== CRONÓMETRO ===== -->
-        <div class="cronometro" id="cronometro" aria-live="polite">00:00</div>
-
-        <!-- ===== PORTADA ===== -->
-        <div class="screen active" id="screen-cover" role="region" aria-label="Portada de la misión">
-            <div class="cover-content">
-                <span class="cover-badge">🧭 Misión 1 · Inicio</span>
-                <h1 class="cover-title">Preparando la <span>feria</span></h1>
-                <p class="cover-sub">📚 Intercambio justo de libros</p>
-                <p class="cover-desc">
-                    En Villa Esperanza, cada libro debe tener su número y todos deben recibir la misma cantidad.
-                </p>
-                <div class="cover-anim">
-                    <span>📚</span>
-                    <span>🔢</span>
-                    <span>🔄</span>
-                    <span>📖</span>
-                </div>
-                <button class="cover-btn" id="btn-iniciar" type="button">🚀 Comenzar</button>
-            </div>
-            <div class="credito-fijo">Secuencia321® · Miguel Ubiera</div>
-        </div>
-
-        <!-- ===== ESTACIONES ===== -->
-        <div class="screen" id="screen-steps" role="region" aria-label="Estaciones interactivas">
-            <div class="steps-container" id="steps-container">
-
-                <div class="steps-header">
-                    <div class="steps-title">
-                        📚 Misión 1
-                        <small>Exploración</small>
-                    </div>
-                    <div class="steps-progress">
-                        <span class="progress-text" id="prog-text">0/10</span>
-                        <div class="progress-bar" aria-hidden="true">
-                            <div class="progress-fill" id="prog-fill" style="width:0%;"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="step-body" id="step-body">
-                    <div class="step-badge" id="step-badge">Estación 1</div>
-                    <div class="step-question" id="step-question">Cargando...</div>
-                    <div class="step-visual" id="step-visual"></div>
-                    <div class="step-options" id="step-options"></div>
-                    <div class="step-feedback empty" id="step-feedback"></div>
-                    <div style="display:flex; gap:8px; justify-content:center; margin-top:2px;">
-                        <button class="btn-teclado" id="btn-teclado" type="button">⌨️ Modo teclado</button>
-                    </div>
-                </div>
-
-                <div class="steps-nav">
-                    <div class="nav-left">
-                        <button class="nav-btn secondary" id="btn-anterior" disabled type="button">◀ Atrás</button>
-                        <button class="nav-btn restart" id="btn-reiniciar" type="button">↻ Reiniciar</button>
-                    </div>
-                    <div class="nav-right">
-                        <span class="attempts-indicator" id="attempts-indicator">Intentos: 0/3</span>
-                        <button class="nav-btn primary" id="btn-continuar" disabled type="button">Continuar →</button>
-                    </div>
-                </div>
-
-            </div>
-            <div class="credito-fijo">Secuencia321® · Miguel Ubiera</div>
-        </div>
-
-        <!-- ===== PANTALLA FINAL ===== -->
-        <div class="screen" id="screen-final" role="region" aria-label="Cierre de la misión">
-            <div class="final-content">
-                <div class="final-icon">🛰️</div>
-                <h2 class="final-title">Exploración <span>completada</span></h2>
-                <p class="final-desc">
-                    Has contado, emparejado y ordenado. Ya sabes que cada elemento necesita su número.
-                </p>
-                <div class="resumen-puntuacion" id="resumen-puntuacion">
-                    <span>✅ Aciertos: <span id="aciertos-final">0</span></span>
-                    <span>❌ Errores: <span id="errores-final">0</span></span>
-                    <span>⏱️ Tiempo: <span id="tiempo-final">00:00</span></span>
-                </div>
-                <div class="final-pregunta">
-                    <span class="label">🔍 Pregunta pendiente</span>
-                    <p class="pregunta">
-                        "¿Cómo asegurar que cada libro tenga su etiqueta y que la cantidad entregada sea igual a la recibida?"
-                    </p>
-                </div>
-                <div class="final-actions">
-                    <button class="nav-btn secondary" id="btn-final-revisar" type="button">↻ Revisar</button>
-                    <button class="nav-btn restart" id="btn-final-reiniciar" type="button">↻ Reiniciar</button>
-                    <button class="nav-btn primary" id="btn-final-continuar" type="button">🚀 Continuar</button>
-                    <button class="nav-btn secondary" id="btn-final-index" type="button">🏠 Inicio</button>
-                </div>
-            </div>
-            <div class="credito-fijo">Secuencia321® · Miguel Ubiera</div>
-        </div>
-
+  <div class="app" id="app">
+    <!-- HEADER -->
+    <div class="app-header">
+      <div class="titulo">
+        📚 Exploradores del inventario
+        <span>Inicio</span>
+      </div>
+      <div class="step-indicator" id="stepIndicator">Paso 1 / 12</div>
     </div>
 
-    <script>
-        (function() {
-            'use strict';
+    <!-- MAIN CONTENT -->
+    <div class="main-content" id="mainContent"></div>
+  </div>
 
-            // ===== CRONÓMETRO =====
-            const cronoEl = document.getElementById('cronometro');
-            let cronoStart = Date.now();
-            let cronoInterval = setInterval(() => {
-                const diff = Math.floor((Date.now() - cronoStart) / 1000);
-                const m = String(Math.floor(diff / 60)).padStart(2, '0');
-                const s = String(diff % 60).padStart(2, '0');
-                cronoEl.textContent = m + ':' + s;
-            }, 500);
+  <script>
+    // ============================================================
+    //  DATOS DE LOS 12 PASOS (CORREGIDOS)
+    // ============================================================
+    const stepsData = [{
+      id: 1,
+      title: '📦 ¿Cuántos libros hay?',
+      desc: 'Observa la caja y haz clic en el número correcto.',
+      type: 'choice',
+      options: ['7', '9', '11'],
+      correct: 1,
+      feedbackOk: '🎉 ¡Excelente! Contaste 9 libros.',
+      feedbackFail: '👀 Revisa con atención. Cuenta uno por uno.'
+    }, {
+      id: 2,
+      title: '🔢 ¿Qué número sigue?',
+      desc: '¿Qué número dirías <strong>después del 8</strong> al contar los libros?',
+      type: 'choice',
+      options: ['7', '9', '10'],
+      correct: 1,
+      feedbackOk: '🌟 ¡Muy bien! Después de 8 viene 9.',
+      feedbackFail: '🧠 Recuerda: al contar, los números siguen un orden. Después de 8 viene 9.'
+    }, {
+      id: 3,
+      title: '🏁 ¿Por dónde empezamos?',
+      desc: '¿Cuál es el <strong>primer número</strong> que dices al empezar a contar los libros?',
+      type: 'choice',
+      options: ['0', '1', '2'],
+      correct: 1,
+      feedbackOk: '✅ ¡Bien! Siempre empezamos contando desde 1.',
+      feedbackFail: '🔁 El conteo comienza en el número 1.'
+    }, {
+      id: 4,
+      title: '🧩 Cuenta en orden',
+      desc: 'Haz clic sobre los números <strong>en la secuencia correcta</strong> (1 → 2 → 3 … 8).',
+      type: 'sequence',
+      sequence: [1, 2, 3, 4, 5, 6, 7, 8],
+      feedbackOk: '🎯 ¡Ordenaste los números!',
+      feedbackFail: '⛔ Ese número no sigue el orden.',
+      items: [1, 2, 3, 4, 5, 6, 7, 8]
+    }, {
+      id: 5,
+      title: '🔍 ¿Qué número falta?',
+      desc: 'Alguien contó: <strong>1, 2, 3, 5, 6, 7</strong>. ¿Qué número falta?',
+      type: 'choice',
+      options: ['4', '5', '8'],
+      correct: 0,
+      feedbackOk: '¡Claro! Faltó el 4. Los números siempre van en orden.',
+      feedbackFail: 'Observa la secuencia: 1, 2, 3, 5. El número que falta es el que va después de 3.'
+    }, {
+      id: 6,
+      title: '🔴 Cuenta los puntos',
+      desc: '¿Cuántos puntos hay dentro del círculo? Escribe la cantidad.',
+      type: 'input',
+      correct: 6,
+      feedbackOk: '🎯 ¡Perfecto! Contaste 6.',
+      feedbackFail: 'Revisa: ¿contaste todos los puntos sin repetir?',
+      visual: '⚫⚫⚫⚫⚫⚫'
+    }, {
+      // ===== PASO 7 CORREGIDO (con visual) =====
+      id: 7,
+      title: '🍎 Señala y cuenta',
+      desc: 'Si empiezas a contar por la <strong>manzana</strong>, ¿qué objeto es el <strong>segundo</strong>?',
+      type: 'choice',
+      options: ['🍌 Banana', '🍊 Naranja', '🍐 Pera'],
+      correct: 0,
+      feedbackOk: '🌟 ¡Muy bien! El segundo es la banana.',
+      feedbackFail: 'Recuerda: el primero es la manzana 🍎, el segundo es la banana 🍌.',
+      visual: '🍎 🍌 🍊 🍐' // <--- los objetos en orden
+    }, {
+      id: 8,
+      title: '🧮 Conteo saltado',
+      desc: 'Haz clic en la secuencia: <strong>2, 4, 6, 8, 10</strong>.',
+      type: 'sequence',
+      sequence: [2, 4, 6, 8, 10],
+      feedbackOk: '🌟 ¡Excelente! Ese es otro orden de conteo.',
+      feedbackFail: 'Debes seguir la secuencia 2, 4, 6, 8, 10.',
+      items: [2, 4, 6, 8, 10]
+    }, {
+      id: 9,
+      title: '❓ ¿Qué falta? (1–10)',
+      desc: 'Observa: <strong>1, 2, 3, 4, 5, 7, 8, 9, 10</strong>. ¿Qué número falta?',
+      type: 'choice',
+      options: ['5', '6', '7'],
+      correct: 1,
+      feedbackOk: '✅ ¡Bien! Faltaba el 6.',
+      feedbackFail: 'Observa la secuencia completa: 1, 2, 3, 4, 5, 7, 8, 9, 10. ¿Qué número falta?'
+    }, {
+      id: 10,
+      title: '🔗 Empareja el nombre',
+      desc: 'Haz clic en un nombre (izquierda) y luego en el número (derecha) que le corresponde.',
+      type: 'matching',
+      pairs: [
+        { name: 'uno', value: 1 },
+        { name: 'dos', value: 2 },
+        { name: 'tres', value: 3 },
+        { name: 'cuatro', value: 4 },
+        { name: 'cinco', value: 5 }
+      ],
+      feedbackOk: '🎉 ¡Todos los pares están correctos!',
+      feedbackFail: 'Ese no es el par correcto.'
+    }, {
+      id: 11,
+      title: '📏 Cuenta en la recta',
+      desc: 'Completa los números que faltan en la recta numérica.',
+      type: 'fillline',
+      visible: [1, 2, 3, 4, 5, 10],
+      blanks: [6, 7, 8, 9],
+      feedbackOk: '🎯 ¡Completaste la recta!',
+      feedbackFail: 'Revisa los números que faltan.'
+    }, {
+      id: 12,
+      title: '🤔 Pregunta para pensar',
+      desc: 'Has hecho un gran trabajo. Ahora, una pregunta para reflexionar:',
+      type: 'final',
+      question: '¿Por qué todos podemos contar los libros si empezamos por diferentes lugares o decimos los números en un orden diferente?',
+      buttonText: '🚀 Ir al desarrollo',
+      buttonLink: 'desarrollo.html'
+    }];
 
-            // ===== DOM REFS =====
-            const screens = {
-                cover: document.getElementById('screen-cover'),
-                steps: document.getElementById('screen-steps'),
-                final: document.getElementById('screen-final'),
-            };
-            const btnIniciar = document.getElementById('btn-iniciar');
-            const btnAnterior = document.getElementById('btn-anterior');
-            const btnContinuar = document.getElementById('btn-continuar');
-            const btnReiniciar = document.getElementById('btn-reiniciar');
-            const btnFinalRevisar = document.getElementById('btn-final-revisar');
-            const btnFinalReiniciar = document.getElementById('btn-final-reiniciar');
-            const btnFinalContinuar = document.getElementById('btn-final-continuar');
-            const btnFinalIndex = document.getElementById('btn-final-index');
-            const btnTeclado = document.getElementById('btn-teclado');
-            const progText = document.getElementById('prog-text');
-            const progFill = document.getElementById('prog-fill');
-            const stepBadge = document.getElementById('step-badge');
-            const stepQuestion = document.getElementById('step-question');
-            const stepVisual = document.getElementById('step-visual');
-            const stepOptions = document.getElementById('step-options');
-            const stepFeedback = document.getElementById('step-feedback');
-            const attemptsInd = document.getElementById('attempts-indicator');
-            const resumenAciertos = document.getElementById('aciertos-final');
-            const resumenErrores = document.getElementById('errores-final');
-            const resumenTiempo = document.getElementById('tiempo-final');
+    // ============================================================
+    //  ESTADO GLOBAL
+    // ============================================================
+    let currentStep = 0;
+    let stepStates = {};
 
-            // ===== ESTADO =====
-            const TOTAL_STEPS = 10;
-            let currentStep = 0;
-            let stepAttempts = 0;
-            const MAX_ATTEMPTS = 3;
-            let stepCompleted = false;
-            let stepLocked = false;
-            const stepState = [];
-            let totalAciertos = 0;
-            let totalErrores = 0;
-            let modoTeclado = false;
-            let tecladoTargets = [];
-            let tecladoIndex = 0;
-            let tecladoDragActive = false;
+    // ============================================================
+    //  UTILIDADES
+    // ============================================================
+    function shuffle(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
 
-            for (let i = 0; i < TOTAL_STEPS; i++) {
-                stepState.push({ completed: false, attempts: 0, locked: false });
+    function launchConfetti(count = 60) {
+      const container = document.createElement('div');
+      container.className = 'confetti-container';
+      document.body.appendChild(container);
+      const colors = ['#E67E22', '#F1C40F', '#2ECC71', '#3498db', '#e74c3c', '#9b59b6', '#1A2A4A'];
+      for (let i = 0; i < count; i++) {
+        const el = document.createElement('div');
+        el.className = 'confetti';
+        const size = 6 + Math.random() * 12;
+        el.style.width = size + 'px';
+        el.style.height = size * (0.5 + Math.random() * 0.9) + 'px';
+        el.style.background = colors[Math.floor(Math.random() * colors.length)];
+        el.style.left = Math.random() * 100 + '%';
+        el.style.top = '-10px';
+        el.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+        el.style.animationDuration = 1.8 + Math.random() * 2.8 + 's';
+        el.style.animationDelay = Math.random() * 1.4 + 's';
+        el.style.transform = `rotate(${Math.random()*360}deg)`;
+        container.appendChild(el);
+      }
+      setTimeout(() => container.remove(), 5500);
+    }
+
+    // ============================================================
+    //  RENDERIZADO
+    // ============================================================
+    const main = document.getElementById('mainContent');
+    const indicator = document.getElementById('stepIndicator');
+
+    function renderStep(index) {
+      const data = stepsData[index];
+      if (!data) return;
+      indicator.textContent = `Paso ${index+1} / ${stepsData.length}`;
+      main.innerHTML = '';
+
+      const stepDiv = document.createElement('div');
+      stepDiv.className = 'step active';
+
+      // Título
+      const title = document.createElement('div');
+      title.className = 'step-title';
+      title.innerHTML = data.title;
+      stepDiv.appendChild(title);
+
+      // Descripción
+      if (data.desc) {
+        const desc = document.createElement('div');
+        desc.className = 'step-desc';
+        desc.innerHTML = data.desc;
+        stepDiv.appendChild(desc);
+      }
+
+      const content = document.createElement('div');
+      content.style.width = '100%';
+
+      // ---------- TYPE: choice ----------
+      if (data.type === 'choice') {
+        // Si hay visual, mostrarlo
+        if (data.visual) {
+          const vis = document.createElement('div');
+          vis.style.fontSize = '3rem';
+          vis.style.textAlign = 'center';
+          vis.style.padding = '10px 0';
+          vis.style.letterSpacing = '16px';
+          vis.textContent = data.visual;
+          content.appendChild(vis);
+        }
+
+        const optDiv = document.createElement('div');
+        optDiv.className = 'options';
+        data.options.forEach((opt, idx) => {
+          const btn = document.createElement('div');
+          btn.className = 'opt';
+          btn.textContent = opt;
+          btn.dataset.idx = idx;
+          btn.addEventListener('click', () => handleChoice(data, idx, optDiv, stepDiv));
+          optDiv.appendChild(btn);
+        });
+        content.appendChild(optDiv);
+
+        const fb = document.createElement('div');
+        fb.className = 'feedback';
+        fb.id = 'fb-' + data.id;
+        content.appendChild(fb);
+      }
+
+      // ---------- TYPE: input ----------
+      if (data.type === 'input') {
+        if (data.visual) {
+          const vis = document.createElement('div');
+          vis.style.fontSize = '2.6rem';
+          vis.style.textAlign = 'center';
+          vis.style.padding = '10px 0';
+          vis.textContent = data.visual;
+          content.appendChild(vis);
+        }
+        const group = document.createElement('div');
+        group.className = 'input-group';
+        const inp = document.createElement('input');
+        inp.type = 'number';
+        inp.id = 'inp-' + data.id;
+        inp.placeholder = '?';
+        inp.min = 0;
+        inp.max = 20;
+        const btn = document.createElement('button');
+        btn.textContent = 'Verificar';
+        btn.addEventListener('click', () => handleInput(data, inp, group, stepDiv));
+        group.appendChild(inp);
+        group.appendChild(btn);
+        content.appendChild(group);
+
+        const fb = document.createElement('div');
+        fb.className = 'feedback';
+        fb.id = 'fb-' + data.id;
+        content.appendChild(fb);
+      }
+
+      // ---------- TYPE: sequence ----------
+      if (data.type === 'sequence') {
+        const seqState = stepStates[data.id] || { clicked: [], done: false };
+        const shuffled = seqState.shuffled || shuffle(data.items);
+        if (!seqState.shuffled) {
+          seqState.shuffled = shuffled;
+          stepStates[data.id] = seqState;
+        }
+
+        const grid = document.createElement('div');
+        grid.className = 'seq-grid';
+        grid.id = 'seq-grid-' + data.id;
+
+        shuffled.forEach((num) => {
+          const item = document.createElement('div');
+          item.className = 'seq-item';
+          if (seqState.clicked.includes(num)) item.classList.add('done');
+          item.textContent = num;
+          item.dataset.num = num;
+          item.addEventListener('click', () => handleSequence(data, num, grid, stepDiv));
+          grid.appendChild(item);
+        });
+        content.appendChild(grid);
+
+        const fb = document.createElement('div');
+        fb.className = 'feedback';
+        fb.id = 'fb-' + data.id;
+        content.appendChild(fb);
+
+        if (seqState.done) {
+          const fbEl = document.getElementById('fb-' + data.id);
+          fbEl.className = 'feedback show success';
+          fbEl.innerHTML = `<span class="fb-icon">🎉</span> ${data.feedbackOk}`;
+          grid.querySelectorAll('.seq-item').forEach(el => el.classList.add('disabled'));
+        }
+      }
+
+      // ---------- TYPE: matching ----------
+      if (data.type === 'matching') {
+        const matchState = stepStates[data.id] || {
+          matched: [],
+          selected: null,
+          selectedEl: null,
+          done: false,
+          shuffledValues: shuffle(data.pairs.map(p => p.value)),
+          shuffledNames: shuffle(data.pairs.map(p => p.name))
+        };
+        if (!stepStates[data.id]) stepStates[data.id] = matchState;
+
+        const container = document.createElement('div');
+        container.className = 'match-container';
+
+        // Columna nombres
+        const colN = document.createElement('div');
+        colN.className = 'match-col';
+        const labelN = document.createElement('div');
+        labelN.className = 'col-label';
+        labelN.textContent = 'Nombre';
+        colN.appendChild(labelN);
+        matchState.shuffledNames.forEach(name => {
+          const el = document.createElement('div');
+          el.className = 'match-item';
+          el.textContent = name;
+          el.dataset.type = 'name';
+          el.dataset.value = name;
+          if (matchState.matched.includes(name)) el.classList.add('matched');
+          el.addEventListener('click', () => handleMatchingClick(data, el, container, stepDiv));
+          colN.appendChild(el);
+        });
+        container.appendChild(colN);
+
+        // Columna números
+        const colV = document.createElement('div');
+        colV.className = 'match-col';
+        const labelV = document.createElement('div');
+        labelV.className = 'col-label';
+        labelV.textContent = 'Número';
+        colV.appendChild(labelV);
+        matchState.shuffledValues.forEach(val => {
+          const el = document.createElement('div');
+          el.className = 'match-item';
+          el.textContent = val;
+          el.dataset.type = 'value';
+          el.dataset.value = val;
+          if (matchState.matched.includes(val)) el.classList.add('matched');
+          el.addEventListener('click', () => handleMatchingClick(data, el, container, stepDiv));
+          colV.appendChild(el);
+        });
+        container.appendChild(colV);
+
+        content.appendChild(container);
+
+        const fb = document.createElement('div');
+        fb.className = 'feedback';
+        fb.id = 'fb-' + data.id;
+        content.appendChild(fb);
+
+        if (matchState.done) {
+          const fbEl = document.getElementById('fb-' + data.id);
+          fbEl.className = 'feedback show success';
+          fbEl.innerHTML = `<span class="fb-icon">🎉</span> ${data.feedbackOk}`;
+          container.querySelectorAll('.match-item').forEach(el => el.classList.add('matched'));
+        }
+      }
+
+      // ---------- TYPE: fillline (CORREGIDO: avance automático) ----------
+      if (data.type === 'fillline') {
+        const fillState = stepStates[data.id] || { filled: [], done: false };
+        if (!stepStates[data.id]) stepStates[data.id] = fillState;
+
+        const numline = document.createElement('div');
+        numline.className = 'numline';
+
+        for (let i = 1; i <= 10; i++) {
+          const el = document.createElement('div');
+          el.className = 'nl-item';
+          if (data.visible.includes(i)) {
+            el.textContent = i;
+          } else {
+            el.className += ' blank';
+            const inp = document.createElement('input');
+            inp.type = 'number';
+            inp.min = 1;
+            inp.max = 10;
+            inp.dataset.pos = i;
+            if (fillState.filled.includes(i)) {
+              inp.value = i;
+              el.classList.add('filled');
             }
+            inp.addEventListener('input', function() {
+              const val = parseInt(this.value);
+              if (val === i) {
+                el.classList.add('filled');
+                if (!fillState.filled.includes(i)) fillState.filled.push(i);
+              } else {
+                el.classList.remove('filled');
+                fillState.filled = fillState.filled.filter(v => v !== i);
+              }
+              // Verificar si todos los blanks están llenos
+              const allFilled = data.blanks.every(b => fillState.filled.includes(b));
+              if (allFilled && !fillState.done) {
+                fillState.done = true;
+                stepStates[data.id] = fillState;
+                const fbEl = document.getElementById('fb-' + data.id);
+                fbEl.className = 'feedback show success';
+                fbEl.innerHTML = `<span class="fb-icon">🎉</span> ${data.feedbackOk}`;
+                launchConfetti(40);
+                numline.querySelectorAll('.blank input').forEach(inp2 => inp2.disabled = true);
+                // ===== AVANCE AUTOMÁTICO AL PASO 12 =====
+                setTimeout(() => {
+                  if (currentStep < stepsData.length - 1) {
+                    currentStep++;
+                    renderStep(currentStep);
+                  }
+                }, 1200);
+              }
+            });
+            el.appendChild(inp);
+          }
+          numline.appendChild(el);
+        }
+        content.appendChild(numline);
 
-            // ============================================================
-            //  CONFETI
-            // ============================================================
-            function lanzarConfeti() {
-                const contenedor = document.createElement('div');
-                contenedor.className = 'confeti';
-                const colores = ['#f9c74f', '#e68a2e', '#2d6a4f', '#c0392b', '#3498db', '#9b59b6', '#f1c40f'];
-                for (let i = 0; i < 30; i++) {
-                    const span = document.createElement('span');
-                    span.style.left = Math.random() * 100 + '%';
-                    span.style.background = colores[Math.floor(Math.random() * colores.length)];
-                    span.style.width = (Math.random() * 8 + 4) + 'px';
-                    span.style.height = (Math.random() * 8 + 4) + 'px';
-                    span.style.animationDuration = (Math.random() * 0.8 + 0.6) + 's';
-                    span.style.animationDelay = (Math.random() * 0.3) + 's';
-                    contenedor.appendChild(span);
-                }
-                document.body.appendChild(contenedor);
-                setTimeout(() => contenedor.remove(), 2000);
+        const fb = document.createElement('div');
+        fb.className = 'feedback';
+        fb.id = 'fb-' + data.id;
+        content.appendChild(fb);
+
+        if (fillState.done) {
+          const fbEl = document.getElementById('fb-' + data.id);
+          fbEl.className = 'feedback show success';
+          fbEl.innerHTML = `<span class="fb-icon">🎉</span> ${data.feedbackOk}`;
+          numline.querySelectorAll('.blank input').forEach(inp => inp.disabled = true);
+        }
+      }
+
+      // ---------- TYPE: final ----------
+      if (data.type === 'final') {
+        const box = document.createElement('div');
+        box.className = 'final-box';
+        const p = document.createElement('div');
+        p.className = 'pregunta';
+        p.innerHTML = `📌 ${data.question}`;
+        box.appendChild(p);
+        content.appendChild(box);
+
+        const btn = document.createElement('button');
+        btn.className = 'btn-primary centered';
+        btn.textContent = data.buttonText || 'Ir al desarrollo';
+        btn.addEventListener('click', () => {
+          if (data.buttonLink) {
+            window.location.href = data.buttonLink;
+          } else {
+            alert('¡Has completado la fase de inicio!');
+          }
+        });
+        content.appendChild(btn);
+      }
+
+      stepDiv.appendChild(content);
+      main.appendChild(stepDiv);
+    }
+
+    // ============================================================
+    //  MANEJADORES DE INTERACCIÓN
+    // ============================================================
+
+    // --- choice ---
+    function handleChoice(data, idx, container, stepDiv) {
+      const btns = container.querySelectorAll('.opt');
+      const fb = document.getElementById('fb-' + data.id);
+      if (stepDiv.dataset.completed) return;
+
+      btns.forEach(b => b.classList.add('disabled'));
+
+      const isCorrect = (idx === data.correct);
+      const btn = btns[idx];
+      if (isCorrect) {
+        btn.classList.add('correct');
+        fb.className = 'feedback show success';
+        fb.innerHTML = `<span class="fb-icon">🎉</span> ${data.feedbackOk}`;
+        stepDiv.dataset.completed = 'true';
+        launchConfetti(40);
+        setTimeout(() => {
+          if (currentStep < stepsData.length - 1) {
+            currentStep++;
+            renderStep(currentStep);
+          }
+        }, 1200);
+      } else {
+        btn.classList.add('wrong');
+        fb.className = 'feedback show error';
+        fb.innerHTML = `<span class="fb-icon">💡</span> ${data.feedbackFail}`;
+        setTimeout(() => {
+          btns.forEach(b => b.classList.remove('disabled', 'wrong'));
+          fb.className = 'feedback';
+          fb.textContent = '';
+        }, 1200);
+      }
+    }
+
+    // --- input ---
+    function handleInput(data, input, container, stepDiv) {
+      if (stepDiv.dataset.completed) return;
+      const fb = document.getElementById('fb-' + data.id);
+      const val = parseInt(input.value);
+      if (isNaN(val)) {
+        fb.className = 'feedback show error';
+        fb.innerHTML = `<span class="fb-icon">✏️</span> Escribe un número.`;
+        return;
+      }
+      const isCorrect = (val === data.correct);
+      if (isCorrect) {
+        fb.className = 'feedback show success';
+        fb.innerHTML = `<span class="fb-icon">🎉</span> ${data.feedbackOk}`;
+        stepDiv.dataset.completed = 'true';
+        input.disabled = true;
+        container.querySelector('button').disabled = true;
+        launchConfetti(40);
+        setTimeout(() => {
+          if (currentStep < stepsData.length - 1) {
+            currentStep++;
+            renderStep(currentStep);
+          }
+        }, 1200);
+      } else {
+        fb.className = 'feedback show error';
+        fb.innerHTML = `<span class="fb-icon">🔄</span> ${data.feedbackFail}`;
+        input.value = '';
+        input.focus();
+        setTimeout(() => {
+          fb.className = 'feedback';
+          fb.textContent = '';
+        }, 1500);
+      }
+    }
+
+    // --- sequence ---
+    function handleSequence(data, num, grid, stepDiv) {
+      if (stepDiv.dataset.completed) return;
+      const state = stepStates[data.id] || { clicked: [], done: false };
+      if (state.done) return;
+      const fb = document.getElementById('fb-' + data.id);
+
+      const expected = data.sequence[state.clicked.length];
+      if (num === expected) {
+        state.clicked.push(num);
+        const items = grid.querySelectorAll('.seq-item');
+        items.forEach(el => {
+          if (parseInt(el.dataset.num) === num) {
+            el.classList.add('done');
+          }
+        });
+        if (state.clicked.length === data.sequence.length) {
+          state.done = true;
+          stepStates[data.id] = state;
+          fb.className = 'feedback show success';
+          fb.innerHTML = `<span class="fb-icon">🎉</span> ${data.feedbackOk}`;
+          stepDiv.dataset.completed = 'true';
+          grid.querySelectorAll('.seq-item').forEach(el => el.classList.add('disabled'));
+          launchConfetti(40);
+          setTimeout(() => {
+            if (currentStep < stepsData.length - 1) {
+              currentStep++;
+              renderStep(currentStep);
             }
+          }, 1200);
+        } else {
+          fb.className = 'feedback';
+          fb.textContent = '';
+        }
+        stepStates[data.id] = state;
+      } else {
+        const items = grid.querySelectorAll('.seq-item');
+        items.forEach(el => {
+          if (parseInt(el.dataset.num) === num) {
+            el.classList.add('wrong-flash');
+            setTimeout(() => el.classList.remove('wrong-flash'), 600);
+          }
+        });
+        fb.className = 'feedback show error';
+        fb.innerHTML = `<span class="fb-icon">⛔</span> ${data.feedbackFail}`;
+        setTimeout(() => {
+          fb.className = 'feedback';
+          fb.textContent = '';
+        }, 1200);
+      }
+    }
 
-            // ============================================================
-            //  DEFINICIÓN DE LAS 10 INTERACCIONES (MEJORADAS)
-            // ============================================================
-            const steps = [];
+    // --- matching ---
+    function handleMatchingClick(data, el, container, stepDiv) {
+      if (stepDiv.dataset.completed) return;
+      const state = stepStates[data.id];
+      if (state.done) return;
+      const fb = document.getElementById('fb-' + data.id);
 
-            // PASO 0: Reconocimiento global
-            steps.push({
-                badge: 'Estación 1 · Reconocer',
-                question: '📊 ¿Cuántos libros hay en total?',
-                render: function(container, optsContainer, feedback) {
-                    const libros = Array(12).fill('📚');
-                    container.innerHTML = `
-                        <div style="display:grid;grid-template-columns:repeat(4,auto);gap:6px 12px;justify-content:center;padding:4px 0;">
-                            ${libros.map(l => `<span style="font-size:3rem;line-height:1.2;">${l}</span>`).join('')}
-                        </div>
-                        <div style="font-size:0.8rem;color:#c0672c;font-weight:600;margin-top:2px;">Diferentes colores y tamaños</div>
-                    `;
-                    optsContainer.innerHTML = `
-                        <button class="opt-btn" data-val="10">10</button>
-                        <button class="opt-btn" data-val="12">12</button>
-                        <button class="opt-btn" data-val="14">14</button>
-                    `;
-                    this._correctVal = 12;
-                },
-                _correctVal: 12,
-                handleOption: function(val, cb) {
-                    const correct = (val === this._correctVal);
-                    let mensaje = correct ? '¡Excelente! Contaste correctamente.' :
-                        'Cuenta uno por uno los libros que ves. Recuerda señalar cada libro mientras cuentas.';
-                    cb(correct, mensaje);
-                }
-            });
+      const type = el.dataset.type;
+      const value = el.dataset.value;
 
-            // PASO 1: Arrastre etiqueta 1
-            steps.push({
-                badge: 'Estación 2 · Etiquetar',
-                question: '🔢 Arrastra el número 1 sobre un libro.',
-                render: function(container, optsContainer, feedback) {
-                    optsContainer.innerHTML = '';
-                    const libros = Array(12).fill('📚');
-                    container.innerHTML = `
-                        <div class="drag-area" id="drag-area-p1">
-                            <div class="drag-source" id="drag-source-p1" draggable="false" style="touch-action:none;cursor:grab;" tabindex="0" role="button" aria-label="Etiqueta número 1, arrastrar">
-                                <span style="font-size:2.4rem;font-weight:900;color:#1A5F82;">1</span>
-                            </div>
-                            <div style="font-size:1rem;font-weight:700;color:#c0672c;">→</div>
-                            <div class="drag-targets" id="drag-targets-p1">
-                                ${libros.map((_, i) => `<div class="drag-target" data-index="${i}" style="font-size:2.2rem;" tabindex="0" role="button">📚</div>`).join('')}
-                            </div>
-                        </div>
-                        <div style="font-size:0.75rem;color:#7a8f9e;margin-top:2px;">Coloca sobre cualquier libro</div>
-                    `;
-                    this._dragSetup = function() {
-                        const source = document.getElementById('drag-source-p1');
-                        const targets = document.querySelectorAll('#drag-targets-p1 .drag-target');
-                        let dragActive = false;
+      if (state.matched.includes(value)) return;
 
-                        // Eventos de ratón/touch
-                        const onStart = (e) => {
-                            e.preventDefault();
-                            if (stepCompleted || stepLocked) return;
-                            dragActive = true;
-                            source.classList.add('dragging');
-                        };
+      if (!state.selected) {
+        container.querySelectorAll('.match-item.selected').forEach(e => e.classList.remove('selected'));
+        el.classList.add('selected');
+        state.selected = { type, value, el };
+        stepStates[data.id] = state;
+        fb.className = 'feedback';
+        fb.textContent = '';
+        return;
+      }
 
-                        const onMove = (e) => {
-                            if (!dragActive) return;
-                            e.preventDefault();
-                            const touch = e.touches ? e.touches[0] : e;
-                            targets.forEach(t => {
-                                const r = t.getBoundingClientRect();
-                                const cx = touch.clientX,
-                                    cy = touch.clientY;
-                                const inside = cx >= r.left && cx <= r.right && cy >= r.top && cy <= r.bottom;
-                                t.classList.toggle('drag-over', inside);
-                            });
-                        };
+      const first = state.selected;
+      if (first.el === el) {
+        el.classList.remove('selected');
+        state.selected = null;
+        stepStates[data.id] = state;
+        return;
+      }
 
-                        const onEnd = (e) => {
-                            if (!dragActive) return;
-                            dragActive = false;
-                            source.classList.remove('dragging');
-                            const touch = e.changedTouches ? e.changedTouches[0] : e;
-                            let dropped = false;
-                            targets.forEach(t => {
-                                const r = t.getBoundingClientRect();
-                                const cx = touch.clientX,
-                                    cy = touch.clientY;
-                                if (cx >= r.left && cx <= r.right && cy >= r.top && cy <= r.bottom) {
-                                    if (!t.classList.contains('matched')) {
-                                        dropped = true;
-                                        t.classList.add('matched');
-                                        t.style.borderColor = '#2e7d32';
-                                        t.style.background = '#d9eedb';
-                                        if (!stepCompleted && !stepLocked) {
-                                            stepCompleted = true;
-                                            stepState[currentStep].completed = true;
-                                            const fb = document.getElementById('step-feedback');
-                                            fb.className = 'step-feedback success';
-                                            fb.innerHTML = '🎉 ¡Muy bien! Asignaste el 1.';
-                                            document.getElementById('btn-continuar').disabled = false;
-                                            updateProgress();
-                                            updateAttempts();
-                                            totalAciertos++;
-                                            lanzarConfeti();
-                                        }
-                                    }
-                                }
-                                t.classList.remove('drag-over');
-                            });
-                            if (!dropped && !stepCompleted && !stepLocked) {
-                                stepAttempts++;
-                                stepState[currentStep].attempts = stepAttempts;
-                                updateAttempts();
-                                const fb = document.getElementById('step-feedback');
-                                if (stepAttempts >= MAX_ATTEMPTS) {
-                                    stepLocked = true;
-                                    stepState[currentStep].locked = true;
-                                    fb.className = 'step-feedback error';
-                                    fb.innerHTML = '💡 Has agotado los intentos. Observa la solución: coloca la etiqueta sobre cualquier libro.';
-                                    const firstTarget = targets[0];
-                                    if (firstTarget && !firstTarget.classList.contains('matched')) {
-                                        firstTarget.classList.add('matched');
-                                        firstTarget.style.borderColor = '#2e7d32';
-                                        firstTarget.style.background = '#d9eedb';
-                                        document.getElementById('btn-continuar').disabled = false;
-                                        stepCompleted = true;
-                                        stepState[currentStep].completed = true;
-                                        updateProgress();
-                                        totalAciertos++;
-                                    }
-                                } else {
-                                    fb.className = 'step-feedback error';
-                                    fb.innerHTML = '⚠️ Coloca sobre un libro, no en el vacío. Intenta de nuevo.';
-                                }
-                            }
-                        };
+      if (first.type === type) {
+        first.el.classList.remove('selected');
+        el.classList.add('selected');
+        state.selected = { type, value, el };
+        stepStates[data.id] = state;
+        return;
+      }
 
-                        source.addEventListener('mousedown', onStart);
-                        document.addEventListener('mousemove', onMove);
-                        document.addEventListener('mouseup', onEnd);
-                        source.addEventListener('touchstart', onStart, { passive: false });
-                        document.addEventListener('touchmove', onMove, { passive: false });
-                        document.addEventListener('touchend', onEnd, { passive: false });
+      const nameVal = type === 'name' ? value : first.value;
+      const numVal = type === 'value' ? value : first.value;
+      const pair = data.pairs.find(p => p.name === nameVal && p.value === parseInt(numVal)) ||
+        data.pairs.find(p => p.name === nameVal || p.value === parseInt(numVal));
 
-                        // Teclado
-                        let tecladoActivo = false;
-                        const tecladoHandler = (e) => {
-                            if (!modoTeclado || stepCompleted || stepLocked) return;
-                            if (!tecladoActivo) {
-                                // Activar con Enter en source
-                                if (e.key === 'Enter' && document.activeElement === source) {
-                                    tecladoActivo = true;
-                                    tecladoTargets = Array.from(targets);
-                                    tecladoIndex = 0;
-                                    tecladoTargets.forEach(t => t.style.outline = 'none');
-                                    tecladoTargets[tecladoIndex].style.outline = '3px solid #e68a2e';
-                                    e.preventDefault();
-                                }
-                                return;
-                            }
-                            // Navegar con flechas
-                            if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-                                e.preventDefault();
-                                tecladoTargets[tecladoIndex].style.outline = 'none';
-                                tecladoIndex = (tecladoIndex + 1) % tecladoTargets.length;
-                                tecladoTargets[tecladoIndex].style.outline = '3px solid #e68a2e';
-                            } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-                                e.preventDefault();
-                                tecladoTargets[tecladoIndex].style.outline = 'none';
-                                tecladoIndex = (tecladoIndex - 1 + tecladoTargets.length) % tecladoTargets.length;
-                                tecladoTargets[tecladoIndex].style.outline = '3px solid #e68a2e';
-                            } else if (e.key === 'Enter') {
-                                e.preventDefault();
-                                const target = tecladoTargets[tecladoIndex];
-                                if (target && !target.classList.contains('matched') && !stepCompleted && !stepLocked) {
-                                    target.classList.add('matched');
-                                    target.style.borderColor = '#2e7d32';
-                                    target.style.background = '#d9eedb';
-                                    if (!stepCompleted && !stepLocked) {
-                                        stepCompleted = true;
-                                        stepState[currentStep].completed = true;
-                                        const fb = document.getElementById('step-feedback');
-                                        fb.className = 'step-feedback success';
-                                        fb.innerHTML = '🎉 ¡Muy bien! Asignaste el 1.';
-                                        document.getElementById('btn-continuar').disabled = false;
-                                        updateProgress();
-                                        updateAttempts();
-                                        totalAciertos++;
-                                        lanzarConfeti();
-                                        tecladoActivo = false;
-                                        tecladoTargets.forEach(t => t.style.outline = 'none');
-                                    }
-                                }
-                            } else if (e.key === 'Escape') {
-                                tecladoActivo = false;
-                                tecladoTargets.forEach(t => t.style.outline = 'none');
-                            }
-                        };
+      if (pair && pair.name === nameVal && pair.value === parseInt(numVal)) {
+        const nameEl = type === 'name' ? el : first.el;
+        const numEl = type === 'value' ? el : first.el;
+        nameEl.classList.remove('selected');
+        nameEl.classList.add('matched');
+        numEl.classList.remove('selected');
+        numEl.classList.add('matched');
+        state.matched.push(nameVal, parseInt(numVal));
+        state.selected = null;
+        stepStates[data.id] = state;
 
-                        document.addEventListener('keydown', tecladoHandler);
-
-                        this._cleanupDrag = function() {
-                            document.removeEventListener('mousemove', onMove);
-                            document.removeEventListener('mouseup', onEnd);
-                            document.removeEventListener('touchmove', onMove);
-                            document.removeEventListener('touchend', onEnd);
-                            document.removeEventListener('keydown', tecladoHandler);
-                        };
-                    };
-                },
-                _dragSetup: null,
-                _cleanupDrag: null,
-                handleOption: null,
-                postRender: function() {
-                    if (this._dragSetup) {
-                        this._dragSetup();
-                    }
-                },
-                cleanup: function() {
-                    if (this._cleanupDrag) this._cleanupDrag();
-                }
-            });
-
-            // PASO 2: Conteo guiado
-            steps.push({
-                badge: 'Estación 3 · Contar',
-                question: '🔢 ¿Cuántos libros hay en esta fila? (1 al 5)',
-                render: function(container, optsContainer, feedback) {
-                    container.innerHTML = `
-                        <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:6px 10px;font-size:2.6rem;padding:4px 0;">
-                            ${[1,2,3,4,5].map(n => `<span>📚<sup style="font-size:1rem;font-weight:800;color:#1A5F82;">${n}</sup></span>`).join('')}
-                        </div>
-                    `;
-                    optsContainer.innerHTML = `
-                        <button class="opt-btn" data-val="4">4</button>
-                        <button class="opt-btn" data-val="5">5</button>
-                        <button class="opt-btn" data-val="6">6</button>
-                    `;
-                    this._correctVal = 5;
-                },
-                _correctVal: 5,
-                handleOption: function(val, cb) {
-                    const correct = (val === this._correctVal);
-                    let mensaje = correct ? '¡Perfecto! Has contado correctamente.' :
-                        'Cuenta en voz alta señalando cada libro. El último número que digas es la cantidad total.';
-                    cb(correct, mensaje);
-                }
-            });
-
-            // PASO 3: Emparejar números
-            steps.push({
-                badge: 'Estación 4 · Emparejar',
-                question: '🔗 Haz clic en un libro y luego en el estuche con el mismo número.',
-                render: function(container, optsContainer, feedback) {
-                    optsContainer.innerHTML = '';
-                    const bookNums = [3, 1, 4, 2];
-                    const caseNums = [2, 4, 1, 3];
-                    container.innerHTML = `
-                        <div class="match-area" id="match-area-p3">
-                            <div class="match-col" id="match-col-left-p3">
-                                <div class="col-title">📚 Libros</div>
-                                ${bookNums.map((n,i) => `
-                                    <div class="match-item" data-id="b${i}" data-num="${n}" data-side="left" style="font-size:1.8rem;" tabindex="0" role="button">
-                                        📚 <span class="item-num">${n}</span>
-                                    </div>
-                                `).join('')}
-                            </div>
-                            <div class="match-col" id="match-col-right-p3">
-                                <div class="col-title">📦 Estuches</div>
-                                ${caseNums.map((n,i) => `
-                                    <div class="match-item" data-id="c${i}" data-num="${n}" data-side="right" style="font-size:1.8rem;" tabindex="0" role="button">
-                                        📦 <span class="item-num">${n}</span>
-                                    </div>
-                                `).join('')}
-                            </div>
-                        </div>
-                        <div style="font-size:0.75rem;color:#7a8f9e;margin-top:2px;">Selecciona un libro y luego el estuche con el mismo número</div>
-                    `;
-                    this._matchState = {
-                        leftSelected: null,
-                        matchedPairs: 0,
-                        totalPairs: 4,
-                        leftItems: null,
-                        rightItems: null,
-                    };
-                    this._setupMatch = function() {
-                        const leftItems = document.querySelectorAll('#match-col-left-p3 .match-item');
-                        const rightItems = document.querySelectorAll('#match-col-right-p3 .match-item');
-                        const state = this._matchState;
-                        state.leftItems = leftItems;
-                        state.rightItems = rightItems;
-
-                        const clearSelected = () => {
-                            leftItems.forEach(el => el.classList.remove('selected'));
-                            state.leftSelected = null;
-                        };
-
-                        const checkComplete = () => {
-                            if (state.matchedPairs === state.totalPairs && !stepCompleted && !stepLocked) {
-                                stepCompleted = true;
-                                stepState[currentStep].completed = true;
-                                const fb = document.getElementById('step-feedback');
-                                fb.className = 'step-feedback success';
-                                fb.innerHTML = '🎉 ¡Excelente! Todos emparejados.';
-                                document.getElementById('btn-continuar').disabled = false;
-                                updateProgress();
-                                updateAttempts();
-                                totalAciertos++;
-                                lanzarConfeti();
-                                leftItems.forEach(el => el.classList.add('disabled'));
-                                rightItems.forEach(el => el.classList.add('disabled'));
-                            }
-                        };
-
-                        const handleLeftClick = (el) => {
-                            if (stepCompleted || stepLocked) return;
-                            if (el.classList.contains('matched') || el.classList.contains('disabled')) return;
-                            clearSelected();
-                            el.classList.add('selected');
-                            state.leftSelected = el.dataset.num;
-                        };
-
-                        const handleRightClick = (el) => {
-                            if (stepCompleted || stepLocked) return;
-                            if (el.classList.contains('matched') || el.classList.contains('disabled')) return;
-                            if (state.leftSelected === null) {
-                                const fb = document.getElementById('step-feedback');
-                                fb.className = 'step-feedback error';
-                                fb.innerHTML = '👆 Primero selecciona un libro (columna izquierda).';
-                                setTimeout(() => {
-                                    if (!stepCompleted && !stepLocked) {
-                                        fb.className = 'step-feedback empty';
-                                        fb.innerHTML = '';
-                                    }
-                                }, 1000);
-                                return;
-                            }
-                            const leftNum = state.leftSelected;
-                            const rightNum = el.dataset.num;
-                            if (leftNum === rightNum) {
-                                const leftEl = document.querySelector(
-                                    `#match-col-left-p3 .match-item[data-num="${leftNum}"]`);
-                                if (leftEl && !leftEl.classList.contains('matched')) {
-                                    leftEl.classList.add('matched');
-                                    leftEl.classList.remove('selected');
-                                }
-                                el.classList.add('matched');
-                                state.matchedPairs++;
-                                const fb = document.getElementById('step-feedback');
-                                fb.className = 'step-feedback success';
-                                fb.innerHTML = '✅ ¡Bien! Pareja correcta.';
-                                setTimeout(() => {
-                                    if (!stepCompleted && !stepLocked) {
-                                        fb.className = 'step-feedback empty';
-                                        fb.innerHTML = '';
-                                    }
-                                }, 700);
-                                state.leftSelected = null;
-                                leftItems.forEach(el => el.classList.remove('selected'));
-                                checkComplete();
-                            } else {
-                                stepAttempts++;
-                                stepState[currentStep].attempts = stepAttempts;
-                                updateAttempts();
-                                const fb = document.getElementById('step-feedback');
-                                if (stepAttempts >= MAX_ATTEMPTS) {
-                                    stepLocked = true;
-                                    stepState[currentStep].locked = true;
-                                    fb.className = 'step-feedback error';
-                                    fb.innerHTML = '💡 Los números deben coincidir. Observa la solución: libro 1 con estuche 1, etc.';
-                                    leftItems.forEach(li => {
-                                        const num = li.dataset.num;
-                                        const ri = document.querySelector(
-                                            `#match-col-right-p3 .match-item[data-num="${num}"]`);
-                                        if (ri && !ri.classList.contains('matched')) {
-                                            li.classList.add('matched');
-                                            ri.classList.add('matched');
-                                        }
-                                    });
-                                    stepCompleted = true;
-                                    stepState[currentStep].completed = true;
-                                    document.getElementById('btn-continuar').disabled = false;
-                                    updateProgress();
-                                    totalAciertos++;
-                                } else {
-                                    fb.className = 'step-feedback error';
-                                    fb.innerHTML =
-                                        `⚠️ No coinciden. Intento ${stepAttempts}/${MAX_ATTEMPTS}. Busca el número que falta.`;
-                                }
-                                state.leftSelected = null;
-                                leftItems.forEach(el => el.classList.remove('selected'));
-                            }
-                        };
-
-                        leftItems.forEach(el => {
-                            el.addEventListener('click', () => handleLeftClick(el));
-                            el.addEventListener('keydown', (e) => {
-                                if (e.key === 'Enter' || e.key === ' ') {
-                                    e.preventDefault();
-                                    handleLeftClick(el);
-                                }
-                            });
-                        });
-                        rightItems.forEach(el => {
-                            el.addEventListener('click', () => handleRightClick(el));
-                            el.addEventListener('keydown', (e) => {
-                                if (e.key === 'Enter' || e.key === ' ') {
-                                    e.preventDefault();
-                                    handleRightClick(el);
-                                }
-                            });
-                        });
-
-                        this._cleanupMatch = function() {
-                            leftItems.forEach(el => el.replaceWith(el.cloneNode(true)));
-                            rightItems.forEach(el => el.replaceWith(el.cloneNode(true)));
-                        };
-                    };
-                },
-                _matchState: null,
-                _setupMatch: null,
-                _cleanupMatch: null,
-                postRender: function() {
-                    if (this._setupMatch) this._setupMatch();
-                },
-                cleanup: function() {
-                    if (this._cleanupMatch) this._cleanupMatch();
-                },
-                handleOption: null
-            });
-
-            // PASO 4: Comparar cantidades
-            steps.push({
-                badge: 'Estación 5 · Comparar',
-                question: '📊 ¿Tienen los dos grupos la misma cantidad?',
-                render: function(container, optsContainer, feedback) {
-                    container.innerHTML = `
-                        <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:16px 30px;padding:4px 0;">
-                            <div style="text-align:center;">
-                                <div style="font-weight:700;color:#1A5F82;font-size:1rem;">Grupo A</div>
-                                <div style="font-size:2.4rem;">${'📚'.repeat(6)}</div>
-                            </div>
-                            <div style="text-align:center;">
-                                <div style="font-weight:700;color:#c0672c;font-size:1rem;">Grupo B</div>
-                                <div style="font-size:2.4rem;">${'📚'.repeat(4)}</div>
-                            </div>
-                        </div>
-                    `;
-                    optsContainer.innerHTML = `
-                        <button class="opt-btn" data-val="si">Sí</button>
-                        <button class="opt-btn" data-val="no">No</button>
-                    `;
-                    this._correctVal = 'no';
-                },
-                _correctVal: 'no',
-                handleOption: function(val, cb) {
-                    const correct = (val === this._correctVal);
-                    let mensaje = correct ? '¡Muy bien! Son diferentes. El grupo A tiene más libros que el B.' :
-                        'Cuenta los libros de cada grupo. Observa que el grupo A tiene 6 y el B tiene 4.';
-                    cb(correct, mensaje);
-                }
-            });
-
-            // PASO 5: Ordenar libros (arrastre)
-            steps.push({
-                badge: 'Estación 6 · Ordenar',
-                question: '📚 Ordena los libros del 1 al 7. Puedes colocar cualquier libro en cada casilla, pero debes seguir el orden numérico.',
-                render: function(container, optsContainer, feedback) {
-                    optsContainer.innerHTML = '';
-                    const emojis = ['📘', '📕', '📗', '📙', '📘', '📕', '📗'];
-                    const shuffled = [...emojis].sort(() => Math.random() - 0.5);
-                    container.innerHTML = `
-                        <div class="order-area" id="order-area-p5">
-                            <div class="order-pool" id="order-pool-p5">
-                                ${shuffled.map((emoji, i) => `
-                                    <div class="order-item" data-idx="${i}" draggable="false" style="touch-action:none;cursor:grab;" tabindex="0" role="button">
-                                        ${emoji}
-                                    </div>
-                                `).join('')}
-                            </div>
-                            <div class="order-slots" id="order-slots-p5">
-                                ${[1,2,3,4,5,6,7].map(n => `
-                                    <div class="slot" data-slot="${n}">
-                                        <span class="slot-num">${n}</span>
-                                    </div>
-                                `).join('')}
-                            </div>
-                        </div>
-                        <div style="font-size:0.75rem;color:#7a8f9e;margin-top:2px;">Arrastra cada libro a su número</div>
-                    `;
-                    this._orderState = {
-                        placed: 0,
-                        total: 7,
-                    };
-                    this._setupOrder = function() {
-                        const items = document.querySelectorAll('#order-pool-p5 .order-item');
-                        const slots = document.querySelectorAll('#order-slots-p5 .slot');
-                        let dragActive = false;
-                        let dragItem = null;
-
-                        const onStart = (e, item) => {
-                            if (stepCompleted || stepLocked) return;
-                            if (item.classList.contains('placed')) return;
-                            e.preventDefault();
-                            dragActive = true;
-                            dragItem = item;
-                            item.classList.add('dragging');
-                        };
-
-                        const onMove = (e) => {
-                            if (!dragActive) return;
-                            e.preventDefault();
-                            const touch = e.touches ? e.touches[0] : e;
-                            slots.forEach(slot => {
-                                const r = slot.getBoundingClientRect();
-                                const cx = touch.clientX,
-                                    cy = touch.clientY;
-                                const inside = cx >= r.left && cx <= r.right && cy >= r.top && cy <= r.bottom;
-                                slot.classList.toggle('drag-over', inside);
-                            });
-                        };
-
-                        const onEnd = (e) => {
-                            if (!dragActive) return;
-                            dragActive = false;
-                            if (dragItem) dragItem.classList.remove('dragging');
-                            const touch = e.changedTouches ? e.changedTouches[0] : e;
-                            let dropped = false;
-                            slots.forEach(slot => {
-                                slot.classList.remove('drag-over');
-                                const r = slot.getBoundingClientRect();
-                                const cx = touch.clientX,
-                                    cy = touch.clientY;
-                                if (cx >= r.left && cx <= r.right && cy >= r.top && cy <= r.bottom) {
-                                    if (!slot.classList.contains('filled') && dragItem && !dragItem.classList
-                                        .contains('placed')) {
-                                        const slotNum = parseInt(slot.dataset.slot);
-                                        const expected = this._orderState.placed + 1;
-                                        if (slotNum === expected) {
-                                            slot.classList.add('filled');
-                                            slot.innerHTML =
-                                                `<span class="slot-emoji">${dragItem.textContent}</span>`;
-                                            dragItem.classList.add('placed');
-                                            this._orderState.placed++;
-                                            const fb = document.getElementById('step-feedback');
-                                            fb.className = 'step-feedback success';
-                                            fb.innerHTML =
-                                                `✅ Posición ${slotNum} correcta.`;
-                                            setTimeout(() => {
-                                                if (!stepCompleted && !stepLocked) {
-                                                    fb.className = 'step-feedback empty';
-                                                    fb.innerHTML = '';
-                                                }
-                                            }, 600);
-                                            if (this._orderState.placed === this._orderState.total) {
-                                                stepCompleted = true;
-                                                stepState[currentStep].completed = true;
-                                                fb.className = 'step-feedback success';
-                                                fb.innerHTML =
-                                                    '🎉 ¡Excelente! Todos ordenados.';
-                                                document.getElementById('btn-continuar').disabled = false;
-                                                updateProgress();
-                                                updateAttempts();
-                                                totalAciertos++;
-                                                lanzarConfeti();
-                                            }
-                                            dropped = true;
-                                        } else {
-                                            stepAttempts++;
-                                            stepState[currentStep].attempts = stepAttempts;
-                                            updateAttempts();
-                                            const fb = document.getElementById('step-feedback');
-                                            if (stepAttempts >= MAX_ATTEMPTS) {
-                                                stepLocked = true;
-                                                stepState[currentStep].locked = true;
-                                                fb.className = 'step-feedback error';
-                                                fb.innerHTML =
-                                                    `💡 Debes colocar en orden, ahora el ${expected}. Observa la solución.`;
-                                                const nextSlot = document.querySelector(
-                                                    `.slot[data-slot="${expected}"]`);
-                                                if (nextSlot && !nextSlot.classList.contains('filled')) {
-                                                    nextSlot.classList.add('filled');
-                                                    nextSlot.innerHTML =
-                                                        `<span class="slot-emoji">${dragItem.textContent}</span>`;
-                                                    dragItem.classList.add('placed');
-                                                    this._orderState.placed++;
-                                                }
-                                                if (this._orderState.placed === this._orderState.total) {
-                                                    stepCompleted = true;
-                                                    stepState[currentStep].completed = true;
-                                                    document.getElementById('btn-continuar').disabled = false;
-                                                    updateProgress();
-                                                    totalAciertos++;
-                                                }
-                                            } else {
-                                                fb.className = 'step-feedback error';
-                                                fb.innerHTML =
-                                                    `⚠️ Debe ir el ${expected}. Intento ${stepAttempts}/${MAX_ATTEMPTS}.`;
-                                            }
-                                            dropped = true;
-                                        }
-                                    }
-                                }
-                            });
-                            if (!dropped && !stepCompleted && !stepLocked) {
-                                const fb = document.getElementById('step-feedback');
-                                fb.className = 'step-feedback error';
-                                fb.innerHTML = '⚠️ Coloca sobre la casilla correspondiente.';
-                                setTimeout(() => {
-                                    if (!stepCompleted && !stepLocked) {
-                                        fb.className = 'step-feedback empty';
-                                        fb.innerHTML = '';
-                                    }
-                                }, 800);
-                            }
-                            dragItem = null;
-                        };
-
-                        // Eventos ratón/touch
-                        items.forEach((item) => {
-                            const handlerStart = (e) => onStart(e, item);
-                            item.addEventListener('mousedown', handlerStart);
-                            item.addEventListener('touchstart', handlerStart, { passive: false });
-                            // Teclado
-                            item.addEventListener('keydown', (e) => {
-                                if (e.key === 'Enter' && !modoTeclado) {
-                                    // Si no está en modo teclado, activar selección por teclado
-                                    if (!stepCompleted && !stepLocked && !item.classList.contains('placed')) {
-                                        // Buscar el primer slot vacío y colocar
-                                        const slotsArr = document.querySelectorAll('#order-slots-p5 .slot');
-                                        for (let s of slotsArr) {
-                                            if (!s.classList.contains('filled')) {
-                                                const slotNum = parseInt(s.dataset.slot);
-                                                const expected = this._orderState.placed + 1;
-                                                if (slotNum === expected) {
-                                                    s.classList.add('filled');
-                                                    s.innerHTML =
-                                                        `<span class="slot-emoji">${item.textContent}</span>`;
-                                                    item.classList.add('placed');
-                                                    this._orderState.placed++;
-                                                    const fb = document.getElementById('step-feedback');
-                                                    fb.className = 'step-feedback success';
-                                                    fb.innerHTML =
-                                                        `✅ Posición ${slotNum} correcta.`;
-                                                    setTimeout(() => {
-                                                        if (!stepCompleted && !stepLocked) {
-                                                            fb.className =
-                                                                'step-feedback empty';
-                                                            fb.innerHTML = '';
-                                                        }
-                                                    }, 600);
-                                                    if (this._orderState.placed === this._orderState
-                                                        .total) {
-                                                        stepCompleted = true;
-                                                        stepState[currentStep].completed = true;
-                                                        fb.className = 'step-feedback success';
-                                                        fb.innerHTML =
-                                                            '🎉 ¡Excelente! Todos ordenados.';
-                                                        document.getElementById('btn-continuar')
-                                                            .disabled = false;
-                                                        updateProgress();
-                                                        updateAttempts();
-                                                        totalAciertos++;
-                                                        lanzarConfeti();
-                                                    }
-                                                    break;
-                                                } else {
-                                                    stepAttempts++;
-                                                    stepState[currentStep].attempts = stepAttempts;
-                                                    updateAttempts();
-                                                    const fb = document.getElementById(
-                                                    'step-feedback');
-                                                    if (stepAttempts >= MAX_ATTEMPTS) {
-                                                        stepLocked = true;
-                                                        stepState[currentStep].locked = true;
-                                                        fb.className = 'step-feedback error';
-                                                        fb.innerHTML =
-                                                            `💡 Debes colocar en orden, ahora el ${expected}. Observa la solución.`;
-                                                        const nextSlot = document.querySelector(
-                                                            `.slot[data-slot="${expected}"]`);
-                                                        if (nextSlot && !nextSlot.classList
-                                                            .contains('filled')) {
-                                                            nextSlot.classList.add('filled');
-                                                            nextSlot.innerHTML =
-                                                                `<span class="slot-emoji">${item.textContent}</span>`;
-                                                            item.classList.add('placed');
-                                                            this._orderState.placed++;
-                                                        }
-                                                        if (this._orderState.placed === this
-                                                            ._orderState.total) {
-                                                            stepCompleted = true;
-                                                            stepState[currentStep].completed =
-                                                            true;
-                                                            document.getElementById('btn-continuar')
-                                                                .disabled = false;
-                                                            updateProgress();
-                                                            totalAciertos++;
-                                                        }
-                                                    } else {
-                                                        fb.className = 'step-feedback error';
-                                                        fb.innerHTML =
-                                                            `⚠️ Debe ir el ${expected}. Intento ${stepAttempts}/${MAX_ATTEMPTS}.`;
-                                                    }
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            });
-                        });
-
-                        document.addEventListener('mousemove', onMove);
-                        document.addEventListener('mouseup', onEnd);
-                        document.addEventListener('touchmove', onMove, { passive: false });
-                        document.addEventListener('touchend', onEnd, { passive: false });
-
-                        this._cleanupOrder = function() {
-                            document.removeEventListener('mousemove', onMove);
-                            document.removeEventListener('mouseup', onEnd);
-                            document.removeEventListener('touchmove', onMove);
-                            document.removeEventListener('touchend', onEnd);
-                        };
-                    };
-                },
-                _orderState: null,
-                _setupOrder: null,
-                _cleanupOrder: null,
-                postRender: function() {
-                    if (this._setupOrder) this._setupOrder();
-                },
-                cleanup: function() {
-                    if (this._cleanupOrder) this._cleanupOrder();
-                },
-                handleOption: null
-            });
-
-            // PASO 6: Conteo con obstáculos
-            steps.push({
-                badge: 'Estación 7 · Conteo selectivo',
-                question: '🔍 ¿Cuántos libros hay (sin contar lápices ni cuadernos)?',
-                render: function(container, optsContainer, feedback) {
-                    container.innerHTML = `
-                        <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:4px 8px;font-size:2.6rem;padding:4px 0;max-width:100%;">
-                            ${'📚'.repeat(9)} ${'✏️'.repeat(3)} ${'📓'.repeat(2)}
-                        </div>
-                        <div style="font-size:0.8rem;color:#c0672c;font-weight:600;margin-top:2px;">Libros, lápices y cuadernos mezclados</div>
-                    `;
-                    optsContainer.innerHTML = `
-                        <button class="opt-btn" data-val="7">7</button>
-                        <button class="opt-btn" data-val="9">9</button>
-                        <button class="opt-btn" data-val="11">11</button>
-                    `;
-                    this._correctVal = 9;
-                },
-                _correctVal: 9,
-                handleOption: function(val, cb) {
-                    const correct = (val === this._correctVal);
-                    let mensaje = correct ? '¡Perfecto! Has contado solo los libros.' :
-                        'Recuerda ignorar lápices y cuadernos. Cuenta solo los libros (📚).';
-                    cb(correct, mensaje);
-                }
-            });
-
-            // PASO 7: Completar secuencia
-            steps.push({
-                badge: 'Estación 8 · Secuencia',
-                question: '🔢 ¿Qué número falta? 1, 2, 3, __, 5',
-                render: function(container, optsContainer, feedback) {
-                    container.innerHTML = `
-                        <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:6px 12px;font-size:2.6rem;padding:4px 0;">
-                            <span>📚<sup style="font-size:1rem;font-weight:800;color:#1A5F82;">1</sup></span>
-                            <span>📚<sup style="font-size:1rem;font-weight:800;color:#1A5F82;">2</sup></span>
-                            <span>📚<sup style="font-size:1rem;font-weight:800;color:#1A5F82;">3</sup></span>
-                            <span style="font-size:1.8rem;color:#c0672c;font-weight:900;">❓</span>
-                            <span>📚<sup style="font-size:1rem;font-weight:800;color:#1A5F82;">5</sup></span>
-                        </div>
-                    `;
-                    optsContainer.innerHTML = `
-                        <button class="opt-btn" data-val="4">4</button>
-                        <button class="opt-btn" data-val="6">6</button>
-                    `;
-                    this._correctVal = 4;
-                },
-                _correctVal: 4,
-                handleOption: function(val, cb) {
-                    const correct = (val === this._correctVal);
-                    let mensaje = correct ? '¡Muy bien! El número que falta es el 4.' :
-                        'Revisa la secuencia: 1, 2, 3, ? , 5. El número que falta está entre el 3 y el 5.';
-                    cb(correct, mensaje);
-                }
-            });
-
-            // PASO 8: Mochilas y loncheras (clic-clic)
-            steps.push({
-                badge: 'Estación 9 · Asociar',
-                question: '🎒🧳 Empareja cada mochila con una lonchera.',
-                render: function(container, optsContainer, feedback) {
-                    optsContainer.innerHTML = '';
-                    const mochilas = ['🎒', '🎒', '🎒', '🎒', '🎒'];
-                    const loncheras = ['🧳', '🧳', '🧳', '🧳', '🧳'];
-                    const shuffledLoncheras = [...loncheras].sort(() => Math.random() - 0.5);
-                    container.innerHTML = `
-                        <div class="match-area" id="match-area-p8">
-                            <div class="match-col" id="match-col-left-p8">
-                                <div class="col-title">🎒 Mochilas</div>
-                                ${mochilas.map((emoji, i) => `
-                                    <div class="match-item" data-id="m${i}" data-side="left" style="font-size:2rem;" tabindex="0" role="button">
-                                        ${emoji}
-                                    </div>
-                                `).join('')}
-                            </div>
-                            <div class="match-col" id="match-col-right-p8">
-                                <div class="col-title">🧳 Loncheras</div>
-                                ${shuffledLoncheras.map((emoji, i) => `
-                                    <div class="match-item" data-id="l${i}" data-side="right" style="font-size:2rem;" tabindex="0" role="button">
-                                        ${emoji}
-                                    </div>
-                                `).join('')}
-                            </div>
-                        </div>
-                        <div style="font-size:0.75rem;color:#7a8f9e;margin-top:2px;">Cualquier orden es válido</div>
-                    `;
-                    this._matchState2 = {
-                        leftSelected: null,
-                        matchedPairs: 0,
-                        totalPairs: 5,
-                        leftItems: null,
-                        rightItems: null,
-                    };
-                    this._setupMatch2 = function() {
-                        const leftItems = document.querySelectorAll('#match-col-left-p8 .match-item');
-                        const rightItems = document.querySelectorAll('#match-col-right-p8 .match-item');
-                        const state = this._matchState2;
-                        state.leftItems = leftItems;
-                        state.rightItems = rightItems;
-
-                        const clearSelected = () => {
-                            leftItems.forEach(el => el.classList.remove('selected'));
-                            state.leftSelected = null;
-                        };
-
-                        const checkComplete = () => {
-                            if (state.matchedPairs === state.totalPairs && !stepCompleted && !stepLocked) {
-                                stepCompleted = true;
-                                stepState[currentStep].completed = true;
-                                const fb = document.getElementById('step-feedback');
-                                fb.className = 'step-feedback success';
-                                fb.innerHTML = '🎉 ¡Excelente! Todos emparejados.';
-                                document.getElementById('btn-continuar').disabled = false;
-                                updateProgress();
-                                updateAttempts();
-                                totalAciertos++;
-                                lanzarConfeti();
-                                leftItems.forEach(el => el.classList.add('disabled'));
-                                rightItems.forEach(el => el.classList.add('disabled'));
-                            }
-                        };
-
-                        const handleLeftClick = (el) => {
-                            if (stepCompleted || stepLocked) return;
-                            if (el.classList.contains('matched') || el.classList.contains('disabled')) return;
-                            clearSelected();
-                            el.classList.add('selected');
-                            state.leftSelected = el.dataset.id;
-                        };
-
-                        const handleRightClick = (el) => {
-                            if (stepCompleted || stepLocked) return;
-                            if (el.classList.contains('matched') || el.classList.contains('disabled')) return;
-                            if (state.leftSelected === null) {
-                                const fb = document.getElementById('step-feedback');
-                                fb.className = 'step-feedback error';
-                                fb.innerHTML = '👆 Primero selecciona una mochila (columna izquierda).';
-                                setTimeout(() => {
-                                    if (!stepCompleted && !stepLocked) {
-                                        fb.className = 'step-feedback empty';
-                                        fb.innerHTML = '';
-                                    }
-                                }, 1000);
-                                return;
-                            }
-                            const leftEl = document.querySelector(
-                                `#match-col-left-p8 .match-item[data-id="${state.leftSelected}"]`);
-                            if (leftEl && !leftEl.classList.contains('matched') && !el.classList.contains(
-                                'matched')) {
-                                leftEl.classList.add('matched');
-                                leftEl.classList.remove('selected');
-                                el.classList.add('matched');
-                                state.matchedPairs++;
-                                const fb = document.getElementById('step-feedback');
-                                fb.className = 'step-feedback success';
-                                fb.innerHTML = '✅ ¡Bien! Emparejaste correctamente.';
-                                setTimeout(() => {
-                                    if (!stepCompleted && !stepLocked) {
-                                        fb.className = 'step-feedback empty';
-                                        fb.innerHTML = '';
-                                    }
-                                }, 600);
-                                state.leftSelected = null;
-                                leftItems.forEach(el => el.classList.remove('selected'));
-                                checkComplete();
-                            } else {
-                                const fb = document.getElementById('step-feedback');
-                                fb.className = 'step-feedback error';
-                                fb.innerHTML = '⚠️ Ese elemento ya está emparejado o no corresponde. Elige otro.';
-                                setTimeout(() => {
-                                    if (!stepCompleted && !stepLocked) {
-                                        fb.className = 'step-feedback empty';
-                                        fb.innerHTML = '';
-                                    }
-                                }, 1000);
-                            }
-                        };
-
-                        leftItems.forEach(el => {
-                            el.addEventListener('click', () => handleLeftClick(el));
-                            el.addEventListener('keydown', (e) => {
-                                if (e.key === 'Enter' || e.key === ' ') {
-                                    e.preventDefault();
-                                    handleLeftClick(el);
-                                }
-                            });
-                        });
-                        rightItems.forEach(el => {
-                            el.addEventListener('click', () => handleRightClick(el));
-                            el.addEventListener('keydown', (e) => {
-                                if (e.key === 'Enter' || e.key === ' ') {
-                                    e.preventDefault();
-                                    handleRightClick(el);
-                                }
-                            });
-                        });
-
-                        this._cleanupMatch2 = function() {
-                            leftItems.forEach(el => el.replaceWith(el.cloneNode(true)));
-                            rightItems.forEach(el => el.replaceWith(el.cloneNode(true)));
-                        };
-                    };
-                },
-                _matchState2: null,
-                _setupMatch2: null,
-                _cleanupMatch2: null,
-                postRender: function() {
-                    if (this._setupMatch2) this._setupMatch2();
-                },
-                cleanup: function() {
-                    if (this._cleanupMatch2) this._cleanupMatch2();
-                },
-                handleOption: null
-            });
-
-            // PASO 9: Verificación final
-            steps.push({
-                badge: 'Estación 10 · Verificar',
-                question: '🔎 ¿Tienen ambas pilas la misma cantidad?',
-                render: function(container, optsContainer, feedback) {
-                    container.innerHTML = `
-                        <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:16px 30px;padding:4px 0;">
-                            <div style="text-align:center;">
-                                <div style="font-weight:700;color:#1A5F82;font-size:1rem;">Pila A</div>
-                                <div style="font-size:2.4rem;">${'📚'.repeat(8)}</div>
-                            </div>
-                            <div style="text-align:center;">
-                                <div style="font-weight:700;color:#c0672c;font-size:1rem;">Pila B</div>
-                                <div style="font-size:2.4rem;">${'📚'.repeat(7)} <span style="font-size:1.8rem;color:#b8452c;">🔁</span></div>
-                                <div style="font-size:0.7rem;color:#7a8f9e;">Uno repetido, otro falta</div>
-                            </div>
-                        </div>
-                    `;
-                    optsContainer.innerHTML = `
-                        <button class="opt-btn" data-val="si">Sí</button>
-                        <button class="opt-btn" data-val="no">No</button>
-                    `;
-                    this._correctVal = 'no';
-                },
-                _correctVal: 'no',
-                handleOption: function(val, cb) {
-                    const correct = (val === this._correctVal);
-                    if (correct) {
-                        cb(true, '🎉 ¡Felicidades! Detectaste el error. La pila B tiene un libro repetido y falta otro.');
-                    } else {
-                        cb(false, 'Observa si hay algún libro repetido o faltante en la pila B. Compara con la pila A.');
-                    }
-                }
-            });
-
-            // ============================================================
-            //  FUNCIONES DE NAVEGACIÓN
-            // ============================================================
-
-            function updateProgress() {
-                let done = 0;
-                for (let i = 0; i < TOTAL_STEPS; i++) {
-                    if (stepState[i].completed) done++;
-                }
-                const pct = Math.round((done / TOTAL_STEPS) * 100);
-                progText.textContent = `${done}/${TOTAL_STEPS}`;
-                progFill.style.width = pct + '%';
-                if (done === TOTAL_STEPS) {
-                    // Si todas completadas, mostrar final automáticamente
-                    // Pero la navegación lo hará al presionar continuar
-                }
+        const allMatched = data.pairs.every(p => state.matched.includes(p.name) && state.matched.includes(p.value));
+        if (allMatched) {
+          state.done = true;
+          stepStates[data.id] = state;
+          fb.className = 'feedback show success';
+          fb.innerHTML = `<span class="fb-icon">🎉</span> ${data.feedbackOk}`;
+          stepDiv.dataset.completed = 'true';
+          launchConfetti(50);
+          setTimeout(() => {
+            if (currentStep < stepsData.length - 1) {
+              currentStep++;
+              renderStep(currentStep);
             }
+          }, 1200);
+        } else {
+          fb.className = 'feedback show success';
+          fb.innerHTML = `<span class="fb-icon">✅</span> ¡Par correcto! Sigue con los demás.`;
+          setTimeout(() => {
+            fb.className = 'feedback';
+            fb.textContent = '';
+          }, 1000);
+        }
+      } else {
+        el.classList.add('wrong-pair');
+        first.el.classList.add('wrong-pair');
+        fb.className = 'feedback show error';
+        fb.innerHTML = `<span class="fb-icon">❌</span> ${data.feedbackFail}`;
+        setTimeout(() => {
+          el.classList.remove('wrong-pair');
+          first.el.classList.remove('wrong-pair');
+          first.el.classList.remove('selected');
+          state.selected = null;
+          stepStates[data.id] = state;
+          fb.className = 'feedback';
+          fb.textContent = '';
+        }, 1000);
+      }
+    }
 
-            function updateAttempts() {
-                const st = stepState[currentStep];
-                attemptsInd.textContent = `Intentos: ${st.attempts}/${MAX_ATTEMPTS}`;
-                if (st.completed || st.locked) {
-                    attemptsInd.textContent = st.completed ? '✓ Listo' : '🔒 Bloqueado';
-                }
-            }
-
-            function renderStep(index) {
-                const prevStep = steps[currentStep];
-                if (prevStep && prevStep.cleanup) prevStep.cleanup();
-
-                const step = steps[index];
-                if (!step) return;
-
-                stepCompleted = stepState[index].completed;
-                stepAttempts = stepState[index].attempts;
-                stepLocked = stepState[index].locked;
-
-                stepBadge.textContent = step.badge;
-                stepQuestion.textContent = step.question;
-                stepFeedback.className = 'step-feedback empty';
-                stepFeedback.innerHTML = '';
-
-                step.render(stepVisual, stepOptions, stepFeedback);
-
-                if (stepCompleted || stepLocked) {
-                    const optBtns = stepOptions.querySelectorAll('.opt-btn');
-                    optBtns.forEach(b => b.disabled = true);
-                    document.getElementById('btn-continuar').disabled = false;
-                    if (stepCompleted) {
-                        stepFeedback.className = 'step-feedback success';
-                        stepFeedback.innerHTML = '✅ Completado. ¡Bien!';
-                    } else {
-                        stepFeedback.className = 'step-feedback info';
-                        stepFeedback.innerHTML = '🔒 Solución mostrada. Continúa.';
-                    }
-                } else {
-                    document.getElementById('btn-continuar').disabled = true;
-                    const optBtns = stepOptions.querySelectorAll('.opt-btn');
-                    optBtns.forEach(btn => {
-                        btn.disabled = false;
-                        btn.onclick = function() {
-                            if (stepCompleted || stepLocked) return;
-                            const val = this.dataset.val;
-                            if (step.handleOption) {
-                                step.handleOption(val, function(correct, message) {
-                                    if (correct) {
-                                        stepCompleted = true;
-                                        stepState[index].completed = true;
-                                        stepFeedback.className = 'step-feedback success';
-                                        stepFeedback.innerHTML = '🎉 ' + message;
-                                        document.getElementById('btn-continuar').disabled = false;
-                                        stepOptions.querySelectorAll('.opt-btn').forEach(b => b
-                                            .disabled = true);
-                                        const btns = stepOptions.querySelectorAll('.opt-btn');
-                                        btns.forEach(b => {
-                                            if (b.dataset.val == step._correctVal) {
-                                                b.classList.add('correct-highlight');
-                                            } else {
-                                                b.classList.add('wrong-highlight');
-                                            }
-                                        });
-                                        // Pulsación
-                                        this.classList.add('pulse');
-                                        setTimeout(() => this.classList.remove('pulse'), 300);
-                                        updateProgress();
-                                        updateAttempts();
-                                        totalAciertos++;
-                                        lanzarConfeti();
-                                    } else {
-                                        stepAttempts++;
-                                        stepState[index].attempts = stepAttempts;
-                                        updateAttempts();
-                                        // Pulsación de error
-                                        this.classList.add('pulse');
-                                        setTimeout(() => this.classList.remove('pulse'), 300);
-                                        if (stepAttempts >= MAX_ATTEMPTS) {
-                                            stepLocked = true;
-                                            stepState[index].locked = true;
-                                            stepFeedback.className = 'step-feedback error';
-                                            stepFeedback.innerHTML =
-                                                '💡 ' + message + ' (se ha mostrado la respuesta correcta)';
-                                            const btns = stepOptions.querySelectorAll('.opt-btn');
-                                            btns.forEach(b => {
-                                                if (b.dataset.val == step._correctVal) {
-                                                    b.classList.add('correct-highlight');
-                                                }
-                                                b.disabled = true;
-                                            });
-                                            document.getElementById('btn-continuar').disabled = false;
-                                            updateProgress();
-                                            // No sumamos aciertos porque se bloqueó
-                                        } else {
-                                            stepFeedback.className = 'step-feedback error';
-                                            stepFeedback.innerHTML = '⚠️ ' + message +
-                                                ` (${stepAttempts}/${MAX_ATTEMPTS})`;
-                                        }
-                                    }
-                                });
-                            }
-                        };
-                    });
-                }
-
-                if (step.postRender) {
-                    setTimeout(() => {
-                        step.postRender();
-                    }, 20);
-                }
-
-                document.getElementById('btn-anterior').disabled = (index === 0);
-                updateProgress();
-                updateAttempts();
-                currentStep = index;
-            }
-
-            function goToStep(index) {
-                if (index < 0 || index >= TOTAL_STEPS) return;
-                const prevStep = steps[currentStep];
-                if (prevStep && prevStep.cleanup) prevStep.cleanup();
-                renderStep(index);
-            }
-
-            function goNext() {
-                if (currentStep < TOTAL_STEPS - 1) {
-                    goToStep(currentStep + 1);
-                } else {
-                    // Comprobar si todas completadas
-                    let allDone = true;
-                    for (let i = 0; i < TOTAL_STEPS; i++) {
-                        if (!stepState[i].completed) allDone = false;
-                    }
-                    if (allDone) {
-                        mostrarFinal();
-                    } else {
-                        // Si no todas completadas, ir al siguiente paso no completado
-                        for (let i = 0; i < TOTAL_STEPS; i++) {
-                            if (!stepState[i].completed) {
-                                goToStep(i);
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-
-            function goPrev() {
-                if (currentStep > 0) {
-                    goToStep(currentStep - 1);
-                }
-            }
-
-            function resetAll() {
-                for (let i = 0; i < TOTAL_STEPS; i++) {
-                    stepState[i] = { completed: false, attempts: 0, locked: false };
-                }
-                totalAciertos = 0;
-                totalErrores = 0;
-                const prevStep = steps[currentStep];
-                if (prevStep && prevStep.cleanup) prevStep.cleanup();
-                currentStep = 0;
-                renderStep(0);
-                cronoStart = Date.now();
-                showScreen('steps');
-                // Resetear cronómetro visual
-                cronoEl.textContent = '00:00';
-            }
-
-            function showScreen(screenId) {
-                Object.keys(screens).forEach(key => {
-                    screens[key].classList.toggle('active', key === screenId);
-                });
-            }
-
-            function mostrarFinal() {
-                showScreen('final');
-                const prevStep = steps[currentStep];
-                if (prevStep && prevStep.cleanup) prevStep.cleanup();
-                // Actualizar resumen
-                resumenAciertos.textContent = totalAciertos;
-                let errores = 0;
-                for (let i = 0; i < TOTAL_STEPS; i++) {
-                    errores += stepState[i].attempts;
-                }
-                totalErrores = errores;
-                resumenErrores.textContent = totalErrores;
-                const tiempo = document.getElementById('cronometro').textContent;
-                resumenTiempo.textContent = tiempo;
-            }
-
-            // ===== EVENTOS =====
-            btnIniciar.addEventListener('click', function() {
-                showScreen('steps');
-                currentStep = 0;
-                for (let i = 0; i < TOTAL_STEPS; i++) {
-                    stepState[i] = { completed: false, attempts: 0, locked: false };
-                }
-                totalAciertos = 0;
-                totalErrores = 0;
-                renderStep(0);
-                cronoStart = Date.now();
-            });
-
-            btnContinuar.addEventListener('click', goNext);
-            btnAnterior.addEventListener('click', goPrev);
-
-            btnReiniciar.addEventListener('click', function() {
-                if (confirm('¿Reiniciar la misión?')) {
-                    resetAll();
-                }
-            });
-
-            btnFinalRevisar.addEventListener('click', function() {
-                showScreen('steps');
-                currentStep = 0;
-                renderStep(0);
-            });
-
-            btnFinalReiniciar.addEventListener('click', function() {
-                if (confirm('¿Reiniciar la misión desde el principio?')) {
-                    resetAll();
-                }
-            });
-
-            btnFinalContinuar.addEventListener('click', function() {
-                window.location.href = 'desarrollo.html';
-            });
-
-            btnFinalIndex.addEventListener('click', function() {
-                window.location.href = 'index.html';
-            });
-
-            btnTeclado.addEventListener('click', function() {
-                modoTeclado = !modoTeclado;
-                this.textContent = modoTeclado ? '⌨️ Modo teclado activado' : '⌨️ Modo teclado';
-                this.style.background = modoTeclado ? '#e68a2e' : '#a8b5c4';
-                this.style.color = modoTeclado ? '#fff' : '#1f2e3a';
-                if (!modoTeclado) {
-                    // Limpiar outlines
-                    document.querySelectorAll('.drag-target, .order-item, .match-item').forEach(el => {
-                        el.style.outline = 'none';
-                    });
-                }
-            });
-
-            // ===== INICIO =====
-            showScreen('cover');
-
-            /*
-             *  FICHA DE CONTINUIDAD
-             *  Área: 01_Números_y_Aritmética
-             *  Dominio: 01_Conteo_y_Numeración
-             *  Núcleo: 01_Principios_y_Estrategias_de_Conteo
-             *  Unidad: 01_Correspondencia_Uno_a_Uno
-             *  Título: El intercambio justo
-             *  Situación: Feria de intercambio de libros
-             *  Propósito: Comprender correspondencia uno a uno
-             *  Conocimientos previos: Conteo 1-20, subitización hasta 5
-             *  Mecánicas: selección, arrastre, clic-clic, ordenación
-             *  Representaciones: emojis, números
-             *  Errores: contar dos veces, saltar, confundir tamaño con cantidad
-             *  Pregunta pendiente: "¿Cómo asegurar que cada libro tenga su etiqueta y que la cantidad entregada sea igual a la recibida?"
-             *  Identidad: cálida (naranja, azul, dorado, crema)
-             *  Nombres: desarrollo.html, cierre.html
-             */
-            console.log('Secuencia321® · Inicio cargado con mejoras.');
-        })();
-    </script>
-
+    // ============================================================
+    //  INICIO
+    // ============================================================
+    renderStep(0);
+  </script>
 </body>
 </html>
